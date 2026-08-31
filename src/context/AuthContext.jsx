@@ -1,20 +1,74 @@
 /* eslint-disable react-refresh/only-export-components -- el hook useAuth vive junto a su Provider a propósito */
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+import { buildLogoutUrl, decodeIdToken } from "@/auth/cognito";
+
+const SESSION_KEY = "sanosysalvos_session";
 
 const AuthContext = createContext({
   user: null,
-  login: () => {},
+  accessToken: null,
+  loginWithTokens: () => {},
   logout: () => {},
 });
 
-export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
+function sessionFromTokens(tokens) {
+  const claims = decodeIdToken(tokens.id_token);
+  return {
+    user: {
+      name: claims.name || claims.email,
+      email: claims.email,
+      picture: claims.picture,
+    },
+    accessToken: tokens.access_token,
+    idToken: tokens.id_token,
+    refreshToken: tokens.refresh_token,
+    expiresAt: Date.now() + tokens.expires_in * 1000,
+  };
+}
 
-  const login = (u) => setUser(u);
-  const logout = () => setUser(null);
+function readStoredSession() {
+  const raw = localStorage.getItem(SESSION_KEY);
+  if (!raw) return null;
+  try {
+    const session = JSON.parse(raw);
+    if (session.expiresAt <= Date.now()) {
+      localStorage.removeItem(SESSION_KEY);
+      return null;
+    }
+    return session;
+  } catch {
+    localStorage.removeItem(SESSION_KEY);
+    return null;
+  }
+}
+
+export function AuthProvider({ children }) {
+  const [session, setSession] = useState(() => readStoredSession());
+
+  useEffect(() => {
+    if (session) {
+      localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+    } else {
+      localStorage.removeItem(SESSION_KEY);
+    }
+  }, [session]);
+
+  const loginWithTokens = (tokens) => setSession(sessionFromTokens(tokens));
+
+  const logout = () => {
+    setSession(null);
+    window.location.assign(buildLogoutUrl());
+  };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider
+      value={{
+        user: session?.user ?? null,
+        accessToken: session?.accessToken ?? null,
+        loginWithTokens,
+        logout,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
