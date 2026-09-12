@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { COMUNAS } from "@/data/pets";
+import LocationPicker from "@/components/map/LocationPicker";
 
 export default function ReportForm() {
   const navigate = useNavigate();
@@ -20,6 +21,7 @@ export default function ReportForm() {
     comuna: "",
     sector: "",
     phone: "",
+    location: null,
     consent1: false,
     consent2: false,
   });
@@ -42,7 +44,7 @@ export default function ReportForm() {
   };
 
   const canSubmit =
-    form.name && form.species && form.description && form.comuna && form.consent1 && form.consent2;
+    form.name && form.species && form.description && form.comuna && form.location && form.consent1 && form.consent2;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -283,24 +285,10 @@ export default function ReportForm() {
                 />
               </div>
 
-              {/* Map placeholder */}
-              <div
-                className="rounded-2xl overflow-hidden h-36 flex items-center justify-center relative"
-                style={{ background: "linear-gradient(135deg, #e8f0d8, #d8ebc8)" }}
-              >
-                <div
-                  className="absolute inset-0 opacity-20"
-                  style={{
-                    backgroundImage:
-                      "repeating-linear-gradient(0deg,#99A966 0,#99A966 1px,transparent 0,transparent 30px),repeating-linear-gradient(90deg,#99A966 0,#99A966 1px,transparent 0,transparent 30px)",
-                  }}
-                />
-                <div className="relative text-center">
-                  <div className="text-3xl mb-1">🗺️</div>
-                  <p className="text-sm font-semibold text-[#2B2B2B]">Marcar ubicación aproximada</p>
-                  <p className="text-xs text-[#8a7a80]">Haz clic en el mapa para confirmar</p>
-                </div>
-              </div>
+              <LocationPicker
+                value={form.location}
+                onChange={(location) => setForm({ ...form, location })}
+              />
               <div className="flex items-center gap-2 bg-[#FFECF2] rounded-2xl p-3">
                 <span className="text-[#C46081]">🔒</span>
                 <p className="text-xs text-[#8a7a80]">La ubicación pública se muestra de forma aproximada para proteger tu privacidad.</p>
