@@ -2,11 +2,42 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { COMUNAS } from "@/data/pets";
 import LocationPicker from "@/components/map/LocationPicker";
+import { useAuth } from "@/context/AuthContext";
+import { crearMascota } from "@/api/mascotas";
+
+const TIENE_API = Boolean(import.meta.env.VITE_API_BASE_URL);
+
+// tipoMascota real de ms-mascotas es PERRO|GATO|CONEJO|OTRO — el mock de
+// pets.js todavía no distingue "conejo" de "otro", pero el formulario de
+// creación sí debe ofrecerlo porque es lo que el backend va a recibir.
+const ESPECIES = [
+  { value: "PERRO", icon: "🐕", label: "Perro" },
+  { value: "GATO", icon: "🐈", label: "Gato" },
+  { value: "CONEJO", icon: "🐇", label: "Conejo" },
+  { value: "OTRO", icon: "🐾", label: "Otro" },
+];
+
+// raza/color/patron/tamaño/comuna/sector no son columnas fijas en el modelo
+// real — van dentro de Mascota.caracteristicas (Map<String,Object>
+// dinámico). Se arman acá en vez de mandarlos sueltos.
+function armarCaracteristicas(form) {
+  const c = {};
+  if (form.breed) c.raza = form.breed;
+  if (form.color) c.color = form.color;
+  if (form.pattern) c.patron = form.pattern;
+  if (form.size) c.tamano = form.size;
+  if (form.comuna) c.comuna = form.comuna;
+  if (form.sector) c.sector = form.sector;
+  return c;
+}
 
 export default function ReportForm() {
   const navigate = useNavigate();
+  const { user, accessToken } = useAuth();
   const [tab, setTab] = useState("extraviada");
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
   const [photoPreview, setPhotoPreview] = useState(null);
   const [dragOver, setDragOver] = useState(false);
 
@@ -20,6 +51,7 @@ export default function ReportForm() {
     description: "",
     comuna: "",
     sector: "",
+    email: user?.email || "",
     phone: "",
     location: null,
     consent1: false,
@@ -44,12 +76,52 @@ export default function ReportForm() {
   };
 
   const canSubmit =
-    form.name && form.species && form.description && form.comuna && form.location && form.consent1 && form.consent2;
+    form.name &&
+    form.species &&
+    form.description &&
+    form.comuna &&
+    form.location &&
+    form.email &&
+    form.consent1 &&
+    form.consent2;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!canSubmit) return;
-    setSubmitted(true);
+
+    // Sin backend configurado (o sin login real de Cognito todavía —
+    // feature/auth-cognito-google no está mergeado), se mantiene el flujo
+    // simulado para no romper la demo. En cuanto ambas cosas estén, este
+    // mismo formulario ya manda el payload real.
+    if (!TIENE_API || !accessToken) {
+      setSubmitted(true);
+      return;
+    }
+
+    setSubmitting(true);
+    setSubmitError(null);
+    try {
+      await crearMascota(
+        {
+          tipoMascota: form.species,
+          nombre: form.name,
+          estado: tab === "extraviada" ? "EXTRAVIADO" : "ENCONTRADO",
+          ubicacion: { latitud: form.location.lat, longitud: form.location.lng },
+          descripcion: form.description,
+          caracteristicas: armarCaracteristicas(form),
+          emailContacto: form.email,
+          // fotografia: pendiente de subir a S3 con presigned URL (ver
+          // Investigacion_Tecnica_Imagenes_Geolocalizacion...docx) — todavía
+          // no hay endpoint para eso, así que no se manda por ahora.
+        },
+        accessToken
+      );
+      setSubmitted(true);
+    } catch (err) {
+      setSubmitError(err.message);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   if (submitted) {
@@ -172,11 +244,7 @@ export default function ReportForm() {
                   Especie <span className="text-[#C46081]">*</span>
                 </label>
                 <div className="flex gap-3">
-                  {[
-                    { value: "perro", icon: "🐕", label: "Perro" },
-                    { value: "gato", icon: "🐈", label: "Gato" },
-                    { value: "otro", icon: "🐇", label: "Otro" },
-                  ].map((s) => (
+                  {ESPECIES.map((s) => (
                     <button
                       key={s.value}
                       type="button"
@@ -297,8 +365,22 @@ export default function ReportForm() {
           </div>
 
           {/* Contact */}
-          <div className="bg-white rounded-3xl p-6 shadow-sm">
-            <h2 className="font-bold text-[#2B2B2B] mb-4">Contacto</h2>
+          <div className="bg-white rounded-3xl p-6 shadow-sm space-y-4">
+            <h2 className="font-bold text-[#2B2B2B] mb-0">Contacto</h2>
+            <div>
+              <label className="block text-sm font-semibold text-[#2B2B2B] mb-1.5">
+                Correo de contacto <span className="text-[#C46081]">*</span>
+              </label>
+              <input
+                type="email"
+                required
+                placeholder="tu@correo.cl"
+                value={form.email}
+                onChange={(e) => setForm({ ...form, email: e.target.value })}
+                className="w-full px-4 py-3 rounded-2xl border-2 border-[#f0d5df] text-sm focus:outline-none focus:border-[#C46081] transition-colors"
+              />
+              <p className="text-xs text-[#8a7a80] mt-1.5">No se muestra públicamente — solo se usa para reenviarte los mensajes de quienes te contacten.</p>
+            </div>
             <div>
               <label className="block text-sm font-semibold text-[#2B2B2B] mb-1.5">
                 Teléfono <span className="text-[#8a7a80] font-normal">(opcional · privado)</span>
@@ -310,7 +392,9 @@ export default function ReportForm() {
                 onChange={(e) => setForm({ ...form, phone: e.target.value })}
                 className="w-full px-4 py-3 rounded-2xl border-2 border-[#f0d5df] text-sm focus:outline-none focus:border-[#C46081] transition-colors"
               />
-              <p className="text-xs text-[#8a7a80] mt-1.5">Tu número no se muestra públicamente. Solo se envía cuando alguien te contacta.</p>
+              <p className="text-xs text-[#8a7a80] mt-1.5">
+                Todavía no se envía al servidor — ms-mascotas por ahora solo guarda el correo de contacto.
+              </p>
             </div>
           </div>
 
@@ -346,10 +430,16 @@ export default function ReportForm() {
             ))}
           </div>
 
+          {submitError && (
+            <div className="bg-red-50 border-2 border-red-200 rounded-2xl p-4 text-sm text-red-700">
+              No se pudo publicar el reporte: {submitError}
+            </div>
+          )}
+
           {/* Submit */}
           <button
             type="submit"
-            disabled={!canSubmit}
+            disabled={!canSubmit || submitting}
             className="w-full py-4 font-black rounded-2xl transition-all text-base shadow-lg disabled:opacity-40 disabled:cursor-not-allowed"
             style={{
               backgroundColor: tab === "extraviada" ? "#C46081" : "#99A966",
@@ -359,7 +449,7 @@ export default function ReportForm() {
                 : "none",
             }}
           >
-            Publicar reporte
+            {submitting ? "Publicando..." : "Publicar reporte"}
           </button>
         </form>
       </div>
