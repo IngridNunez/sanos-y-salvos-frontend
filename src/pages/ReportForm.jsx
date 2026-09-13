@@ -17,16 +17,16 @@ const ESPECIES = [
   { value: "OTRO", icon: "🐾", label: "Otro" },
 ];
 
-// raza/color/patron/tamaño/comuna/sector no son columnas fijas en el modelo
-// real — van dentro de Mascota.caracteristicas (Map<String,Object>
-// dinámico). Se arman acá en vez de mandarlos sueltos.
+// raza/color/patron/tamaño/sector no son columnas fijas en el modelo real —
+// van dentro de Mascota.caracteristicas (Map<String,Object> dinámico).
+// comuna sí es un campo propio (R-N°5 pide poder buscar por comuna) y se
+// manda aparte, ver handleSubmit.
 function armarCaracteristicas(form) {
   const c = {};
   if (form.breed) c.raza = form.breed;
   if (form.color) c.color = form.color;
   if (form.pattern) c.patron = form.pattern;
   if (form.size) c.tamano = form.size;
-  if (form.comuna) c.comuna = form.comuna;
   if (form.sector) c.sector = form.sector;
   return c;
 }
@@ -107,6 +107,7 @@ export default function ReportForm() {
           nombre: form.name,
           estado: tab === "extraviada" ? "EXTRAVIADO" : "ENCONTRADO",
           ubicacion: { latitud: form.location.lat, longitud: form.location.lng },
+          comuna: form.comuna,
           descripcion: form.description,
           caracteristicas: armarCaracteristicas(form),
           emailContacto: form.email,

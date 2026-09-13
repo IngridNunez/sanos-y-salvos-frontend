@@ -3,16 +3,17 @@ import { apiFetch } from "./client";
 // Formas reales de ms-mascotas (ver CrearMascotaDTO/MascotaResponseDTO) —
 // deliberadamente distintas del mock de src/data/pets.js:
 //   - id se llama idMascota (ObjectId de Mongo, string).
-//   - no hay breed/color/pattern/size/comuna/sector como campos fijos: van
-//     dentro de caracteristicas (Map<String,Object> dinámico).
+//   - comuna es un campo propio y filtrable (R-N°5) — sector, en cambio, no
+//     existe como columna: va dentro de caracteristicas junto con
+//     raza/color/patron/tamaño (Map<String,Object> dinámico).
 //   - ubicacion es un objeto { latitud, longitud }, ya redondeado por
 //     privacidad en las respuestas públicas — no esperar precisión de metros.
 //   - emailContacto es obligatorio al crear, pero nunca viene en la
 //     respuesta (no se expone públicamente).
 
-export function listarMascotas({ estado, tipoMascota, page, size } = {}) {
+export function listarMascotas({ estado, tipoMascota, comuna, page, size } = {}) {
   return apiFetch("/mascotas", {
-    params: { estado, tipoMascota, page, size },
+    params: { estado, tipoMascota, comuna, page, size },
   });
 }
 
