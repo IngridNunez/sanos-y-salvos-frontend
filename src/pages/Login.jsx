@@ -1,20 +1,13 @@
-import { useNavigate, useSearchParams, Link } from "react-router";
-import { useAuth } from "@/context/AuthContext";
+import { useSearchParams, Link } from "react-router";
+import { redirectToLogin } from "@/auth/cognito";
 
 export default function Login() {
-  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { login } = useAuth();
 
   const redirect = searchParams.get("redirect") || "/";
 
   const handleGoogleLogin = () => {
-    // Simulate Google login
-    login({
-      name: "María González",
-      email: "maria@ejemplo.cl",
-    });
-    navigate(redirect);
+    redirectToLogin({ identityProvider: "Google", redirectTo: redirect });
   };
 
   return (

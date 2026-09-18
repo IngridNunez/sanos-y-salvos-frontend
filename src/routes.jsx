@@ -6,6 +6,7 @@ import Home from "@/pages/Home";
 import Listing from "@/pages/Listing";
 import PetDetail from "@/pages/PetDetail";
 import Login from "@/pages/Login";
+import AuthCallback from "@/pages/AuthCallback";
 import ReportForm from "@/pages/ReportForm";
 
 function Root() {
@@ -38,5 +39,9 @@ export const router = createBrowserRouter([
   {
     path: "/login",
     Component: LoginRoot,
+  },
+  {
+    path: "/auth/callback",
+    Component: AuthCallback,
   },
 ]);
