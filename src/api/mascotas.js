@@ -61,3 +61,55 @@ export async function obtenerMascotaPorId(id) {
   return mapMascota(await response.json());
 }
 // ###################################
+
+// ###################################
+const SPECIES_A_TIPO = { perro: "PERRO", gato: "GATO", otro: "OTRO" };
+const TAB_A_ESTADO = { extraviada: "EXTRAVIADO", encontrada: "ENCONTRADO" };
+
+// no hay subida de imagenes real todavia: se usa una foto de stock segun la especie
+const FOTO_PLACEHOLDER = {
+  PERRO: "https://images.unsplash.com/photo-1547482354-89d4259dbc4b?w=600&h=600&fit=crop&auto=format",
+  GATO: "https://images.unsplash.com/photo-1682839764237-2f7f7515f252?w=600&h=600&fit=crop&auto=format",
+  OTRO: "https://images.unsplash.com/photo-1585110396000-c9ffd4e4b308?w=600&h=600&fit=crop&auto=format",
+};
+
+/* form: lo que junta ReportForm.jsx | tab: "extraviada" | "encontrada" | tokens: {accessToken, idToken, refreshToken} */
+export async function crearMascota(form, tab, tokens, correoUsuario) {
+  const tipoMascota = SPECIES_A_TIPO[form.species] ?? "OTRO";
+
+  const caracteristicas = {};
+  if (form.breed) caracteristicas.raza = form.breed;
+  if (form.color) caracteristicas.color = form.color;
+  if (form.pattern) caracteristicas.patron = form.pattern;
+  if (form.size) caracteristicas.tamaño = form.size;
+
+  const body = {
+    tipoMascota,
+    nombre: form.name,
+    fotografia: FOTO_PLACEHOLDER[tipoMascota],
+    estado: TAB_A_ESTADO[tab] ?? "EXTRAVIADO",
+    comuna: form.comuna,
+    descripcion: form.description,
+    caracteristicas,
+    emailContacto: correoUsuario,
+  };
+
+  const response = await fetch(`${API_URL}/api/v1/mascotas`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${tokens.accessToken}`,
+      "X-Id-Token": `Bearer ${tokens.idToken}`,
+      "X-Refresh-Token": tokens.refreshToken,
+    },
+    body: JSON.stringify(body),
+  });
+
+  if (!response.ok) {
+    const detalle = await response.text().catch(() => "");
+    throw new Error(`No se pudo publicar el reporte (${response.status}). ${detalle}`);
+  }
+
+  return mapMascota(await response.json());
+}
+// ###################################

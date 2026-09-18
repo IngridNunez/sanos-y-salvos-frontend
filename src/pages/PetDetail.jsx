@@ -190,7 +190,7 @@ export default function PetDetail() {
       </div>
 
       {showContact && (
-        <ContactModal petName={pet.name} onClose={() => setShowContact(false)} />
+        <ContactModal petId={pet.id} petName={pet.name} onClose={() => setShowContact(false)} />
       )}
     </div>
   );
