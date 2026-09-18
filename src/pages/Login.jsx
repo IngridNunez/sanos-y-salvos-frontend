@@ -23,7 +23,6 @@ export default function Login() {
     setError(null);
   };
 
-  // ###################################
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -87,7 +86,6 @@ export default function Login() {
       setLoading(false);
     }
   };
-  // ###################################
 
   return (
     <div className="min-h-screen bg-[#FFECF2] flex items-center justify-center p-4">

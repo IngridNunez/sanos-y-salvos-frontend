@@ -9,7 +9,6 @@ export default function PetDetail() {
   const navigate = useNavigate();
   const [showContact, setShowContact] = useState(false);
 
-  // ###################################
   const [pet, setPet] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -28,7 +27,6 @@ export default function PetDetail() {
       </div>
     );
   }
-  // ###################################
 
   if (!pet) {
     return (

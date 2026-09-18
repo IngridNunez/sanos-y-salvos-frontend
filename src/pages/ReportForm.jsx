@@ -12,14 +12,12 @@ export default function ReportForm() {
   const [photoPreview, setPhotoPreview] = useState(null);
   const [dragOver, setDragOver] = useState(false);
 
-  // ###################################
   const [enviando, setEnviando] = useState(false);
   const [errorEnvio, setErrorEnvio] = useState(null);
 
   useEffect(() => {
     if (!user) navigate("/login?redirect=/reportar", { replace: true });
   }, [user, navigate]);
-  // ###################################
 
   const [form, setForm] = useState({
     name: "",
@@ -56,7 +54,6 @@ export default function ReportForm() {
   const canSubmit =
     form.name && form.species && form.description && form.comuna && form.consent1 && form.consent2;
 
-  // ###################################
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!canSubmit) return;
@@ -71,7 +68,6 @@ export default function ReportForm() {
       setEnviando(false);
     }
   };
-  // ###################################
 
   if (!user) return null;
 

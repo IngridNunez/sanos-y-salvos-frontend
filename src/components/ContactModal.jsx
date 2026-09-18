@@ -4,7 +4,6 @@ import { contactarPorMascota } from "@/api/contactos";
 export default function ContactModal({ petId, petName, onClose }) {
   const [sent, setSent] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", phone: "", message: "" });
-  // ###################################
   const [enviando, setEnviando] = useState(false);
   const [error, setError] = useState(null);
 
@@ -27,7 +26,6 @@ export default function ContactModal({ petId, petName, onClose }) {
       setEnviando(false);
     }
   };
-  // ###################################
 
   return (
     <div

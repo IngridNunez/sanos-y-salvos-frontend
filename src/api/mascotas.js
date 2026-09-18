@@ -14,11 +14,9 @@ const TIPO_A_SPECIES = {
 };
 
 function mapMascota(m) {
-  // ###################################
   /* caracteristicas es un mapa libre: ahi vienen raza/tamaño/color/etc
    * cuando el que reporto los cargo, no siempre estan todos */
   const c = m.caracteristicas ?? {};
-  // ###################################
   return {
     id: m.idMascota,
     name: m.nombre,
@@ -49,7 +47,6 @@ export async function obtenerMascotas() {
   return contenido.map(mapMascota);
 }
 
-// ###################################
 export async function obtenerMascotaPorId(id) {
   const response = await fetch(`${API_URL}/api/v1/mascotas/${id}`);
   if (response.status === 404) {
@@ -60,9 +57,7 @@ export async function obtenerMascotaPorId(id) {
   }
   return mapMascota(await response.json());
 }
-// ###################################
 
-// ###################################
 const SPECIES_A_TIPO = { perro: "PERRO", gato: "GATO", otro: "OTRO" };
 const TAB_A_ESTADO = { extraviada: "EXTRAVIADO", encontrada: "ENCONTRADO" };
 
@@ -112,4 +107,3 @@ export async function crearMascota(form, tab, tokens, correoUsuario) {
 
   return mapMascota(await response.json());
 }
-// ###################################

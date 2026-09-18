@@ -72,7 +72,6 @@ export default function Listing() {
   const [viewMode, setViewMode] = useState("grid");
   const [page, setPage] = useState(1);
 
-  // ###################################
   const [pets, setPets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -83,7 +82,6 @@ export default function Listing() {
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
   }, []);
-  // ###################################
 
   const filtered = useMemo(() => {
     return pets.filter((p) => {

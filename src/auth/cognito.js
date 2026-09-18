@@ -8,7 +8,6 @@ const logoutUri = import.meta.env.VITE_COGNITO_LOGOUT_URI;
 const scope = import.meta.env.VITE_COGNITO_SCOPE || "openid email profile";
 const userPoolId = import.meta.env.VITE_COGNITO_USER_POOL_ID;
 
-// ###################################
 /* login con correo/contraseña directo contra Cognito (SRP, sin Hosted UI) */
 const userPool = new CognitoUserPool({ UserPoolId: userPoolId, ClientId: clientId });
 
@@ -99,7 +98,6 @@ export function confirmarRegistro(email, codigo) {
     });
   });
 }
-// ###################################
 
 const PKCE_VERIFIER_KEY = "cognito_pkce_verifier";
 const STATE_KEY = "cognito_oauth_state";
