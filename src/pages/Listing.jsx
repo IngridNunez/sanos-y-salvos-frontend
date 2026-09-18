@@ -1,6 +1,7 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useSearchParams } from "react-router";
-import { PETS, COMUNAS } from "@/data/pets";
+import { COMUNAS } from "@/data/pets";
+import { obtenerMascotas } from "@/api/mascotas";
 import PetCard from "@/components/PetCard";
 import StatusBadge from "@/components/StatusBadge";
 
@@ -71,14 +72,27 @@ export default function Listing() {
   const [viewMode, setViewMode] = useState("grid");
   const [page, setPage] = useState(1);
 
+  // ###################################
+  const [pets, setPets] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    obtenerMascotas()
+      .then(setPets)
+      .catch((err) => setError(err.message))
+      .finally(() => setLoading(false));
+  }, []);
+  // ###################################
+
   const filtered = useMemo(() => {
-    return PETS.filter((p) => {
+    return pets.filter((p) => {
       if (filterStatus && p.status !== filterStatus) return false;
       if (filterComuna && p.comuna !== filterComuna) return false;
       if (filterSpecies && p.species !== filterSpecies) return false;
       return true;
     });
-  }, [filterStatus, filterComuna, filterSpecies]);
+  }, [pets, filterStatus, filterComuna, filterSpecies]);
 
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
   const paged = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
@@ -203,7 +217,15 @@ export default function Listing() {
         </div>
 
         {/* Content */}
-        {viewMode === "map" ? (
+        {loading ? (
+          <div className="text-center py-24 bg-white rounded-3xl">
+            <p className="text-[#8a7a80]">Cargando mascotas...</p>
+          </div>
+        ) : error ? (
+          <div className="text-center py-24 bg-white rounded-3xl">
+            <p className="text-[#C46081] font-semibold">No se pudo conectar con el servidor: {error}</p>
+          </div>
+        ) : viewMode === "map" ? (
           <MapView pets={filtered} />
         ) : filtered.length === 0 ? (
           <div className="text-center py-24 bg-white rounded-3xl">
