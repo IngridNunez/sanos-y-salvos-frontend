@@ -65,6 +65,8 @@ export function AuthProvider({ children }) {
       value={{
         user: session?.user ?? null,
         accessToken: session?.accessToken ?? null,
+        idToken: session?.idToken ?? null, // ###################################
+        refreshToken: session?.refreshToken ?? null, // ###################################
         loginWithTokens,
         logout,
       }}
