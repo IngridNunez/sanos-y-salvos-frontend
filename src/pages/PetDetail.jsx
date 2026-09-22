@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router";
-import { PETS } from "@/data/pets";
+import { obtenerMascotaPorId } from "@/api/mascotas";
 import StatusBadge from "@/components/StatusBadge";
 import ContactModal from "@/components/ContactModal";
 
@@ -9,7 +9,37 @@ export default function PetDetail() {
   const navigate = useNavigate();
   const [showContact, setShowContact] = useState(false);
 
-  const pet = PETS.find((p) => p.id === id);
+  const [pet, setPet] = useState(null);
+  const [loadedId, setLoadedId] = useState(null);
+  const loading = loadedId !== id;
+
+  useEffect(() => {
+    let cancelado = false;
+    obtenerMascotaPorId(id)
+      .then((data) => {
+        if (cancelado) return;
+        setPet(data);
+      })
+      .catch(() => {
+        if (cancelado) return;
+        setPet(null);
+      })
+      .finally(() => {
+        if (cancelado) return;
+        setLoadedId(id);
+      });
+    return () => {
+      cancelado = true;
+    };
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#FFECF2] flex items-center justify-center">
+        <p className="text-[#8a7a80]">Cargando...</p>
+      </div>
+    );
+  }
 
   if (!pet) {
     return (
@@ -171,7 +201,7 @@ export default function PetDetail() {
       </div>
 
       {showContact && (
-        <ContactModal petName={pet.name} onClose={() => setShowContact(false)} />
+        <ContactModal petId={pet.id} petName={pet.name} onClose={() => setShowContact(false)} />
       )}
     </div>
   );

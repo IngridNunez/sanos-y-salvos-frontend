@@ -1,13 +1,23 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { COMUNAS } from "@/data/pets";
+import { crearMascota } from "@/api/mascotas";
+import { useAuth } from "@/context/AuthContext";
 
 export default function ReportForm() {
   const navigate = useNavigate();
+  const { user, accessToken, idToken, refreshToken } = useAuth();
   const [tab, setTab] = useState("extraviada");
   const [submitted, setSubmitted] = useState(false);
   const [photoPreview, setPhotoPreview] = useState(null);
   const [dragOver, setDragOver] = useState(false);
+
+  const [enviando, setEnviando] = useState(false);
+  const [errorEnvio, setErrorEnvio] = useState(null);
+
+  useEffect(() => {
+    if (!user) navigate("/login?redirect=/reportar", { replace: true });
+  }, [user, navigate]);
 
   const [form, setForm] = useState({
     name: "",
@@ -44,11 +54,22 @@ export default function ReportForm() {
   const canSubmit =
     form.name && form.species && form.description && form.comuna && form.consent1 && form.consent2;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!canSubmit) return;
-    setSubmitted(true);
+    setEnviando(true);
+    setErrorEnvio(null);
+    try {
+      await crearMascota(form, tab, { accessToken, idToken, refreshToken }, user.email);
+      setSubmitted(true);
+    } catch (err) {
+      setErrorEnvio(err.message);
+    } finally {
+      setEnviando(false);
+    }
   };
+
+  if (!user) return null;
 
   if (submitted) {
     return (
@@ -359,9 +380,12 @@ export default function ReportForm() {
           </div>
 
           {/* Submit */}
+          {errorEnvio && (
+            <p className="text-sm text-[#C46081] font-semibold text-center">{errorEnvio}</p>
+          )}
           <button
             type="submit"
-            disabled={!canSubmit}
+            disabled={!canSubmit || enviando}
             className="w-full py-4 font-black rounded-2xl transition-all text-base shadow-lg disabled:opacity-40 disabled:cursor-not-allowed"
             style={{
               backgroundColor: tab === "extraviada" ? "#C46081" : "#99A966",
@@ -371,7 +395,7 @@ export default function ReportForm() {
                 : "none",
             }}
           >
-            Publicar reporte
+            {enviando ? "Publicando..." : "Publicar reporte"}
           </button>
         </form>
       </div>

@@ -6,7 +6,10 @@ import Home from "@/pages/Home";
 import Listing from "@/pages/Listing";
 import PetDetail from "@/pages/PetDetail";
 import Login from "@/pages/Login";
+import AuthCallback from "@/pages/AuthCallback";
 import ReportForm from "@/pages/ReportForm";
+import Privacidad from "@/pages/Privacidad";
+import Terminos from "@/pages/Terminos";
 
 function Root() {
   return (
@@ -33,10 +36,16 @@ export const router = createBrowserRouter([
       { path: "buscar", Component: Listing },
       { path: "mascota/:id", Component: PetDetail },
       { path: "reportar", Component: ReportForm },
+      { path: "privacidad", Component: Privacidad },
+      { path: "terminos", Component: Terminos },
     ],
   },
   {
     path: "/login",
     Component: LoginRoot,
+  },
+  {
+    path: "/auth/callback",
+    Component: AuthCallback,
   },
 ]);

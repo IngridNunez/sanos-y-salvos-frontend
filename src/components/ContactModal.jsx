@@ -1,12 +1,30 @@
 import { useState } from "react";
+import { contactarPorMascota } from "@/api/contactos";
 
-export default function ContactModal({ petName, onClose }) {
+export default function ContactModal({ petId, petName, onClose }) {
   const [sent, setSent] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", phone: "", message: "" });
+  const [enviando, setEnviando] = useState(false);
+  const [error, setError] = useState(null);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setSent(true);
+    setEnviando(true);
+    setError(null);
+    try {
+      await contactarPorMascota({
+        mascotaId: petId,
+        nombre: form.name,
+        email: form.email,
+        telefono: form.phone,
+        mensaje: form.message,
+      });
+      setSent(true);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setEnviando(false);
+    }
   };
 
   return (
@@ -105,11 +123,13 @@ export default function ContactModal({ petName, onClose }) {
               </p>
             </div>
 
+            {error && <p className="text-xs text-[#C46081] font-semibold">{error}</p>}
             <button
               type="submit"
-              className="w-full py-3.5 bg-[#C46081] text-white font-bold rounded-2xl hover:bg-[#a84e6c] transition-colors"
+              disabled={enviando}
+              className="w-full py-3.5 bg-[#C46081] text-white font-bold rounded-2xl hover:bg-[#a84e6c] transition-colors disabled:opacity-50"
             >
-              Enviar mensaje
+              {enviando ? "Enviando..." : "Enviar mensaje"}
             </button>
           </form>
         )}
