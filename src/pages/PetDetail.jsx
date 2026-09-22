@@ -10,14 +10,27 @@ export default function PetDetail() {
   const [showContact, setShowContact] = useState(false);
 
   const [pet, setPet] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loadedId, setLoadedId] = useState(null);
+  const loading = loadedId !== id;
 
   useEffect(() => {
-    setLoading(true);
+    let cancelado = false;
     obtenerMascotaPorId(id)
-      .then(setPet)
-      .catch(() => setPet(null))
-      .finally(() => setLoading(false));
+      .then((data) => {
+        if (cancelado) return;
+        setPet(data);
+      })
+      .catch(() => {
+        if (cancelado) return;
+        setPet(null);
+      })
+      .finally(() => {
+        if (cancelado) return;
+        setLoadedId(id);
+      });
+    return () => {
+      cancelado = true;
+    };
   }, [id]);
 
   if (loading) {
