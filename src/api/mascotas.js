@@ -34,6 +34,9 @@ function mapMascota(m) {
     size: c.tamaño ?? c.tamano ?? null,
     // el backend no tiene un campo de sector/dirección, solo coordenadas
     sector: "—",
+    // ms-mascotas devuelve la ubicación redondeada (~1 km) por privacidad
+    lat: m.ubicacion?.latitud ?? null,
+    lng: m.ubicacion?.longitud ?? null,
   };
 }
 
@@ -88,6 +91,9 @@ export async function crearMascota(form, tab, tokens, correoUsuario) {
     caracteristicas,
     emailContacto: correoUsuario,
   };
+  if (form.location) {
+    body.ubicacion = { latitud: form.location.lat, longitud: form.location.lng };
+  }
 
   const response = await fetch(`${API_URL}/api/v1/mascotas`, {
     method: "POST",

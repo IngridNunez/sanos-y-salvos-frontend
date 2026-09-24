@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router";
 import { obtenerMascotaPorId } from "@/api/mascotas";
+import PetLocationMap from "@/components/map/PetLocationMap";
 import StatusBadge from "@/components/StatusBadge";
 import ContactModal from "@/components/ContactModal";
 
@@ -85,31 +86,21 @@ export default function PetDetail() {
               </div>
             </div>
 
-            {/* Map placeholder */}
+            {/* Ubicación aproximada */}
             <div className="bg-white rounded-3xl overflow-hidden shadow-sm">
               <div className="p-4 border-b border-[#f0d5df]">
                 <h3 className="font-bold text-[#2B2B2B] text-sm">Ubicación aproximada</h3>
-                <p className="text-xs text-[#8a7a80]">{pet.sector}, {pet.comuna}</p>
+                <p className="text-xs text-[#8a7a80]">{pet.comuna}</p>
               </div>
-              <div
-                className="relative h-44 flex items-center justify-center"
-                style={{
-                  background: "linear-gradient(135deg, #e8f0d8 0%, #d8ebc8 100%)",
-                }}
-              >
-                <div
-                  className="absolute inset-0 opacity-20"
-                  style={{
-                    backgroundImage:
-                      "repeating-linear-gradient(0deg,#99A966 0,#99A966 1px,transparent 0,transparent 40px),repeating-linear-gradient(90deg,#99A966 0,#99A966 1px,transparent 0,transparent 40px)",
-                  }}
-                />
-                <div className="relative text-center">
-                  <div className="text-3xl mb-1">📍</div>
-                  <div className="text-sm font-bold text-[#2B2B2B]">{pet.sector}</div>
-                  <div className="text-xs text-[#8a7a80]">{pet.comuna}</div>
-                </div>
-                <div className="absolute bottom-3 right-3 bg-white/80 backdrop-blur rounded-xl px-2 py-1 text-xs text-[#8a7a80]">
+              <div className="relative h-44">
+                {pet.lat != null && pet.lng != null ? (
+                  <PetLocationMap lat={pet.lat} lng={pet.lng} status={pet.status} />
+                ) : (
+                  <div className="h-full flex items-center justify-center text-sm text-[#8a7a80] bg-[#FFECF2]">
+                    Sin ubicación en el mapa
+                  </div>
+                )}
+                <div className="absolute bottom-3 right-3 z-[1000] bg-white/80 backdrop-blur rounded-xl px-2 py-1 text-xs text-[#8a7a80]">
                   🔒 Ubicación aproximada
                 </div>
               </div>
