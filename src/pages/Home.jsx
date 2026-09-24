@@ -424,21 +424,19 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ALIANZAS */}
-      <section id="alianzas" className="py-12 bg-[#FFECF2]">
+      {/* ALIANZAS (teaser: el detalle vive en /alianzas) */}
+      <section className="py-12 bg-[#FFECF2]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="font-black text-2xl text-[#2B2B2B] mb-2">Alianzas</h2>
-          <p className="text-[#8a7a80] text-sm mb-8">Trabajamos junto a organizaciones que comparten nuestra misión</p>
-          <div className="flex flex-wrap justify-center gap-4">
-            {["Municipalidad de Viña del Mar", "Clínica Veterinaria SurPet", "Fundación Patitas", "Radio Comunal 102.5", "SpiderTech"].map((name) => (
-              <div
-                key={name}
-                className="bg-white rounded-2xl px-6 py-3 text-sm font-semibold text-[#8a7a80] border border-[#f0d5df] hover:border-[#C46081] hover:text-[#C46081] transition-colors cursor-pointer"
-              >
-                {name}
-              </div>
-            ))}
-          </div>
+          <p className="text-[#8a7a80] text-sm mb-6">
+            Buscamos veterinarias, municipios y fundaciones que compartan nuestra misión
+          </p>
+          <button
+            onClick={() => navigate("/alianzas")}
+            className="px-6 py-3 border-2 border-[#C46081] text-[#C46081] font-bold rounded-2xl hover:bg-white transition-colors text-sm"
+          >
+            Conoce cómo sumarte →
+          </button>
         </div>
       </section>
     </div>

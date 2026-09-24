@@ -9,6 +9,9 @@ import Login from "@/pages/Login";
 import AuthCallback from "@/pages/AuthCallback";
 import ReportForm from "@/pages/ReportForm";
 import Privacidad from "@/pages/Privacidad";
+import Conocenos from "@/pages/Conocenos";
+import Alianzas from "@/pages/Alianzas";
+import Contacto from "@/pages/Contacto";
 import Terminos from "@/pages/Terminos";
 
 function Root() {
@@ -38,6 +41,9 @@ export const router = createBrowserRouter([
       { path: "reportar", Component: ReportForm },
       { path: "privacidad", Component: Privacidad },
       { path: "terminos", Component: Terminos },
+      { path: "conocenos", Component: Conocenos },
+      { path: "alianzas", Component: Alianzas },
+      { path: "contacto", Component: Contacto },
     ],
   },
   {
