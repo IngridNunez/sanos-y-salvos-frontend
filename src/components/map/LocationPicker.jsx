@@ -34,7 +34,7 @@ export default function LocationPicker({ value, onChange }) {
   };
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-2 relative isolate">
       <div className="rounded-2xl overflow-hidden" style={{ height: 220 }}>
         <MapContainer
           center={center}

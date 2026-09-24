@@ -28,7 +28,7 @@ export default function PetsMap({ pets }) {
   }, [pets]);
 
   return (
-    <div className="rounded-3xl overflow-hidden shadow-sm relative" style={{ height: 480 }}>
+    <div className="rounded-3xl overflow-hidden shadow-sm relative isolate" style={{ height: 480 }}>
       <label className="absolute z-[1000] top-3 right-3 bg-white/95 backdrop-blur rounded-2xl px-3 py-2 text-xs font-semibold text-[#2B2B2B] shadow-md flex items-center gap-2 cursor-pointer">
         <input
           type="checkbox"
