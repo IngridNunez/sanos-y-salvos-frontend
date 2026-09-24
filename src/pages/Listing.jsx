@@ -4,58 +4,9 @@ import { COMUNAS } from "@/data/pets";
 import { obtenerMascotas } from "@/api/mascotas";
 import PetCard from "@/components/PetCard";
 import StatusBadge from "@/components/StatusBadge";
+import PetsMap from "@/components/map/PetsMap";
 
 const PAGE_SIZE = 6;
-
-// Simple map pin SVG — actual map requires a library; this is a placeholder tile
-function MapView({ pets }) {
-  return (
-    <div className="relative bg-[#e8f0d8] rounded-3xl overflow-hidden" style={{ height: 480 }}>
-      {/* Fake map tiles */}
-      <div className="absolute inset-0 opacity-30"
-        style={{
-          backgroundImage: "repeating-linear-gradient(0deg,#99A966 0,#99A966 1px,transparent 0,transparent 60px),repeating-linear-gradient(90deg,#99A966 0,#99A966 1px,transparent 0,transparent 60px)",
-        }}
-      />
-      <div className="absolute inset-0 flex items-center justify-center">
-        <div className="text-center">
-          <div className="text-4xl mb-2">🗺️</div>
-          <div className="font-bold text-[#2B2B2B]">Vista de mapa</div>
-          <p className="text-sm text-[#8a7a80] mt-1">
-            {pets.length} mascotas en esta zona
-          </p>
-        </div>
-      </div>
-      {/* Fake pins */}
-      {pets.slice(0, 8).map((pet, i) => (
-        <div
-          key={pet.id}
-          className="absolute flex flex-col items-center"
-          style={{
-            left: `${15 + (i * 11) % 70}%`,
-            top: `${20 + (i * 17) % 60}%`,
-          }}
-        >
-          <div
-            className="w-9 h-9 rounded-full border-3 border-white shadow-lg flex items-center justify-center text-base overflow-hidden"
-            style={{
-              borderColor: "white",
-              borderWidth: 2,
-              backgroundColor:
-                pet.status === "extraviada" ? "#C46081" : pet.status === "encontrada" ? "#99A966" : "#EFB357",
-            }}
-            title={pet.name}
-          >
-            {pet.species === "perro" ? "🐕" : "🐈"}
-          </div>
-          <div className="text-[10px] font-bold text-[#2B2B2B] bg-white rounded px-1 mt-0.5 shadow">
-            {pet.name}
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
 
 export default function Listing() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -224,7 +175,7 @@ export default function Listing() {
             <p className="text-[#C46081] font-semibold">No se pudo conectar con el servidor: {error}</p>
           </div>
         ) : viewMode === "map" ? (
-          <MapView pets={filtered} />
+          <PetsMap pets={filtered.filter((p) => p.lat != null && p.lng != null)} />
         ) : filtered.length === 0 ? (
           <div className="text-center py-24 bg-white rounded-3xl">
             <div className="text-6xl mb-4">🔍</div>

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { COMUNAS } from "@/data/pets";
 import { crearMascota } from "@/api/mascotas";
+import LocationPicker from "@/components/map/LocationPicker";
 import { useAuth } from "@/context/AuthContext";
 
 export default function ReportForm() {
@@ -31,6 +32,7 @@ export default function ReportForm() {
     description: "",
     comuna: "",
     sector: "",
+    location: null,
     phone: "",
     consent1: false,
     consent2: false,
@@ -54,7 +56,7 @@ export default function ReportForm() {
   };
 
   const canSubmit =
-    form.name && form.species && form.description && form.comuna && form.consent1 && form.consent2;
+    form.name && form.species && form.description && form.comuna && form.location && form.consent1 && form.consent2;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -306,24 +308,14 @@ export default function ReportForm() {
                 />
               </div>
 
-              {/* Map placeholder */}
-              <div
-                className="rounded-2xl overflow-hidden h-36 flex items-center justify-center relative"
-                style={{ background: "linear-gradient(135deg, #e8f0d8, #d8ebc8)" }}
-              >
-                <div
-                  className="absolute inset-0 opacity-20"
-                  style={{
-                    backgroundImage:
-                      "repeating-linear-gradient(0deg,#99A966 0,#99A966 1px,transparent 0,transparent 30px),repeating-linear-gradient(90deg,#99A966 0,#99A966 1px,transparent 0,transparent 30px)",
-                  }}
-                />
-                <div className="relative text-center">
-                  <div className="text-3xl mb-1">🗺️</div>
-                  <p className="text-sm font-semibold text-[#2B2B2B]">Marcar ubicación aproximada</p>
-                  <p className="text-xs text-[#8a7a80]">Haz clic en el mapa para confirmar</p>
-                </div>
-              </div>
+              {/* Selector de ubicación (clic en el mapa) */}
+              <LocationPicker
+                value={form.location}
+                onChange={(location) => setForm({ ...form, location })}
+              />
+              {!form.location && (
+                <p className="text-xs text-[#C46081] font-semibold">La ubicación en el mapa es obligatoria.</p>
+              )}
               <div className="flex items-center gap-2 bg-[#FFECF2] rounded-2xl p-3">
                 <span className="text-[#C46081]">🔒</span>
                 <p className="text-xs text-[#8a7a80]">La ubicación pública se muestra de forma aproximada para proteger tu privacidad.</p>

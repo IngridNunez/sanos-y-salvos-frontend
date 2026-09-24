@@ -28,6 +28,9 @@ export default function Footer() {
               <li><Link to="/" className="hover:text-white transition-colors">Inicio</Link></li>
               <li><Link to="/buscar?status=extraviada" className="hover:text-white transition-colors">Mascotas Extraviadas</Link></li>
               <li><Link to="/buscar?status=encontrada" className="hover:text-white transition-colors">Mascotas Encontradas</Link></li>
+              <li><Link to="/conocenos" className="hover:text-white transition-colors">Conócenos</Link></li>
+              <li><Link to="/alianzas" className="hover:text-white transition-colors">Alianzas</Link></li>
+              <li><Link to="/contacto" className="hover:text-white transition-colors">Contacto</Link></li>
               <li><Link to="/#como-funciona" className="hover:text-white transition-colors">Cómo Funciona</Link></li>
             </ul>
           </div>

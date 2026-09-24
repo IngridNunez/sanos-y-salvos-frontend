@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router";
-import { obtenerMascotaPorId } from "@/api/mascotas";
+import { obtenerMascotaPorId, obtenerIdsMisMascotas, cambiarEstadoMascota } from "@/api/mascotas";
+import { useAuth } from "@/context/AuthContext";
+import PetLocationMap from "@/components/map/PetLocationMap";
 import StatusBadge from "@/components/StatusBadge";
 import ContactModal from "@/components/ContactModal";
 
@@ -8,6 +10,10 @@ export default function PetDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [showContact, setShowContact] = useState(false);
+  const { user, accessToken, idToken, refreshToken } = useAuth();
+  const [esDueno, setEsDueno] = useState(false);
+  const [actualizando, setActualizando] = useState(false);
+  const [errorEstado, setErrorEstado] = useState(null);
 
   const [pet, setPet] = useState(null);
   const [loadedId, setLoadedId] = useState(null);
@@ -32,6 +38,35 @@ export default function PetDetail() {
       cancelado = true;
     };
   }, [id]);
+
+  useEffect(() => {
+    if (!user || !accessToken) return;
+    let cancelado = false;
+    obtenerIdsMisMascotas({ accessToken, idToken, refreshToken })
+      .then((ids) => {
+        if (!cancelado) setEsDueno(ids.has(id));
+      })
+      .catch(() => {
+        if (!cancelado) setEsDueno(false);
+      });
+    return () => {
+      cancelado = true;
+    };
+  }, [id, user, accessToken, idToken, refreshToken]);
+
+  const marcarReunificada = async () => {
+    if (!window.confirm(`¿Confirmas que ${pet.name} ya fue encontrada y reunida con su familia?`)) return;
+    setActualizando(true);
+    setErrorEstado(null);
+    try {
+      const actualizada = await cambiarEstadoMascota(id, "REUNIFICADO", { accessToken, idToken, refreshToken });
+      setPet(actualizada);
+    } catch (err) {
+      setErrorEstado(err.message);
+    } finally {
+      setActualizando(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -85,31 +120,21 @@ export default function PetDetail() {
               </div>
             </div>
 
-            {/* Map placeholder */}
+            {/* Ubicación aproximada */}
             <div className="bg-white rounded-3xl overflow-hidden shadow-sm">
               <div className="p-4 border-b border-[#f0d5df]">
                 <h3 className="font-bold text-[#2B2B2B] text-sm">Ubicación aproximada</h3>
-                <p className="text-xs text-[#8a7a80]">{pet.sector}, {pet.comuna}</p>
+                <p className="text-xs text-[#8a7a80]">{pet.comuna}</p>
               </div>
-              <div
-                className="relative h-44 flex items-center justify-center"
-                style={{
-                  background: "linear-gradient(135deg, #e8f0d8 0%, #d8ebc8 100%)",
-                }}
-              >
-                <div
-                  className="absolute inset-0 opacity-20"
-                  style={{
-                    backgroundImage:
-                      "repeating-linear-gradient(0deg,#99A966 0,#99A966 1px,transparent 0,transparent 40px),repeating-linear-gradient(90deg,#99A966 0,#99A966 1px,transparent 0,transparent 40px)",
-                  }}
-                />
-                <div className="relative text-center">
-                  <div className="text-3xl mb-1">📍</div>
-                  <div className="text-sm font-bold text-[#2B2B2B]">{pet.sector}</div>
-                  <div className="text-xs text-[#8a7a80]">{pet.comuna}</div>
-                </div>
-                <div className="absolute bottom-3 right-3 bg-white/80 backdrop-blur rounded-xl px-2 py-1 text-xs text-[#8a7a80]">
+              <div className="relative h-44 isolate">
+                {pet.lat != null && pet.lng != null ? (
+                  <PetLocationMap lat={pet.lat} lng={pet.lng} status={pet.status} />
+                ) : (
+                  <div className="h-full flex items-center justify-center text-sm text-[#8a7a80] bg-[#FFECF2]">
+                    Sin ubicación en el mapa
+                  </div>
+                )}
+                <div className="absolute bottom-3 right-3 z-[1000] bg-white/80 backdrop-blur rounded-xl px-2 py-1 text-xs text-[#8a7a80]">
                   🔒 Ubicación aproximada
                 </div>
               </div>
@@ -166,6 +191,20 @@ export default function PetDetail() {
 
             {/* Actions */}
             <div className="bg-white rounded-3xl p-6 shadow-sm space-y-3">
+              {esDueno && pet.status !== "reunificada" && (
+                <div className="bg-[#99A966]/10 border-2 border-[#99A966] rounded-2xl p-4 space-y-2">
+                  <p className="text-xs text-[#5f6b3f] font-semibold">Este reporte es tuyo</p>
+                  <button
+                    onClick={marcarReunificada}
+                    disabled={actualizando}
+                    className="w-full py-3.5 bg-[#99A966] text-white font-bold rounded-2xl hover:bg-[#83925a] transition-colors text-sm disabled:opacity-60"
+                  >
+                    {actualizando ? "Guardando..." : "🎉 ¡Ya la encontré! Marcar como reunificada"}
+                  </button>
+                  {errorEstado && <p className="text-xs text-[#C46081]">{errorEstado}</p>}
+                </div>
+              )}
+
               <button
                 onClick={() => setShowContact(true)}
                 className="w-full py-4 bg-[#C46081] text-white font-bold rounded-2xl hover:bg-[#a84e6c] transition-all shadow-md shadow-[#C46081]/20 text-sm"

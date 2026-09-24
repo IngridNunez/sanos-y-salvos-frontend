@@ -34,11 +34,17 @@ function mapMascota(m) {
     size: c.tamaño ?? c.tamano ?? null,
     // el backend no tiene un campo de sector/dirección, solo coordenadas
     sector: "—",
+    // ms-mascotas devuelve la ubicación redondeada (~1 km) por privacidad
+    // fecha cruda (ISO) para filtrar por rango en las estadísticas del Home
+    fechaISO: m.fecha ?? null,
+    lat: m.ubicacion?.latitud ?? null,
+    lng: m.ubicacion?.longitud ?? null,
   };
 }
 
+// más recientes primero; size alto porque el Home cuenta reunificadas por comuna/fecha
 export async function obtenerMascotas() {
-  const response = await fetch(`${API_URL}/api/v1/mascotas`);
+  const response = await fetch(`${API_URL}/api/v1/mascotas?size=200&sort=fecha,desc`);
   if (!response.ok) {
     throw new Error(`Error al obtener mascotas: ${response.status}`);
   }
@@ -88,6 +94,9 @@ export async function crearMascota(form, tab, correoUsuario) {
     caracteristicas,
     emailContacto: correoUsuario,
   };
+  if (form.location) {
+    body.ubicacion = { latitud: form.location.lat, longitud: form.location.lng };
+  }
 
   const response = await fetch(`${API_URL}/api/v1/mascotas`, {
     method: "POST",
@@ -104,5 +113,40 @@ export async function crearMascota(form, tab, correoUsuario) {
     throw new Error(`No se pudo publicar el reporte (${response.status}). ${detalle}`);
   }
 
+  return mapMascota(await response.json());
+}
+
+function authHeaders(tokens) {
+  return {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${tokens.accessToken}`,
+    "X-Id-Token": `Bearer ${tokens.idToken}`,
+    "X-Refresh-Token": tokens.refreshToken,
+  };
+}
+
+/* ids de las mascotas que reportó el usuario logueado — el listado público no trae
+ * usuarioId (privacidad), así que "soy el dueño" se resuelve con /mis-mascotas */
+export async function obtenerIdsMisMascotas(tokens) {
+  const response = await fetch(`${API_URL}/api/v1/mascotas/mis-mascotas?size=200`, {
+    headers: authHeaders(tokens),
+  });
+  if (!response.ok) {
+    throw new Error(`Error al obtener tus mascotas: ${response.status}`);
+  }
+  const data = await response.json();
+  return new Set((data.content ?? data).map((m) => m.idMascota));
+}
+
+/* estado: "EXTRAVIADO" | "ENCONTRADO" | "REUNIFICADO" — solo el dueño puede (lo valida ms-mascotas) */
+export async function cambiarEstadoMascota(id, estado, tokens) {
+  const response = await fetch(`${API_URL}/api/v1/mascotas/${id}/estado`, {
+    method: "PATCH",
+    headers: authHeaders(tokens),
+    body: JSON.stringify({ estado }),
+  });
+  if (!response.ok) {
+    throw new Error(`No se pudo actualizar el estado (${response.status})`);
+  }
   return mapMascota(await response.json());
 }

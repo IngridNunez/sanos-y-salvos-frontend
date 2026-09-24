@@ -6,9 +6,9 @@ const navLinks = [
   { label: "Inicio", to: "/" },
   { label: "Mascotas Extraviadas", to: "/buscar?status=extraviada" },
   { label: "Mascotas Encontradas", to: "/buscar?status=encontrada" },
-  { label: "Conócenos", to: "/#conocenos" },
-  { label: "Alianzas", to: "/#alianzas" },
-  { label: "Contacto", to: "/#contacto" },
+  { label: "Conócenos", to: "/conocenos" },
+  { label: "Alianzas", to: "/alianzas" },
+  { label: "Contacto", to: "/contacto" },
 ];
 
 export default function Navbar() {
