@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from "recharts";
-import { PETS, COMUNAS } from "@/data/pets";
+import { COMUNAS } from "@/data/pets";
+import { obtenerMascotas } from "@/api/mascotas";
 import PetCard from "@/components/PetCard";
 import { useAuth } from "@/context/AuthContext";
 
@@ -33,19 +34,30 @@ const STEPS = [
   { num: "4", icon: "🏠", title: "Reencuentro", desc: "Trabajamos para que vuelvan sanos y salvos a casa." },
 ];
 
-function StatsBlock() {
+// Filtra por la fecha del reporte. "este-mes"/"anio" son calendario; el resto, ventana móvil.
+function enRango(fechaISO, range) {
+  if (!fechaISO) return false;
+  const fecha = new Date(fechaISO);
+  const ahora = new Date();
+  if (range === "este-mes") return fecha.getFullYear() === ahora.getFullYear() && fecha.getMonth() === ahora.getMonth();
+  if (range === "anio") return fecha.getFullYear() === ahora.getFullYear();
+  const dias = range === "semana" ? 7 : 90;
+  return ahora - fecha <= dias * 24 * 60 * 60 * 1000;
+}
+
+function StatsBlock({ pets }) {
   const [comuna, setComuna] = useState("Viña del Mar");
   const [range, setRange] = useState("este-mes");
 
-  const filtered = PETS.filter((p) => p.comuna === comuna);
+  const filtered = pets.filter((p) => p.comuna === comuna && enRango(p.fechaISO, range));
   const lost = filtered.filter((p) => p.status === "extraviada").length;
   const found = filtered.filter((p) => p.status === "encontrada").length;
   const reunited = filtered.filter((p) => p.status === "reunificada").length;
 
   const chartData = [
-    { name: "Extraviadas", value: lost + 8, fill: "#C46081" },
-    { name: "Encontradas", value: found + 5, fill: "#99A966" },
-    { name: "Reunificadas", value: reunited + 12, fill: "#EFB357" },
+    { name: "Extraviadas", value: lost, fill: "#C46081" },
+    { name: "Encontradas", value: found, fill: "#99A966" },
+    { name: "Reunificadas", value: reunited, fill: "#EFB357" },
   ];
 
   return (
@@ -84,9 +96,9 @@ function StatsBlock() {
             {/* Numbers */}
             <div className="grid grid-cols-3 gap-4">
               {[
-                { label: "Extraviadas", count: lost + 8, color: "#C46081", bg: "bg-[#C46081]" },
-                { label: "Encontradas", count: found + 5, color: "#99A966", bg: "bg-[#99A966]" },
-                { label: "Reunificadas", count: reunited + 12, color: "#EFB357", bg: "bg-[#EFB357]" },
+                { label: "Extraviadas", count: lost, color: "#C46081", bg: "bg-[#C46081]" },
+                { label: "Encontradas", count: found, color: "#99A966", bg: "bg-[#99A966]" },
+                { label: "Reunificadas", count: reunited, color: "#EFB357", bg: "bg-[#EFB357]" },
               ].map((s) => (
                 <div key={s.label} className="bg-white rounded-3xl p-5 text-center shadow-sm">
                   <div
@@ -132,8 +144,29 @@ export default function Home() {
   const [searchSpecies, setSearchSpecies] = useState("");
   const [heroComuna, setHeroComuna] = useState("Viña del Mar, Valparaíso");
 
-  const recentPets = PETS.filter((p) => p.status !== "reunificada").slice(0, 4);
-  const reunitedPets = PETS.filter((p) => p.status === "reunificada");
+  const [pets, setPets] = useState([]);
+  const [cargando, setCargando] = useState(true);
+
+  useEffect(() => {
+    let cancelado = false;
+    obtenerMascotas()
+      .then((data) => {
+        if (!cancelado) setPets(data);
+      })
+      .catch(() => {
+        if (!cancelado) setPets([]);
+      })
+      .finally(() => {
+        if (!cancelado) setCargando(false);
+      });
+    return () => {
+      cancelado = true;
+    };
+  }, []);
+
+  // el API ya viene ordenado por fecha desc, así que "recientes" = las primeras activas
+  const recentPets = pets.filter((p) => p.status !== "reunificada").slice(0, 4);
+  const reunitedPets = pets.filter((p) => p.status === "reunificada").slice(0, 6);
 
   const handleReport = () => {
     if (!user) navigate("/login?redirect=/reportar");
@@ -294,6 +327,9 @@ export default function Home() {
               <PetCard key={pet.id} pet={pet} />
             ))}
           </div>
+          {!cargando && recentPets.length === 0 && (
+            <p className="text-center text-[#8a7a80] py-6">Aún no hay reportes activos.</p>
+          )}
         </div>
       </section>
 
@@ -341,7 +377,7 @@ export default function Home() {
       </section>
 
       {/* STATS BLOCK */}
-      <StatsBlock />
+      <StatsBlock pets={pets} />
 
       {/* REUNITED */}
       <section className="py-16 bg-[#FFECF2]">
@@ -355,6 +391,9 @@ export default function Home() {
               <PetCard key={pet.id} pet={pet} />
             ))}
           </div>
+          {!cargando && reunitedPets.length === 0 && (
+            <p className="text-center text-[#8a7a80] py-6">Cuando una mascota vuelva a casa, aparecerá aquí.</p>
+          )}
         </div>
       </section>
 

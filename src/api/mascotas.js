@@ -35,13 +35,16 @@ function mapMascota(m) {
     // el backend no tiene un campo de sector/dirección, solo coordenadas
     sector: "—",
     // ms-mascotas devuelve la ubicación redondeada (~1 km) por privacidad
+    // fecha cruda (ISO) para filtrar por rango en las estadísticas del Home
+    fechaISO: m.fecha ?? null,
     lat: m.ubicacion?.latitud ?? null,
     lng: m.ubicacion?.longitud ?? null,
   };
 }
 
+// más recientes primero; size alto porque el Home cuenta reunificadas por comuna/fecha
 export async function obtenerMascotas() {
-  const response = await fetch(`${API_URL}/api/v1/mascotas`);
+  const response = await fetch(`${API_URL}/api/v1/mascotas?size=200&sort=fecha,desc`);
   if (!response.ok) {
     throw new Error(`Error al obtener mascotas: ${response.status}`);
   }
