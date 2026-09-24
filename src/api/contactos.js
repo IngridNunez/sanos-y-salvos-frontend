@@ -4,7 +4,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 export async function contactarPorMascota({ mascotaId, nombre, email, telefono, mensaje }) {
   const response = await fetch(`${API_URL}/api/v1/contactos`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", "X-Requested-With": "web" },
     body: JSON.stringify({
       mascotaId,
       nombreContacto: nombre,

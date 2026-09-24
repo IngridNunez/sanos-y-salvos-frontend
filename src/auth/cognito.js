@@ -8,8 +8,31 @@ const logoutUri = import.meta.env.VITE_COGNITO_LOGOUT_URI;
 const scope = import.meta.env.VITE_COGNITO_SCOPE || "openid email profile";
 const userPoolId = import.meta.env.VITE_COGNITO_USER_POOL_ID;
 
+/* amazon-cognito-identity-js guarda sus tokens solo en localStorage por
+ * defecto durante el SRP handshake. Con un Storage en memoria (se pierde al
+ * recargar la página) evitamos que queden ahí — los tokens que igual
+ * necesitamos se sacan del callback onSuccess y se mandan al bff, que es
+ * quien los persiste como cookie httpOnly. */
+class MemoryStorage {
+  constructor() {
+    this.datos = {};
+  }
+  getItem(clave) {
+    return Object.prototype.hasOwnProperty.call(this.datos, clave) ? this.datos[clave] : null;
+  }
+  setItem(clave, valor) {
+    this.datos[clave] = valor;
+  }
+  removeItem(clave) {
+    delete this.datos[clave];
+  }
+  clear() {
+    this.datos = {};
+  }
+}
+
 /* login con correo/contraseña directo contra Cognito (SRP, sin Hosted UI) */
-const userPool = new CognitoUserPool({ UserPoolId: userPoolId, ClientId: clientId });
+const userPool = new CognitoUserPool({ UserPoolId: userPoolId, ClientId: clientId, Storage: new MemoryStorage() });
 
 /* Cognito manda sus errores en ingles (err.code identifica el tipo); se traducen los mas comunes */
 const MENSAJES_ERROR = {

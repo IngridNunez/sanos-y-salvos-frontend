@@ -68,8 +68,8 @@ const FOTO_PLACEHOLDER = {
   OTRO: "https://images.unsplash.com/photo-1585110396000-c9ffd4e4b308?w=600&h=600&fit=crop&auto=format",
 };
 
-/* form: lo que junta ReportForm.jsx | tab: "extraviada" | "encontrada" | tokens: {accessToken, idToken, refreshToken} */
-export async function crearMascota(form, tab, tokens, correoUsuario) {
+/* form: lo que junta ReportForm.jsx | tab: "extraviada" | "encontrada" */
+export async function crearMascota(form, tab, correoUsuario) {
   const tipoMascota = SPECIES_A_TIPO[form.species] ?? "OTRO";
 
   const caracteristicas = {};
@@ -91,11 +91,10 @@ export async function crearMascota(form, tab, tokens, correoUsuario) {
 
   const response = await fetch(`${API_URL}/api/v1/mascotas`, {
     method: "POST",
+    credentials: "include", /* manda la cookie de sesion en vez de armar el header a mano */
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${tokens.accessToken}`,
-      "X-Id-Token": `Bearer ${tokens.idToken}`,
-      "X-Refresh-Token": tokens.refreshToken,
+      "X-Requested-With": "web",
     },
     body: JSON.stringify(body),
   });

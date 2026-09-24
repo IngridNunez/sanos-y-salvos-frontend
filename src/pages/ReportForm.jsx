@@ -6,7 +6,7 @@ import { useAuth } from "@/context/AuthContext";
 
 export default function ReportForm() {
   const navigate = useNavigate();
-  const { user, accessToken, idToken, refreshToken } = useAuth();
+  const { user, cargandoSesion } = useAuth();
   const [tab, setTab] = useState("extraviada");
   const [submitted, setSubmitted] = useState(false);
   const [photoPreview, setPhotoPreview] = useState(null);
@@ -16,8 +16,10 @@ export default function ReportForm() {
   const [errorEnvio, setErrorEnvio] = useState(null);
 
   useEffect(() => {
-    if (!user) navigate("/login?redirect=/reportar", { replace: true });
-  }, [user, navigate]);
+    /* espera a que termine de preguntarle al bff si hay sesion activa antes
+     * de redirigir — si no, redirige de una aunque el usuario si este logueado */
+    if (!cargandoSesion && !user) navigate("/login?redirect=/reportar", { replace: true });
+  }, [user, cargandoSesion, navigate]);
 
   const [form, setForm] = useState({
     name: "",
@@ -60,7 +62,7 @@ export default function ReportForm() {
     setEnviando(true);
     setErrorEnvio(null);
     try {
-      await crearMascota(form, tab, { accessToken, idToken, refreshToken }, user.email);
+      await crearMascota(form, tab, user.email);
       setSubmitted(true);
     } catch (err) {
       setErrorEnvio(err.message);

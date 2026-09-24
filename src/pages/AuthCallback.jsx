@@ -15,8 +15,8 @@ export default function AuthCallback() {
     ranOnce.current = true;
 
     handleAuthCallback(searchParams)
-      .then(({ tokens, redirectTo }) => {
-        loginWithTokens(tokens);
+      .then(async ({ tokens, redirectTo }) => {
+        await loginWithTokens(tokens);
         navigate(redirectTo, { replace: true });
       })
       .catch((err) => setError(err.message));

@@ -39,7 +39,7 @@ export default function Login() {
     setError(null);
     try {
       const tokens = await loginConCorreo(email, password);
-      loginWithTokens(tokens);
+      await loginWithTokens(tokens);
       navigate(redirect, { replace: true });
     } catch (err) {
       setError(err.message);
@@ -78,7 +78,7 @@ export default function Login() {
       await confirmarRegistro(email, codigo);
       // cuenta ya verificada: logueamos directo con las mismas credenciales
       const tokens = await loginConCorreo(email, password);
-      loginWithTokens(tokens);
+      await loginWithTokens(tokens);
       navigate(redirect, { replace: true });
     } catch (err) {
       setError(err.message);
