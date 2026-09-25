@@ -10,7 +10,7 @@ export default function PetDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [showContact, setShowContact] = useState(false);
-  const { user, accessToken, idToken, refreshToken } = useAuth();
+  const { user } = useAuth();
   const [esDueno, setEsDueno] = useState(false);
   const [actualizando, setActualizando] = useState(false);
   const [errorEstado, setErrorEstado] = useState(null);
@@ -40,9 +40,9 @@ export default function PetDetail() {
   }, [id]);
 
   useEffect(() => {
-    if (!user || !accessToken) return;
+    if (!user) return;
     let cancelado = false;
-    obtenerIdsMisMascotas({ accessToken, idToken, refreshToken })
+    obtenerIdsMisMascotas()
       .then((ids) => {
         if (!cancelado) setEsDueno(ids.has(id));
       })
@@ -52,14 +52,14 @@ export default function PetDetail() {
     return () => {
       cancelado = true;
     };
-  }, [id, user, accessToken, idToken, refreshToken]);
+  }, [id, user]);
 
   const marcarReunificada = async () => {
     if (!window.confirm(`¿Confirmas que ${pet.name} ya fue encontrada y reunida con su familia?`)) return;
     setActualizando(true);
     setErrorEstado(null);
     try {
-      const actualizada = await cambiarEstadoMascota(id, "REUNIFICADO", { accessToken, idToken, refreshToken });
+      const actualizada = await cambiarEstadoMascota(id, "REUNIFICADO");
       setPet(actualizada);
     } catch (err) {
       setErrorEstado(err.message);

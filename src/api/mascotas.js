@@ -116,20 +116,18 @@ export async function crearMascota(form, tab, correoUsuario) {
   return mapMascota(await response.json());
 }
 
-function authHeaders(tokens) {
-  return {
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${tokens.accessToken}`,
-    "X-Id-Token": `Bearer ${tokens.idToken}`,
-    "X-Refresh-Token": tokens.refreshToken,
-  };
-}
+/* la sesión viaja en cookies httpOnly: solo hay que incluirlas (y el header anti-CSRF en escrituras) */
+const headersSesion = {
+  "Content-Type": "application/json",
+  "X-Requested-With": "web",
+};
 
 /* ids de las mascotas que reportó el usuario logueado — el listado público no trae
  * usuarioId (privacidad), así que "soy el dueño" se resuelve con /mis-mascotas */
-export async function obtenerIdsMisMascotas(tokens) {
+export async function obtenerIdsMisMascotas() {
   const response = await fetch(`${API_URL}/api/v1/mascotas/mis-mascotas?size=200`, {
-    headers: authHeaders(tokens),
+    credentials: "include",
+    headers: headersSesion,
   });
   if (!response.ok) {
     throw new Error(`Error al obtener tus mascotas: ${response.status}`);
@@ -139,10 +137,11 @@ export async function obtenerIdsMisMascotas(tokens) {
 }
 
 /* estado: "EXTRAVIADO" | "ENCONTRADO" | "REUNIFICADO" — solo el dueño puede (lo valida ms-mascotas) */
-export async function cambiarEstadoMascota(id, estado, tokens) {
+export async function cambiarEstadoMascota(id, estado) {
   const response = await fetch(`${API_URL}/api/v1/mascotas/${id}/estado`, {
     method: "PATCH",
-    headers: authHeaders(tokens),
+    credentials: "include",
+    headers: headersSesion,
     body: JSON.stringify({ estado }),
   });
   if (!response.ok) {
