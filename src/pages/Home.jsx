@@ -54,6 +54,22 @@ function StatsBlock({ pets }) {
   const found = filtered.filter((p) => p.status === "encontrada").length;
   const reunited = filtered.filter((p) => p.status === "reunificada").length;
 
+  // Efectividad: de TODO lo reportado en el período (sin importar su estado
+  // actual), cuánto terminó reunificado. tipoReporte es el origen del reporte
+  // y no cambia aunque el estado sí — así una mascota reunificada sigue
+  // contando hacia "perdidas" o "encontradas" según cómo se reportó al inicio.
+  const reportadas = filtered.length;
+  const efectividad = reportadas > 0 ? Math.round((reunited / reportadas) * 100) : 0;
+
+  const porOrigen = (origen) => {
+    const total = filtered.filter((p) => p.tipoReporte === origen).length;
+    const vueltas = filtered.filter((p) => p.tipoReporte === origen && p.status === "reunificada").length;
+    return { total, vueltas, pct: total > 0 ? Math.round((vueltas / total) * 100) : 0 };
+  };
+  const origenPerdidas = porOrigen("extraviada");
+  const origenEncontradas = porOrigen("encontrada");
+  const hayDatosDeOrigen = origenPerdidas.total + origenEncontradas.total > 0;
+
   const chartData = [
     { name: "Extraviadas", value: lost, fill: "#C46081" },
     { name: "Encontradas", value: found, fill: "#99A966" },
@@ -90,6 +106,42 @@ function StatsBlock({ pets }) {
               <option value="tres-meses">Últimos 3 meses</option>
               <option value="anio">Este año</option>
             </select>
+          </div>
+
+          {/* Efectividad: el indicador central del negocio — de todo lo reportado,
+              qué porcentaje volvió a casa. Antes esta sección no calculaba esto:
+              solo mostraba la foto actual (extraviadas/encontradas/reunificadas),
+              sin decir "de cuántas" se logró reunificar. */}
+          <div className="rounded-3xl p-6 md:p-8 mb-6 text-center bg-gradient-to-br from-[#EFB357] to-[#e6a23f] text-white">
+            <p className="text-sm font-semibold text-white/85 mb-1">Efectividad de reunificación</p>
+            <p className="text-5xl font-black mb-1">{efectividad}%</p>
+            <p className="text-sm text-white/85">
+              {reportadas === 0
+                ? "Sin reportes en este período y comuna"
+                : `${reunited} de ${reportadas} mascotas reportadas volvieron a casa`}
+            </p>
+            {hayDatosDeOrigen && (
+              <div className="grid sm:grid-cols-2 gap-3 mt-5 max-w-md mx-auto">
+                <div className="bg-white/15 rounded-2xl p-3">
+                  <p className="text-xs text-white/80">Reportadas perdidas</p>
+                  <p className="font-black text-lg">
+                    {origenPerdidas.pct}%{" "}
+                    <span className="font-normal text-xs text-white/80">
+                      ({origenPerdidas.vueltas}/{origenPerdidas.total})
+                    </span>
+                  </p>
+                </div>
+                <div className="bg-white/15 rounded-2xl p-3">
+                  <p className="text-xs text-white/80">Reportadas encontradas</p>
+                  <p className="font-black text-lg">
+                    {origenEncontradas.pct}%{" "}
+                    <span className="font-normal text-xs text-white/80">
+                      ({origenEncontradas.vueltas}/{origenEncontradas.total})
+                    </span>
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">

@@ -32,13 +32,18 @@ function mapMascota(m) {
     color: c.color ?? "—",
     pattern: c.patron ?? c.patrón ?? "—",
     size: c.tamaño ?? c.tamano ?? null,
-    // el backend no tiene un campo de sector/dirección, solo coordenadas
-    sector: "—",
+    // ms-mascotas no tiene un campo propio de sector/dirección (solo comuna +
+    // coordenadas), así que viaja dentro de caracteristicas, igual que
+    // raza/color/patrón — no se busca por él, solo se muestra.
+    sector: c.sector || "—",
     // ms-mascotas devuelve la ubicación redondeada (~1 km) por privacidad
     // fecha cruda (ISO) para filtrar por rango en las estadísticas del Home
     fechaISO: m.fecha ?? null,
     lat: m.ubicacion?.latitud ?? null,
     lng: m.ubicacion?.longitud ?? null,
+    // origen del reporte (nunca cambia, aunque el estado sí) — null en
+    // mascotas ya reunificadas de antes de que ms-mascotas tuviera este campo
+    tipoReporte: ESTADO_A_STATUS[m.tipoReporte] ?? null,
   };
 }
 
@@ -83,6 +88,7 @@ export async function crearMascota(form, tab, correoUsuario) {
   if (form.color) caracteristicas.color = form.color;
   if (form.pattern) caracteristicas.patron = form.pattern;
   if (form.size) caracteristicas.tamaño = form.size;
+  if (form.sector) caracteristicas.sector = form.sector;
 
   const body = {
     tipoMascota,
