@@ -194,7 +194,10 @@ export default function Home() {
   const { user } = useAuth();
   const [searchComuna, setSearchComuna] = useState("");
   const [searchSpecies, setSearchSpecies] = useState("");
-  const [heroComuna, setHeroComuna] = useState("Viña del Mar, Valparaíso");
+  // "Viña del Mar" a secas: debe calzar exacto con un valor de COMUNAS y con
+  // pet.comuna (antes decía "Viña del Mar, Valparaíso", que no matcheaba
+  // ninguna opción del selector).
+  const [heroComuna, setHeroComuna] = useState("Viña del Mar");
 
   const [pets, setPets] = useState([]);
   const [cargando, setCargando] = useState(true);
@@ -219,6 +222,11 @@ export default function Home() {
   // el API ya viene ordenado por fecha desc, así que "recientes" = las primeras activas
   const recentPets = pets.filter((p) => p.status !== "reunificada").slice(0, 4);
   const reunitedPets = pets.filter((p) => p.status === "reunificada").slice(0, 6);
+
+  // Antes era un "2" fijo en el JSX, sin relación con la comuna elegida arriba.
+  const reunidasHeroEsteMes = pets.filter(
+    (p) => p.comuna === heroComuna && p.status === "reunificada" && enRango(p.fechaISO, "este-mes")
+  ).length;
 
   const handleReport = () => {
     if (!user) navigate("/login?redirect=/reportar");
@@ -312,7 +320,7 @@ export default function Home() {
                     <option key={c}>{c}</option>
                   ))}
                 </select>
-                <div className="text-3xl font-black text-[#C46081] leading-none">128</div>
+                <div className="text-3xl font-black text-[#C46081] leading-none">{reunidasHeroEsteMes}</div>
                 <div className="text-xs text-[#8a7a80] mt-0.5">mascotas reunidas este mes</div>
                 <div className="mt-2 text-[#C46081] text-lg">❤️</div>
               </div>
