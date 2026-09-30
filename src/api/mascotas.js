@@ -35,7 +35,7 @@ function mapMascota(m) {
     // ms-mascotas no tiene un campo propio de sector/dirección (solo comuna +
     // coordenadas), así que viaja dentro de caracteristicas, igual que
     // raza/color/patrón — no se busca por él, solo se muestra.
-    sector: c.sector || "—",
+    sector: c.sector || "", /* vacío si no se indicó: las pantallas muestran solo la comuna */
     // ms-mascotas devuelve la ubicación redondeada (~1 km) por privacidad
     // fecha cruda (ISO) para filtrar por rango en las estadísticas del Home
     fechaISO: m.fecha ?? null,
