@@ -182,7 +182,7 @@ export default function PetDetail() {
               <h2 className="font-bold text-[#2B2B2B] mb-3">Dónde fue vista</h2>
               <div className="flex items-center gap-2 text-sm">
                 <span className="text-[#C46081]">📍</span>
-                <span className="font-semibold text-[#2B2B2B]">{pet.sector}, {pet.comuna}</span>
+                <span className="font-semibold text-[#2B2B2B]">{[pet.sector, pet.comuna].filter(Boolean).join(", ")}</span>
               </div>
               <p className="text-xs text-[#8a7a80] mt-2">
                 La ubicación exacta se muestra solo de forma aproximada para proteger la privacidad.

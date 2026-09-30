@@ -26,7 +26,7 @@ export default function PetCard({ pet }) {
           <div className="space-y-1">
             <div className="flex items-center gap-1.5 text-xs text-[#8a7a80]">
               <span>📍</span>
-              <span className="truncate">{pet.sector}, {pet.comuna}</span>
+              <span className="truncate">{[pet.sector, pet.comuna].filter(Boolean).join(", ")}</span>
             </div>
             <div className="flex items-center gap-1.5 text-xs text-[#8a7a80]">
               <span>🗓</span>

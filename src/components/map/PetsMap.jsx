@@ -77,7 +77,7 @@ export default function PetsMap({ pets }) {
                   />
                   <div>
                     <div className="font-bold text-sm text-[#2B2B2B]">{pet.name}</div>
-                    <div className="text-xs text-[#8a7a80]">{pet.sector}, {pet.comuna}</div>
+                    <div className="text-xs text-[#8a7a80]">{[pet.sector, pet.comuna].filter(Boolean).join(", ")}</div>
                   </div>
                 </div>
               </Popup>
