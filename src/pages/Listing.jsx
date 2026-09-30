@@ -23,6 +23,18 @@ export default function Listing() {
   const [viewMode, setViewMode] = useState("grid");
   const [page, setPage] = useState(1);
 
+  /* al navegar entre links del menú (?status=extraviada → ?status=encontrada) React
+   * reutiliza esta página sin volver a montarla: se vuelven a leer los filtros de la URL */
+  const paramsKey = searchParams.toString();
+  const [prevParamsKey, setPrevParamsKey] = useState(paramsKey);
+  if (paramsKey !== prevParamsKey) {
+    setPrevParamsKey(paramsKey);
+    setFilterStatus(searchParams.get("status") || "");
+    setFilterComuna(searchParams.get("comuna") || "");
+    setFilterSpecies(searchParams.get("species") || "");
+    setPage(1);
+  }
+
   const [pets, setPets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
