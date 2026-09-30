@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { COMUNAS } from "@/data/pets";
-import { crearMascota } from "@/api/mascotas";
+import { crearMascota, subirFoto } from "@/api/mascotas";
 import LocationPicker from "@/components/map/LocationPicker";
 import { useAuth } from "@/context/AuthContext";
 
@@ -11,6 +11,7 @@ export default function ReportForm() {
   const [tab, setTab] = useState("extraviada");
   const [submitted, setSubmitted] = useState(false);
   const [photoPreview, setPhotoPreview] = useState(null);
+  const [photoFile, setPhotoFile] = useState(null);
   const [dragOver, setDragOver] = useState(false);
 
   const [enviando, setEnviando] = useState(false);
@@ -41,6 +42,7 @@ export default function ReportForm() {
   const handlePhoto = (file) => {
     const url = URL.createObjectURL(file);
     setPhotoPreview(url);
+    setPhotoFile(file);
   };
 
   const handleDrop = (e) => {
@@ -64,7 +66,8 @@ export default function ReportForm() {
     setEnviando(true);
     setErrorEnvio(null);
     try {
-      await crearMascota(form, tab, user.email);
+      const fotografiaUrl = photoFile ? await subirFoto(photoFile) : undefined;
+      await crearMascota(form, tab, user.email, fotografiaUrl);
       setSubmitted(true);
     } catch (err) {
       setErrorEnvio(err.message);
@@ -153,7 +156,7 @@ export default function ReportForm() {
                   />
                   <button
                     type="button"
-                    onClick={(e) => { e.stopPropagation(); setPhotoPreview(null); }}
+                    onClick={(e) => { e.stopPropagation(); setPhotoPreview(null); setPhotoFile(null); }}
                     className="absolute -top-2 -right-2 w-7 h-7 bg-[#C46081] text-white rounded-full text-xs font-bold flex items-center justify-center mx-auto"
                     style={{ left: "calc(50% + 52px)" }}
                   >

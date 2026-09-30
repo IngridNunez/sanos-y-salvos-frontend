@@ -72,15 +72,41 @@ export async function obtenerMascotaPorId(id) {
 const SPECIES_A_TIPO = { perro: "PERRO", gato: "GATO", otro: "OTRO" };
 const TAB_A_ESTADO = { extraviada: "EXTRAVIADO", encontrada: "ENCONTRADO" };
 
-// no hay subida de imagenes real todavia: se usa una foto de stock segun la especie
+// foto de stock segun la especie, para reportes sin foto propia
 const FOTO_PLACEHOLDER = {
   PERRO: "https://images.unsplash.com/photo-1547482354-89d4259dbc4b?w=600&h=600&fit=crop&auto=format",
   GATO: "https://images.unsplash.com/photo-1682839764237-2f7f7515f252?w=600&h=600&fit=crop&auto=format",
   OTRO: "https://images.unsplash.com/photo-1585110396000-c9ffd4e4b308?w=600&h=600&fit=crop&auto=format",
 };
 
-/* form: lo que junta ReportForm.jsx | tab: "extraviada" | "encontrada" */
-export async function crearMascota(form, tab, correoUsuario) {
+/* mismos limites que valida ms-mascotas al firmar la URL (S3Service) */
+const EXTENSION_POR_TIPO = { "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp" };
+const MAX_FOTO_BYTES = 5 * 1024 * 1024;
+
+/* sube la foto directo a S3 con una URL firmada que entrega ms-mascotas; devuelve la URL publica del objeto */
+export async function subirFoto(file) {
+  const extension = EXTENSION_POR_TIPO[file.type];
+  if (!extension) throw new Error("La foto debe ser JPG, PNG o WEBP.");
+  if (file.size > MAX_FOTO_BYTES) throw new Error("La foto no puede pesar más de 5 MB.");
+
+  const params = new URLSearchParams({
+    fileName: `foto.${extension}`, /* nombre fijo: el original puede traer caracteres que S3Service rechaza */
+    contentType: file.type,
+    fileSize: String(file.size),
+  });
+  const firma = await fetch(`${API_URL}/api/v1/mascotas/presigned-url?${params}`, { credentials: "include" });
+  if (!firma.ok) throw new Error(`No se pudo preparar la subida de la foto (${firma.status}).`);
+  const { url } = await firma.json();
+
+  /* va directo a S3, sin cookies: la URL firmada ya trae la autorizacion */
+  const subida = await fetch(url, { method: "PUT", headers: { "Content-Type": file.type }, body: file });
+  if (!subida.ok) throw new Error(`No se pudo subir la foto (${subida.status}).`);
+
+  return url.split("?")[0];
+}
+
+/* form: lo que junta ReportForm.jsx | tab: "extraviada" | "encontrada" | fotografiaUrl: resultado de subirFoto (opcional) */
+export async function crearMascota(form, tab, correoUsuario, fotografiaUrl) {
   const tipoMascota = SPECIES_A_TIPO[form.species] ?? "OTRO";
 
   const caracteristicas = {};
@@ -93,7 +119,7 @@ export async function crearMascota(form, tab, correoUsuario) {
   const body = {
     tipoMascota,
     nombre: form.name,
-    fotografia: FOTO_PLACEHOLDER[tipoMascota],
+    fotografia: fotografiaUrl ?? FOTO_PLACEHOLDER[tipoMascota],
     estado: TAB_A_ESTADO[tab] ?? "EXTRAVIADO",
     comuna: form.comuna,
     descripcion: form.description,
