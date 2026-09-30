@@ -2,7 +2,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { buildLogoutUrl, decodeIdToken } from "@/auth/cognito";
 
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = import.meta.env.VITE_API_URL ?? ""; /* vacío en producción: /api va por el rewrite del mismo dominio */
 
 /* Los tokens ya no se guardan en el frontend (ni en localStorage ni en este
  * contexto): el bff los recibe una vez en /auth/session y los devuelve como

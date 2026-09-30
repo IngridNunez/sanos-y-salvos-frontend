@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = import.meta.env.VITE_API_URL ?? ""; /* vacío en producción: /api va por el rewrite del mismo dominio */
 
 const ESTADO_A_STATUS = {
   EXTRAVIADO: "extraviada",
