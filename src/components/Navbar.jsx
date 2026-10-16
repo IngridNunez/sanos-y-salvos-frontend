@@ -75,6 +75,12 @@ export default function Navbar() {
           <div className="hidden lg:flex items-center gap-2">
             {user ? (
               <>
+                <Link
+                  to="/admin"
+                  className="px-4 py-2 text-[#C46081] text-sm font-bold rounded-2xl hover:bg-[#FFECF2] transition-colors"
+                >
+                  Administración
+                </Link>
                 <button
                   onClick={handleReport}
                   className="px-4 py-2 bg-[#C46081] text-white text-sm font-bold rounded-2xl hover:bg-[#a84e6c] transition-colors"
@@ -132,6 +138,13 @@ export default function Navbar() {
           <div className="pt-2 flex flex-col gap-2">
             {user ? (
               <>
+                <Link
+                  to="/admin"
+                  className="block px-3 py-2.5 text-sm font-bold rounded-xl text-[#C46081] hover:bg-[#FFECF2]"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  Administración
+                </Link>
                 <button
                   onClick={() => { handleReport(); setMobileOpen(false); }}
                   className="px-4 py-2.5 bg-[#C46081] text-white text-sm font-bold rounded-2xl"
