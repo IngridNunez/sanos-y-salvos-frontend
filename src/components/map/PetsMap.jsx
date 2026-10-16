@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import { MapContainer, TileLayer, Marker, Popup, Circle } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import "@/lib/leafletSetup";
-import { createPetIcon, STATUS_COLORS } from "./petIcon";
+import { createPetIcon, createUserLocationIcon, STATUS_COLORS } from "./petIcon";
 
 // Centro por defecto: región de Valparaíso, donde vive todo el dataset de
 // ejemplo. Cuando haya reportes reales, conviene centrar según la comuna
@@ -16,16 +16,17 @@ const DEFAULT_ZOOM = 11;
 // solo para reportes activos, una reunificación ya no genera alerta.
 const RADIO_ALERTA_METROS = 3000;
 
-export default function PetsMap({ pets }) {
+export default function PetsMap({ pets, userLocation, radioBusquedaKm }) {
   const navigate = useNavigate();
   const [showAlertRadius, setShowAlertRadius] = useState(true);
 
   const center = useMemo(() => {
+    if (userLocation) return [userLocation.lat, userLocation.lng];
     if (pets.length === 0) return DEFAULT_CENTER;
     const lat = pets.reduce((sum, p) => sum + p.lat, 0) / pets.length;
     const lng = pets.reduce((sum, p) => sum + p.lng, 0) / pets.length;
     return [lat, lng];
-  }, [pets]);
+  }, [pets, userLocation]);
 
   return (
     <div className="rounded-3xl overflow-hidden shadow-sm relative isolate" style={{ height: 480 }}>
@@ -48,6 +49,21 @@ export default function PetsMap({ pets }) {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
+
+        {userLocation && (
+          <>
+            <Marker position={[userLocation.lat, userLocation.lng]} icon={createUserLocationIcon()}>
+              <Popup>Tú estás aquí</Popup>
+            </Marker>
+            {radioBusquedaKm && (
+              <Circle
+                center={[userLocation.lat, userLocation.lng]}
+                radius={radioBusquedaKm * 1000}
+                pathOptions={{ color: "#3B82F6", fillColor: "#3B82F6", fillOpacity: 0.04, weight: 1, dashArray: "6 6" }}
+              />
+            )}
+          </>
+        )}
 
         {pets.map((pet) => (
           <div key={pet.id}>
