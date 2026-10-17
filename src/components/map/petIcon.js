@@ -31,3 +31,20 @@ export function createPetIcon({ status, species }) {
     popupAnchor: [0, -32],
   });
 }
+
+// Marca la ubicación real de quien está mirando el mapa (distinto de los
+// pines de mascotas, para que no se confundan con un reporte).
+export function createUserLocationIcon() {
+  return L.divIcon({
+    className: "",
+    html: `
+      <div style="
+        width:18px;height:18px;border-radius:50%;
+        background:#3B82F6;border:3px solid white;
+        box-shadow:0 0 0 4px rgba(59,130,246,0.25), 0 2px 6px rgba(0,0,0,0.35);
+      "></div>`,
+    iconSize: [18, 18],
+    iconAnchor: [9, 9],
+    popupAnchor: [0, -12],
+  });
+}

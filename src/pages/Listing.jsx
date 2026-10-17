@@ -2,11 +2,14 @@ import { useState, useMemo, useEffect } from "react";
 import { useSearchParams } from "react-router";
 import { COMUNAS } from "@/data/pets";
 import { obtenerMascotas } from "@/api/mascotas";
+import { obtenerAlertasPorZona } from "@/api/alertas";
+import { solicitarUbicacionActual } from "@/lib/geolocation";
 import PetCard from "@/components/PetCard";
 import StatusBadge from "@/components/StatusBadge";
 import PetsMap from "@/components/map/PetsMap";
 
 const PAGE_SIZE = 6;
+const RADIO_CERCA_DE_MI_KM = 10;
 
 export default function Listing() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -39,6 +42,11 @@ export default function Listing() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const [userLocation, setUserLocation] = useState(null);
+  const [idsMascotasCercanas, setIdsMascotasCercanas] = useState(null);
+  const [buscandoCercania, setBuscandoCercania] = useState(false);
+  const [errorCercania, setErrorCercania] = useState(null);
+
   useEffect(() => {
     obtenerMascotas()
       .then(setPets)
@@ -46,14 +54,38 @@ export default function Listing() {
       .finally(() => setLoading(false));
   }, []);
 
+  const buscarCercaDeMi = async () => {
+    setErrorCercania(null);
+    setBuscandoCercania(true);
+    try {
+      // dispara el permiso nativo del navegador para compartir ubicación
+      const ubicacion = await solicitarUbicacionActual();
+      setUserLocation(ubicacion);
+      const alertas = await obtenerAlertasPorZona(ubicacion.lat, ubicacion.lng, RADIO_CERCA_DE_MI_KM);
+      setIdsMascotasCercanas(new Set(alertas.map((a) => a.mascotaId)));
+      setViewMode("map");
+    } catch (err) {
+      setErrorCercania(err.message);
+    } finally {
+      setBuscandoCercania(false);
+    }
+  };
+
+  const limpiarCercania = () => {
+    setUserLocation(null);
+    setIdsMascotasCercanas(null);
+    setErrorCercania(null);
+  };
+
   const filtered = useMemo(() => {
     return pets.filter((p) => {
+      if (idsMascotasCercanas && !idsMascotasCercanas.has(p.id)) return false;
       if (filterStatus && p.status !== filterStatus) return false;
       if (filterComuna && p.comuna !== filterComuna) return false;
       if (filterSpecies && p.species !== filterSpecies) return false;
       return true;
     });
-  }, [pets, filterStatus, filterComuna, filterSpecies]);
+  }, [pets, filterStatus, filterComuna, filterSpecies, idsMascotasCercanas]);
 
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
   const paged = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
@@ -75,6 +107,7 @@ export default function Listing() {
     setFilterDateTo("");
     setPage(1);
     setSearchParams({});
+    limpiarCercania();
   };
 
   return (
@@ -152,7 +185,7 @@ export default function Listing() {
         </div>
 
         {/* Results header */}
-        <div className="flex items-center justify-between mb-5">
+        <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
           <div className="text-sm text-[#8a7a80]">
             <span className="font-bold text-[#2B2B2B] text-base">{filtered.length}</span> mascotas encontradas
             {filterStatus && (
@@ -162,6 +195,22 @@ export default function Listing() {
             )}
           </div>
           <div className="flex gap-2">
+            {idsMascotasCercanas ? (
+              <button
+                onClick={limpiarCercania}
+                className="px-4 py-2 rounded-2xl border-2 border-[#C46081] text-[#C46081] font-semibold text-sm hover:bg-[#FFECF2] transition-colors"
+              >
+                📍 Viendo cerca de mí — quitar
+              </button>
+            ) : (
+              <button
+                onClick={buscarCercaDeMi}
+                disabled={buscandoCercania}
+                className="px-4 py-2 rounded-2xl border-2 border-[#f0d5df] text-[#2B2B2B] font-semibold text-sm hover:border-[#C46081] hover:text-[#C46081] transition-colors disabled:opacity-50"
+              >
+                {buscandoCercania ? "Obteniendo ubicación…" : "📍 Ver cerca de mí"}
+              </button>
+            )}
             <button
               onClick={() => setViewMode("grid")}
               className={`w-9 h-9 rounded-xl flex items-center justify-center text-lg transition-colors ${viewMode === "grid" ? "bg-[#C46081] text-white" : "bg-white text-[#8a7a80] hover:bg-[#FFECF2]"}`}
@@ -177,6 +226,10 @@ export default function Listing() {
           </div>
         </div>
 
+        {errorCercania && (
+          <p className="text-sm text-[#C46081] font-semibold mb-4">{errorCercania}</p>
+        )}
+
         {/* Content */}
         {loading ? (
           <div className="text-center py-24 bg-white rounded-3xl">
@@ -187,7 +240,11 @@ export default function Listing() {
             <p className="text-[#C46081] font-semibold">No se pudo conectar con el servidor: {error}</p>
           </div>
         ) : viewMode === "map" ? (
-          <PetsMap pets={filtered.filter((p) => p.lat != null && p.lng != null)} />
+          <PetsMap
+            pets={filtered.filter((p) => p.lat != null && p.lng != null)}
+            userLocation={userLocation}
+            radioBusquedaKm={idsMascotasCercanas ? RADIO_CERCA_DE_MI_KM : null}
+          />
         ) : filtered.length === 0 ? (
           <div className="text-center py-24 bg-white rounded-3xl">
             <div className="text-6xl mb-4">🔍</div>
