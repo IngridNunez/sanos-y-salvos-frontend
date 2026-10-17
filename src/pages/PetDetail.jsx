@@ -199,7 +199,11 @@ export default function PetDetail() {
                     disabled={actualizando}
                     className="w-full py-3.5 bg-[#99A966] text-white font-bold rounded-2xl hover:bg-[#83925a] transition-colors text-sm disabled:opacity-60"
                   >
-                    {actualizando ? "Guardando..." : "🎉 ¡Ya la encontré! Marcar como reunificada"}
+                    {actualizando
+                      ? "Guardando..."
+                      : pet.tipoReporte === "encontrada"
+                        ? "🎉 ¡Ya se la devolví a su dueño! Marcar como reunificada"
+                        : "🎉 ¡Ya la encontré! Marcar como reunificada"}
                   </button>
                   {errorEstado && <p className="text-xs text-[#C46081]">{errorEstado}</p>}
                 </div>

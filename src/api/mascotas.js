@@ -181,3 +181,23 @@ export async function cambiarEstadoMascota(id, estado) {
   }
   return mapMascota(await response.json());
 }
+
+/* pública (sin sesión): quien hace clic en el link del correo de contacto confirma
+ * la reunificación con el token — el token es la autorización, no hace falta login.
+ * Devuelve el resultado tal cual lo manda ms-mascotas: CONFIRMADA | YA_REUNIFICADA,
+ * o lanza con el status 404/410 para TOKEN_INVALIDO/TOKEN_EXPIRADO. */
+export async function confirmarReunificacion(id, token) {
+  const response = await fetch(`${API_URL}/api/v1/mascotas/${id}/confirmar-reunificacion`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "X-Requested-With": "web" },
+    body: JSON.stringify({ token }),
+  });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    const error = new Error(data.resultado || `No se pudo confirmar (${response.status})`);
+    error.status = response.status;
+    error.resultado = data.resultado;
+    throw error;
+  }
+  return data.resultado;
+}
