@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router";
 import { useAuth } from "@/context/AuthContext";
 
@@ -16,6 +16,17 @@ export default function Navbar() {
   const location = useLocation();
   const { user, logout } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [cuentaAbierta, setCuentaAbierta] = useState(false);
+  const cuentaRef = useRef(null);
+
+  useEffect(() => {
+    if (!cuentaAbierta) return;
+    const cerrarSiEsFuera = (e) => {
+      if (cuentaRef.current && !cuentaRef.current.contains(e.target)) setCuentaAbierta(false);
+    };
+    document.addEventListener("mousedown", cerrarSiEsFuera);
+    return () => document.removeEventListener("mousedown", cerrarSiEsFuera);
+  }, [cuentaAbierta]);
 
   const handleReport = () => {
     if (!user) {
@@ -75,18 +86,33 @@ export default function Navbar() {
           <div className="hidden xl:flex items-center gap-1.5 shrink-0">
             {user ? (
               <>
-                <Link
-                  to="/perfil"
-                  className="px-3 py-2 text-[#2B2B2B] text-sm font-semibold rounded-2xl whitespace-nowrap hover:text-[#C46081] hover:bg-[#FFECF2] transition-colors"
-                >
-                  👤 Perfil
-                </Link>
-                <Link
-                  to="/admin"
-                  className="px-3 py-2 text-[#C46081] text-sm font-bold rounded-2xl whitespace-nowrap hover:bg-[#FFECF2] transition-colors"
-                >
-                  Admin
-                </Link>
+                <div className="relative" ref={cuentaRef}>
+                  <button
+                    onClick={() => setCuentaAbierta((v) => !v)}
+                    className="px-3 py-2 text-[#2B2B2B] text-sm font-semibold rounded-2xl whitespace-nowrap hover:text-[#C46081] hover:bg-[#FFECF2] transition-colors flex items-center gap-1"
+                  >
+                    👤 Mi cuenta
+                    <span className={`text-[10px] transition-transform ${cuentaAbierta ? "rotate-180" : ""}`}>▾</span>
+                  </button>
+                  {cuentaAbierta && (
+                    <div className="absolute right-0 mt-2 w-44 bg-white rounded-2xl shadow-lg border border-[#f0d5df] py-1.5 z-50">
+                      <Link
+                        to="/perfil"
+                        onClick={() => setCuentaAbierta(false)}
+                        className="block px-4 py-2 text-sm font-semibold text-[#2B2B2B] hover:bg-[#FFECF2] hover:text-[#C46081]"
+                      >
+                        👤 Mi perfil
+                      </Link>
+                      <Link
+                        to="/admin"
+                        onClick={() => setCuentaAbierta(false)}
+                        className="block px-4 py-2 text-sm font-bold text-[#C46081] hover:bg-[#FFECF2]"
+                      >
+                        Administración
+                      </Link>
+                    </div>
+                  )}
+                </div>
                 <button
                   onClick={handleReport}
                   className="px-3 py-2 bg-[#C46081] text-white text-sm font-bold rounded-2xl whitespace-nowrap hover:bg-[#a84e6c] transition-colors"
