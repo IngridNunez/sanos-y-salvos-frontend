@@ -78,38 +78,38 @@ export default function AdminDashboard() {
   };
 
   if (cargandoSesion) {
-    return <div className="min-h-screen bg-[#FFECF2] flex items-center justify-center text-[#8a7a80]">Verificando sesión...</div>;
+    return <div className="min-h-screen bg-[var(--color-bg)] flex items-center justify-center text-[var(--color-muted)]">Verificando sesión...</div>;
   }
   if (!user) return <Navigate to="/login?redirect=/admin" replace />;
 
   const totalPaginas = Math.ceil(total / TAMANO_PAGINA);
 
   return (
-    <div className="min-h-screen bg-[#FFECF2] py-8">
+    <div className="min-h-screen bg-[var(--color-bg)] py-8">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <header className="mb-7">
-          <p className="mb-1 text-sm font-bold uppercase tracking-wider text-[#C46081]">Sanos y Salvos</p>
-          <h1 className="text-3xl font-black text-[#2B2B2B]">Panel de administración</h1>
-          <p className="mt-1 text-[#8a7a80]">Revisa los reportes antes de que aparezcan en la comunidad.</p>
+          <p className="mb-1 text-sm font-bold uppercase tracking-wider text-[var(--color-primary)]">Sanos y Salvos</p>
+          <h1 className="text-3xl font-black text-[var(--color-text)]">Panel de administración</h1>
+          <p className="mt-1 text-[var(--color-muted)]">Revisa los reportes antes de que aparezcan en la comunidad.</p>
         </header>
 
         <section className="overflow-hidden rounded-3xl bg-white shadow-sm">
-          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#f0d5df] px-5 py-5 sm:px-7">
+          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[var(--color-border)] px-5 py-5 sm:px-7">
             <div>
-              <h2 className="text-lg font-black text-[#2B2B2B]">Reportes</h2>
-              <p className="text-sm text-[#8a7a80]">{total} {total === 1 ? "reporte" : "reportes"}</p>
+              <h2 className="text-lg font-black text-[var(--color-text)]">Reportes</h2>
+              <p className="text-sm text-[var(--color-muted)]">{total} {total === 1 ? "reporte" : "reportes"}</p>
             </div>
             <button
               type="button"
               onClick={() => setRecarga((actual) => actual + 1)}
               disabled={cargando}
-              className="rounded-xl border border-[#f0d5df] px-4 py-2 text-sm font-bold text-[#C46081] hover:bg-[#FFECF2] disabled:opacity-50"
+              className="rounded-xl border border-[var(--color-border)] px-4 py-2 text-sm font-bold text-[var(--color-primary)] hover:bg-[var(--color-bg)] disabled:opacity-50"
             >
               Actualizar
             </button>
           </div>
 
-          <div className="flex gap-2 overflow-x-auto border-b border-[#f0d5df] px-5 sm:px-7" role="tablist" aria-label="Estado de moderación">
+          <div className="flex gap-2 overflow-x-auto border-b border-[var(--color-border)] px-5 sm:px-7" role="tablist" aria-label="Estado de moderación">
             {FILTROS.map((opcion) => (
               <button
                 key={opcion.id}
@@ -119,8 +119,8 @@ export default function AdminDashboard() {
                 onClick={() => { setFiltro(opcion); setPagina(0); }}
                 className={`whitespace-nowrap border-b-2 px-3 py-3 text-sm font-bold transition-colors ${
                   filtro.id === opcion.id
-                    ? "border-[#C46081] text-[#C46081]"
-                    : "border-transparent text-[#8a7a80] hover:text-[#2B2B2B]"
+                    ? "border-[var(--color-primary)] text-[var(--color-primary)]"
+                    : "border-transparent text-[var(--color-muted)] hover:text-[var(--color-text)]"
                 }`}
               >
                 {opcion.label}
@@ -135,29 +135,29 @@ export default function AdminDashboard() {
           )}
 
           {cargando ? (
-            <p className="px-6 py-14 text-center text-sm text-[#8a7a80]" role="status">Cargando reportes...</p>
+            <p className="px-6 py-14 text-center text-sm text-[var(--color-muted)]" role="status">Cargando reportes...</p>
           ) : mascotas.length === 0 ? (
             <div className="px-6 py-14 text-center">
               <p className="mb-2 text-4xl" aria-hidden="true">🐾</p>
-              <h3 className="font-bold text-[#2B2B2B]">No hay reportes {filtro.id === "pendiente" ? "pendientes" : filtro.id === "aprobada" ? "aprobados" : "rechazados"}</h3>
-              <p className="mt-1 text-sm text-[#8a7a80]">Cuando haya cambios, aparecerán aquí.</p>
+              <h3 className="font-bold text-[var(--color-text)]">No hay reportes {filtro.id === "pendiente" ? "pendientes" : filtro.id === "aprobada" ? "aprobados" : "rechazados"}</h3>
+              <p className="mt-1 text-sm text-[var(--color-muted)]">Cuando haya cambios, aparecerán aquí.</p>
             </div>
           ) : (
-            <div className="divide-y divide-[#f0d5df]">
+            <div className="divide-y divide-[var(--color-border)]">
               {mascotas.map((mascota) => (
                 <article key={mascota.id} className="grid gap-5 px-5 py-6 sm:grid-cols-[9rem_1fr] sm:px-7">
                   <div>
                     <img
                       src={mascota.photo}
                       alt={`Foto de ${mascota.name}`}
-                      className="h-36 w-full rounded-2xl bg-[#FFECF2] object-cover sm:h-36"
+                      className="h-36 w-full rounded-2xl bg-[var(--color-bg)] object-cover sm:h-36"
                       loading="lazy"
                     />
                     <a
                       href={mascota.photo}
                       target="_blank"
                       rel="noreferrer"
-                      className="mt-2 block text-center text-xs font-bold text-[#C46081] hover:underline"
+                      className="mt-2 block text-center text-xs font-bold text-[var(--color-primary)] hover:underline"
                     >
                       Abrir foto original
                     </a>
@@ -165,8 +165,8 @@ export default function AdminDashboard() {
                   <div className="min-w-0">
                     <div className="flex flex-wrap items-start justify-between gap-2">
                       <div>
-                        <h3 className="text-lg font-black text-[#2B2B2B]">{mascota.name}</h3>
-                        <p className="text-sm text-[#8a7a80]">
+                        <h3 className="text-lg font-black text-[var(--color-text)]">{mascota.name}</h3>
+                        <p className="text-sm text-[var(--color-muted)]">
                           {mascota.species} · {mascota.comuna || "Comuna no indicada"} · {fechaVisible(mascota.fechaISO)}
                         </p>
                       </div>
@@ -185,7 +185,7 @@ export default function AdminDashboard() {
                       {mascota.moderationStatus === "aprobada" && (
                         <Link
                           to={`/mascota/${encodeURIComponent(mascota.id)}`}
-                          className="rounded-xl border border-[#f0d5df] px-3 py-2 text-sm font-bold text-[#2B2B2B] hover:bg-[#FFECF2]"
+                          className="rounded-xl border border-[var(--color-border)] px-3 py-2 text-sm font-bold text-[var(--color-text)] hover:bg-[var(--color-bg)]"
                         >
                           Ver reporte público
                         </Link>
@@ -196,7 +196,7 @@ export default function AdminDashboard() {
                             type="button"
                             disabled={accionId !== null}
                             onClick={() => moderar(mascota, "aprobar")}
-                            className="rounded-xl bg-[#99A966] px-3 py-2 text-sm font-bold text-white hover:bg-[#7d8d52] disabled:opacity-50"
+                            className="rounded-xl bg-[var(--color-secondary)] px-3 py-2 text-sm font-bold text-white hover:bg-[#7d8d52] disabled:opacity-50"
                           >
                             Aprobar
                           </button>
@@ -204,7 +204,7 @@ export default function AdminDashboard() {
                             type="button"
                             disabled={accionId !== null}
                             onClick={() => moderar(mascota, "rechazar")}
-                            className="rounded-xl border border-[#C46081] px-3 py-2 text-sm font-bold text-[#C46081] hover:bg-[#FFECF2] disabled:opacity-50"
+                            className="rounded-xl border border-[var(--color-primary)] px-3 py-2 text-sm font-bold text-[var(--color-primary)] hover:bg-[var(--color-bg)] disabled:opacity-50"
                           >
                             Rechazar
                           </button>
@@ -226,21 +226,21 @@ export default function AdminDashboard() {
           )}
 
           {totalPaginas > 1 && (
-            <div className="flex items-center justify-between border-t border-[#f0d5df] px-5 py-4 sm:px-7">
+            <div className="flex items-center justify-between border-t border-[var(--color-border)] px-5 py-4 sm:px-7">
               <button
                 type="button"
                 disabled={pagina === 0 || cargando}
                 onClick={() => setPagina((actual) => actual - 1)}
-                className="rounded-xl px-3 py-2 text-sm font-bold text-[#C46081] disabled:text-[#cbbac0]"
+                className="rounded-xl px-3 py-2 text-sm font-bold text-[var(--color-primary)] disabled:text-[#cbbac0]"
               >
                 Anterior
               </button>
-              <span className="text-sm text-[#8a7a80]">Página {pagina + 1} de {totalPaginas}</span>
+              <span className="text-sm text-[var(--color-muted)]">Página {pagina + 1} de {totalPaginas}</span>
               <button
                 type="button"
                 disabled={pagina + 1 >= totalPaginas || cargando}
                 onClick={() => setPagina((actual) => actual + 1)}
-                className="rounded-xl px-3 py-2 text-sm font-bold text-[#C46081] disabled:text-[#cbbac0]"
+                className="rounded-xl px-3 py-2 text-sm font-bold text-[var(--color-primary)] disabled:text-[#cbbac0]"
               >
                 Siguiente
               </button>

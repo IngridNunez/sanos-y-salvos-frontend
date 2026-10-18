@@ -29,7 +29,7 @@ export default function InAppBrowserBanner() {
   };
 
   return (
-    <div className="bg-[#EFB357] text-[#2B2B2B] px-4 py-2.5 text-sm flex items-center justify-center gap-3 flex-wrap text-center">
+    <div className="bg-[var(--color-accent)] text-[var(--color-text)] px-4 py-2.5 text-sm flex items-center justify-center gap-3 flex-wrap text-center">
       <span>
         ⚠️ Estás usando el navegador dentro de la app (WhatsApp/Instagram) — algunas funciones como reportar una
         mascota pueden fallar acá. Abre este link en Safari o Chrome para que todo funcione bien.

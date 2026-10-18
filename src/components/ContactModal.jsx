@@ -35,14 +35,14 @@ export default function ContactModal({ petId, petName, onClose }) {
     >
       <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 pb-4 border-b border-[#f0d5df]">
+        <div className="flex items-center justify-between p-6 pb-4 border-b border-[var(--color-border)]">
           <div>
-            <h2 className="font-black text-xl text-[#2B2B2B]">Contactar</h2>
-            <p className="text-sm text-[#8a7a80]">sobre <span className="font-semibold text-[#C46081]">{petName}</span></p>
+            <h2 className="font-black text-xl text-[var(--color-text)]">Contactar</h2>
+            <p className="text-sm text-[var(--color-muted)]">sobre <span className="font-semibold text-[var(--color-primary)]">{petName}</span></p>
           </div>
           <button
             onClick={onClose}
-            className="w-9 h-9 rounded-2xl bg-[#FFECF2] text-[#C46081] text-lg font-bold flex items-center justify-center hover:bg-[#f5d5e1] transition-colors"
+            className="w-9 h-9 rounded-2xl bg-[var(--color-bg)] text-[var(--color-primary)] text-lg font-bold flex items-center justify-center hover:bg-[#f5d5e1] transition-colors"
           >
             ✕
           </button>
@@ -51,13 +51,13 @@ export default function ContactModal({ petId, petName, onClose }) {
         {sent ? (
           <div className="p-8 text-center">
             <div className="text-5xl mb-4">💌</div>
-            <h3 className="font-black text-xl text-[#2B2B2B] mb-2">¡Mensaje enviado!</h3>
-            <p className="text-[#8a7a80] text-sm mb-6">
+            <h3 className="font-black text-xl text-[var(--color-text)] mb-2">¡Mensaje enviado!</h3>
+            <p className="text-[var(--color-muted)] text-sm mb-6">
               El dueño/a recibirá tu mensaje pronto. Gracias por ayudar a reunir mascotas con sus familias.
             </p>
             <button
               onClick={onClose}
-              className="px-6 py-3 bg-[#C46081] text-white font-bold rounded-2xl hover:bg-[#a84e6c] transition-colors"
+              className="px-6 py-3 bg-[var(--color-primary)] text-white font-bold rounded-2xl hover:bg-[var(--color-primary-dark)] transition-colors"
             >
               Cerrar
             </button>
@@ -65,7 +65,7 @@ export default function ContactModal({ petId, petName, onClose }) {
         ) : (
           <form onSubmit={handleSubmit} className="p-6 space-y-4">
             <div>
-              <label className="block text-sm font-semibold text-[#2B2B2B] mb-1.5">
+              <label className="block text-sm font-semibold text-[var(--color-text)] mb-1.5">
                 Tu nombre *
               </label>
               <input
@@ -74,11 +74,11 @@ export default function ContactModal({ petId, petName, onClose }) {
                 placeholder="María González"
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
-                className="w-full px-4 py-3 rounded-2xl border-2 border-[#f0d5df] text-sm focus:outline-none focus:border-[#C46081] transition-colors"
+                className="w-full px-4 py-3 rounded-2xl border-2 border-[var(--color-border)] text-sm focus:outline-none focus:border-[var(--color-primary)] transition-colors"
               />
             </div>
             <div>
-              <label className="block text-sm font-semibold text-[#2B2B2B] mb-1.5">
+              <label className="block text-sm font-semibold text-[var(--color-text)] mb-1.5">
                 Correo electrónico *
               </label>
               <input
@@ -87,23 +87,23 @@ export default function ContactModal({ petId, petName, onClose }) {
                 placeholder="maria@ejemplo.cl"
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
-                className="w-full px-4 py-3 rounded-2xl border-2 border-[#f0d5df] text-sm focus:outline-none focus:border-[#C46081] transition-colors"
+                className="w-full px-4 py-3 rounded-2xl border-2 border-[var(--color-border)] text-sm focus:outline-none focus:border-[var(--color-primary)] transition-colors"
               />
             </div>
             <div>
-              <label className="block text-sm font-semibold text-[#2B2B2B] mb-1.5">
-                Teléfono <span className="text-[#8a7a80] font-normal">(opcional)</span>
+              <label className="block text-sm font-semibold text-[var(--color-text)] mb-1.5">
+                Teléfono <span className="text-[var(--color-muted)] font-normal">(opcional)</span>
               </label>
               <input
                 type="tel"
                 placeholder="+56 9 1234 5678"
                 value={form.phone}
                 onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                className="w-full px-4 py-3 rounded-2xl border-2 border-[#f0d5df] text-sm focus:outline-none focus:border-[#C46081] transition-colors"
+                className="w-full px-4 py-3 rounded-2xl border-2 border-[var(--color-border)] text-sm focus:outline-none focus:border-[var(--color-primary)] transition-colors"
               />
             </div>
             <div>
-              <label className="block text-sm font-semibold text-[#2B2B2B] mb-1.5">
+              <label className="block text-sm font-semibold text-[var(--color-text)] mb-1.5">
                 Mensaje *
               </label>
               <textarea
@@ -112,22 +112,22 @@ export default function ContactModal({ petId, petName, onClose }) {
                 placeholder="Creo haber visto a tu mascota en..."
                 value={form.message}
                 onChange={(e) => setForm({ ...form, message: e.target.value })}
-                className="w-full px-4 py-3 rounded-2xl border-2 border-[#f0d5df] text-sm focus:outline-none focus:border-[#C46081] transition-colors resize-none"
+                className="w-full px-4 py-3 rounded-2xl border-2 border-[var(--color-border)] text-sm focus:outline-none focus:border-[var(--color-primary)] transition-colors resize-none"
               />
             </div>
 
-            <div className="bg-[#FFECF2] rounded-2xl p-3 flex gap-2">
-              <span className="text-[#C46081] mt-0.5">🔒</span>
-              <p className="text-xs text-[#8a7a80]">
+            <div className="bg-[var(--color-bg)] rounded-2xl p-3 flex gap-2">
+              <span className="text-[var(--color-primary)] mt-0.5">🔒</span>
+              <p className="text-xs text-[var(--color-muted)]">
                 Tus datos de contacto no se muestran públicamente. Solo serán compartidos con el dueño/a de la mascota.
               </p>
             </div>
 
-            {error && <p className="text-xs text-[#C46081] font-semibold">{error}</p>}
+            {error && <p className="text-xs text-[var(--color-primary)] font-semibold">{error}</p>}
             <button
               type="submit"
               disabled={enviando}
-              className="w-full py-3.5 bg-[#C46081] text-white font-bold rounded-2xl hover:bg-[#a84e6c] transition-colors disabled:opacity-50"
+              className="w-full py-3.5 bg-[var(--color-primary)] text-white font-bold rounded-2xl hover:bg-[var(--color-primary-dark)] transition-colors disabled:opacity-50"
             >
               {enviando ? "Enviando..." : "Enviar mensaje"}
             </button>

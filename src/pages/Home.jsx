@@ -11,19 +11,19 @@ const VALUES = [
     icon: "📍",
     title: "Búsqueda por comuna",
     desc: "Filtra reportes por tu comuna y encuentra mascotas cerca de ti.",
-    color: "#C46081",
+    color: "var(--color-primary)",
   },
   {
     icon: "🤝",
     title: "Red comunitaria activa",
     desc: "Vecinos conectados que colaboran para reunir familias.",
-    color: "#99A966",
+    color: "var(--color-secondary)",
   },
   {
     icon: "🛡️",
     title: "Proceso seguro y confiable",
     desc: "Tus datos de contacto son privados. Solo comparte lo que quieras.",
-    color: "#EFB357",
+    color: "var(--color-accent)",
   },
 ];
 
@@ -71,26 +71,26 @@ function StatsBlock({ pets }) {
   const hayDatosDeOrigen = origenPerdidas.total + origenEncontradas.total > 0;
 
   const chartData = [
-    { name: "Extraviadas", value: lost, fill: "#C46081" },
-    { name: "Encontradas", value: found, fill: "#99A966" },
-    { name: "Reunificadas", value: reunited, fill: "#EFB357" },
+    { name: "Extraviadas", value: lost, fill: "var(--color-primary)" },
+    { name: "Encontradas", value: found, fill: "var(--color-secondary)" },
+    { name: "Reunificadas", value: reunited, fill: "var(--color-accent)" },
   ];
 
   return (
     <section className="py-16 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-10">
-          <h2 className="font-black text-3xl text-[#2B2B2B] mb-2">Reporte de Reunificaciones</h2>
-          <p className="text-[#8a7a80]">Estado de mascotas en tu comuna</p>
+          <h2 className="font-black text-3xl text-[var(--color-text)] mb-2">Reporte de Reunificaciones</h2>
+          <p className="text-[var(--color-muted)]">Estado de mascotas en tu comuna</p>
         </div>
 
-        <div className="bg-[#FFECF2] rounded-3xl p-6 md:p-8">
+        <div className="bg-[var(--color-bg)] rounded-3xl p-6 md:p-8">
           {/* Filters */}
           <div className="flex flex-wrap gap-3 mb-8">
             <select
               value={comuna}
               onChange={(e) => setComuna(e.target.value)}
-              className="px-4 py-2.5 rounded-2xl border-2 border-[#f0d5df] bg-white text-sm font-semibold text-[#2B2B2B] focus:outline-none focus:border-[#C46081]"
+              className="px-4 py-2.5 rounded-2xl border-2 border-[var(--color-border)] bg-white text-sm font-semibold text-[var(--color-text)] focus:outline-none focus:border-[var(--color-primary)]"
             >
               {COMUNAS.map((c) => (
                 <option key={c}>{c}</option>
@@ -99,7 +99,7 @@ function StatsBlock({ pets }) {
             <select
               value={range}
               onChange={(e) => setRange(e.target.value)}
-              className="px-4 py-2.5 rounded-2xl border-2 border-[#f0d5df] bg-white text-sm font-semibold text-[#2B2B2B] focus:outline-none focus:border-[#C46081]"
+              className="px-4 py-2.5 rounded-2xl border-2 border-[var(--color-border)] bg-white text-sm font-semibold text-[var(--color-text)] focus:outline-none focus:border-[var(--color-primary)]"
             >
               <option value="este-mes">Este mes</option>
               <option value="semana">Esta semana</option>
@@ -112,7 +112,7 @@ function StatsBlock({ pets }) {
               qué porcentaje volvió a casa. Antes esta sección no calculaba esto:
               solo mostraba la foto actual (extraviadas/encontradas/reunificadas),
               sin decir "de cuántas" se logró reunificar. */}
-          <div className="rounded-3xl p-6 md:p-8 mb-6 text-center bg-gradient-to-br from-[#EFB357] to-[#e6a23f] text-white">
+          <div className="rounded-3xl p-6 md:p-8 mb-6 text-center bg-gradient-to-br from-[var(--color-accent)] to-[#e6a23f] text-white">
             <p className="text-sm font-semibold text-white/85 mb-1">Efectividad de reunificación</p>
             <p className="text-5xl font-black mb-1">{efectividad}%</p>
             <p className="text-sm text-white/85">
@@ -148,9 +148,9 @@ function StatsBlock({ pets }) {
             {/* Numbers */}
             <div className="grid grid-cols-3 gap-4">
               {[
-                { label: "Extraviadas", count: lost, color: "#C46081", bg: "bg-[#C46081]" },
-                { label: "Encontradas", count: found, color: "#99A966", bg: "bg-[#99A966]" },
-                { label: "Reunificadas", count: reunited, color: "#EFB357", bg: "bg-[#EFB357]" },
+                { label: "Extraviadas", count: lost, color: "var(--color-primary)", bg: "bg-[var(--color-primary)]" },
+                { label: "Encontradas", count: found, color: "var(--color-secondary)", bg: "bg-[var(--color-secondary)]" },
+                { label: "Reunificadas", count: reunited, color: "var(--color-accent)", bg: "bg-[var(--color-accent)]" },
               ].map((s) => (
                 <div key={s.label} className="bg-white rounded-3xl p-5 text-center shadow-sm">
                   <div
@@ -159,7 +159,7 @@ function StatsBlock({ pets }) {
                   >
                     {s.count}
                   </div>
-                  <div className="text-xs font-semibold text-[#8a7a80]">{s.label}</div>
+                  <div className="text-xs font-semibold text-[var(--color-muted)]">{s.label}</div>
                 </div>
               ))}
             </div>
@@ -168,7 +168,7 @@ function StatsBlock({ pets }) {
             <div className="h-48">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={chartData} barSize={40}>
-                  <XAxis dataKey="name" tick={{ fontSize: 11, fill: "#8a7a80" }} axisLine={false} tickLine={false} />
+                  <XAxis dataKey="name" tick={{ fontSize: 11, fill: "var(--color-muted)" }} axisLine={false} tickLine={false} />
                   <YAxis hide />
                   <Tooltip
                     contentStyle={{ borderRadius: "1rem", border: "none", boxShadow: "0 4px 20px rgba(0,0,0,0.1)" }}
@@ -243,29 +243,29 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white">
       {/* HERO */}
-      <section className="relative bg-gradient-to-b from-[#FFECF2] to-white overflow-hidden pb-20 lg:pb-24">
+      <section className="relative bg-gradient-to-b from-[var(--color-bg)] to-white overflow-hidden pb-20 lg:pb-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
             {/* Left */}
             <div>
-              <h1 className="font-black text-4xl md:text-5xl text-[#2B2B2B] leading-tight mb-3">
+              <h1 className="font-black text-4xl md:text-5xl text-[var(--color-text)] leading-tight mb-3">
                 Porque su familia{" "}
-                <span className="text-[#C46081]">nunca deja de buscarlos</span>
+                <span className="text-[var(--color-primary)]">nunca deja de buscarlos</span>
               </h1>
-              <p className="text-[#8a7a80] text-lg mb-8 leading-relaxed max-w-lg">
+              <p className="text-[var(--color-muted)] text-lg mb-8 leading-relaxed max-w-lg">
                 Plataforma comunitaria que conecta personas, tecnología y amor para reunir mascotas perdidas con sus familias.
               </p>
 
               <div className="flex flex-wrap gap-3 mb-10">
                 <button
                   onClick={handleReport}
-                  className="flex items-center gap-2 px-6 py-3.5 bg-[#C46081] text-white font-bold rounded-2xl hover:bg-[#a84e6c] transition-all shadow-md shadow-[#C46081]/30 text-sm"
+                  className="flex items-center gap-2 px-6 py-3.5 bg-[var(--color-primary)] text-white font-bold rounded-2xl hover:bg-[var(--color-primary-dark)] transition-all shadow-md shadow-[var(--color-primary)]/30 text-sm"
                 >
                   <span>＋</span> Reportar Mascota Extraviada
                 </button>
                 <button
                   onClick={() => navigate("/buscar?status=encontrada")}
-                  className="flex items-center gap-2 px-6 py-3.5 border-2 border-[#C46081] text-[#C46081] font-bold rounded-2xl hover:bg-white transition-colors text-sm"
+                  className="flex items-center gap-2 px-6 py-3.5 border-2 border-[var(--color-primary)] text-[var(--color-primary)] font-bold rounded-2xl hover:bg-white transition-colors text-sm"
                 >
                   <span>🔍</span> Ver Mascotas Encontradas
                 </button>
@@ -282,7 +282,7 @@ export default function Home() {
                       {v.icon}
                     </div>
                     <div>
-                      <div className="font-bold text-sm text-[#2B2B2B] leading-tight">{v.title}</div>
+                      <div className="font-bold text-sm text-[var(--color-text)] leading-tight">{v.title}</div>
                     </div>
                   </div>
                 ))}
@@ -292,8 +292,8 @@ export default function Home() {
             {/* Right — dog image + floating card */}
             <div className="relative">
               {/* Decorative blobs */}
-              <div className="absolute -top-10 -right-10 w-64 h-64 bg-[#99A966]/15 rounded-full blur-3xl" />
-              <div className="absolute -bottom-10 -left-10 w-48 h-48 bg-[#C46081]/10 rounded-full blur-3xl" />
+              <div className="absolute -top-10 -right-10 w-64 h-64 bg-[var(--color-secondary)]/15 rounded-full blur-3xl" />
+              <div className="absolute -bottom-10 -left-10 w-48 h-48 bg-[var(--color-primary)]/10 rounded-full blur-3xl" />
 
               <div className="relative rounded-3xl overflow-hidden aspect-[4/3] shadow-xl">
                 <img
@@ -308,21 +308,21 @@ export default function Home() {
               {/* Floating community card */}
               <div className="absolute -bottom-10 sm:-bottom-14 -right-4 sm:-right-8 bg-white rounded-3xl shadow-xl p-4 min-w-[180px]">
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="text-[#C46081] text-sm">📍</span>
-                  <span className="text-xs text-[#8a7a80] font-semibold">Tu comunidad</span>
+                  <span className="text-[var(--color-primary)] text-sm">📍</span>
+                  <span className="text-xs text-[var(--color-muted)] font-semibold">Tu comunidad</span>
                 </div>
                 <select
                   value={heroComuna}
                   onChange={(e) => setHeroComuna(e.target.value)}
-                  className="text-xs font-bold text-[#2B2B2B] bg-transparent border-none w-full focus:outline-none mb-2 cursor-pointer"
+                  className="text-xs font-bold text-[var(--color-text)] bg-transparent border-none w-full focus:outline-none mb-2 cursor-pointer"
                 >
                   {COMUNAS.map((c) => (
                     <option key={c}>{c}</option>
                   ))}
                 </select>
-                <div className="text-3xl font-black text-[#C46081] leading-none">{reunidasHeroEsteMes}</div>
-                <div className="text-xs text-[#8a7a80] mt-0.5">mascotas reunidas este mes</div>
-                <div className="mt-2 text-[#C46081] text-lg">❤️</div>
+                <div className="text-3xl font-black text-[var(--color-primary)] leading-none">{reunidasHeroEsteMes}</div>
+                <div className="text-xs text-[var(--color-muted)] mt-0.5">mascotas reunidas este mes</div>
+                <div className="mt-2 text-[var(--color-primary)] text-lg">❤️</div>
               </div>
             </div>
           </div>
@@ -334,18 +334,18 @@ export default function Home() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-white rounded-3xl shadow-xl p-5 sm:p-6 flex flex-col sm:flex-row items-center gap-4">
             <div className="flex items-center gap-3 flex-1">
-              <div className="w-10 h-10 bg-[#FFECF2] rounded-2xl flex items-center justify-center text-[#C46081] text-lg shrink-0">
+              <div className="w-10 h-10 bg-[var(--color-bg)] rounded-2xl flex items-center justify-center text-[var(--color-primary)] text-lg shrink-0">
                 🔍
               </div>
               <div>
-                <div className="font-bold text-[#2B2B2B] text-sm">¿Viste una mascota?</div>
-                <div className="text-xs text-[#8a7a80]">Ayúdanos a encontrar a su familia.</div>
+                <div className="font-bold text-[var(--color-text)] text-sm">¿Viste una mascota?</div>
+                <div className="text-xs text-[var(--color-muted)]">Ayúdanos a encontrar a su familia.</div>
               </div>
             </div>
             <select
               value={searchComuna}
               onChange={(e) => setSearchComuna(e.target.value)}
-              className="px-4 py-3 rounded-2xl border-2 border-[#f0d5df] text-sm font-semibold text-[#2B2B2B] focus:outline-none focus:border-[#C46081] bg-white w-full sm:w-52"
+              className="px-4 py-3 rounded-2xl border-2 border-[var(--color-border)] text-sm font-semibold text-[var(--color-text)] focus:outline-none focus:border-[var(--color-primary)] bg-white w-full sm:w-52"
             >
               <option value="">📍 Selecciona tu comuna</option>
               {COMUNAS.map((c) => <option key={c} value={c}>{c}</option>)}
@@ -353,7 +353,7 @@ export default function Home() {
             <select
               value={searchSpecies}
               onChange={(e) => setSearchSpecies(e.target.value)}
-              className="px-4 py-3 rounded-2xl border-2 border-[#f0d5df] text-sm font-semibold text-[#2B2B2B] focus:outline-none focus:border-[#C46081] bg-white w-full sm:w-44"
+              className="px-4 py-3 rounded-2xl border-2 border-[var(--color-border)] text-sm font-semibold text-[var(--color-text)] focus:outline-none focus:border-[var(--color-primary)] bg-white w-full sm:w-44"
             >
               <option value="">🐾 Tipo de mascota</option>
               <option value="perro">🐕 Perro</option>
@@ -362,7 +362,7 @@ export default function Home() {
             </select>
             <button
               onClick={handleSearch}
-              className="px-6 py-3 bg-[#C46081] text-white font-bold rounded-2xl hover:bg-[#a84e6c] transition-colors flex items-center gap-2 shrink-0 text-sm w-full sm:w-auto justify-center"
+              className="px-6 py-3 bg-[var(--color-primary)] text-white font-bold rounded-2xl hover:bg-[var(--color-primary-dark)] transition-colors flex items-center gap-2 shrink-0 text-sm w-full sm:w-auto justify-center"
             >
               🔍 Buscar
             </button>
@@ -374,10 +374,10 @@ export default function Home() {
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between mb-8">
-            <h2 className="font-black text-2xl text-[#2B2B2B]">Reportes recientes</h2>
+            <h2 className="font-black text-2xl text-[var(--color-text)]">Reportes recientes</h2>
             <button
               onClick={() => navigate("/buscar")}
-              className="text-[#C46081] font-bold text-sm hover:underline flex items-center gap-1"
+              className="text-[var(--color-primary)] font-bold text-sm hover:underline flex items-center gap-1"
             >
               Ver todos →
             </button>
@@ -388,7 +388,7 @@ export default function Home() {
             ))}
           </div>
           {!cargando && recentPets.length === 0 && (
-            <p className="text-center text-[#8a7a80] py-6">Aún no hay reportes activos.</p>
+            <p className="text-center text-[var(--color-muted)] py-6">Aún no hay reportes activos.</p>
           )}
         </div>
       </section>
@@ -397,22 +397,22 @@ export default function Home() {
       <section id="como-funciona" className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="font-black text-3xl text-[#2B2B2B] mb-2">Cómo funciona</h2>
-            <p className="text-[#8a7a80]">4 pasos para reunir a tu mascota con su familia</p>
+            <h2 className="font-black text-3xl text-[var(--color-text)] mb-2">Cómo funciona</h2>
+            <p className="text-[var(--color-muted)]">4 pasos para reunir a tu mascota con su familia</p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {STEPS.map((step, i) => (
               <div key={step.num} className="text-center group">
                 <div className="relative inline-block mb-4">
-                  <div className="w-16 h-16 bg-[#FFECF2] rounded-3xl flex items-center justify-center text-3xl mx-auto group-hover:bg-[#C46081] group-hover:scale-110 transition-all duration-200">
+                  <div className="w-16 h-16 bg-[var(--color-bg)] rounded-3xl flex items-center justify-center text-3xl mx-auto group-hover:bg-[var(--color-primary)] group-hover:scale-110 transition-all duration-200">
                     {step.icon}
                   </div>
-                  <div className="absolute -top-2 -right-2 w-6 h-6 bg-[#C46081] text-white text-xs font-black rounded-full flex items-center justify-center">
+                  <div className="absolute -top-2 -right-2 w-6 h-6 bg-[var(--color-primary)] text-white text-xs font-black rounded-full flex items-center justify-center">
                     {step.num}
                   </div>
                 </div>
-                <h3 className="font-black text-lg text-[#2B2B2B] mb-2">{step.title}</h3>
-                <p className="text-sm text-[#8a7a80] leading-relaxed">{step.desc}</p>
+                <h3 className="font-black text-lg text-[var(--color-text)] mb-2">{step.title}</h3>
+                <p className="text-sm text-[var(--color-muted)] leading-relaxed">{step.desc}</p>
                 {i < STEPS.length - 1 && (
                   <div className="hidden lg:block absolute" />
                 )}
@@ -421,14 +421,14 @@ export default function Home() {
           </div>
 
           {/* CTA strip */}
-          <div className="mt-12 bg-[#FFECF2] rounded-3xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="mt-12 bg-[var(--color-bg)] rounded-3xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div>
-              <div className="font-black text-lg text-[#2B2B2B]">Cada alerta puede ser el reencuentro.</div>
-              <div className="text-sm text-[#C46081] font-semibold">¡Tu ayuda hace la diferencia!</div>
+              <div className="font-black text-lg text-[var(--color-text)]">Cada alerta puede ser el reencuentro.</div>
+              <div className="text-sm text-[var(--color-primary)] font-semibold">¡Tu ayuda hace la diferencia!</div>
             </div>
             <button
               onClick={handleReport}
-              className="px-6 py-3 bg-[#C46081] text-white font-bold rounded-2xl hover:bg-[#a84e6c] transition-colors shrink-0 text-sm"
+              className="px-6 py-3 bg-[var(--color-primary)] text-white font-bold rounded-2xl hover:bg-[var(--color-primary-dark)] transition-colors shrink-0 text-sm"
             >
               Reportar ahora
             </button>
@@ -440,11 +440,11 @@ export default function Home() {
       <StatsBlock pets={pets} />
 
       {/* REUNITED */}
-      <section className="py-16 bg-[#FFECF2]">
+      <section className="py-16 bg-[var(--color-bg)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">
-            <h2 className="font-black text-3xl text-[#2B2B2B] mb-2">🏠 Ya en casa</h2>
-            <p className="text-[#8a7a80]">Mascotas que volvieron con sus familias gracias a la comunidad</p>
+            <h2 className="font-black text-3xl text-[var(--color-text)] mb-2">🏠 Ya en casa</h2>
+            <p className="text-[var(--color-muted)]">Mascotas que volvieron con sus familias gracias a la comunidad</p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {reunitedPets.map((pet) => (
@@ -452,7 +452,7 @@ export default function Home() {
             ))}
           </div>
           {!cargando && reunitedPets.length === 0 && (
-            <p className="text-center text-[#8a7a80] py-6">Cuando una mascota vuelva a casa, aparecerá aquí.</p>
+            <p className="text-center text-[var(--color-muted)] py-6">Cuando una mascota vuelva a casa, aparecerá aquí.</p>
           )}
         </div>
       </section>
@@ -461,7 +461,7 @@ export default function Home() {
       <section id="conocenos" className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="font-black text-3xl text-[#2B2B2B] mb-2">¿Por qué Sanos y Salvos?</h2>
+            <h2 className="font-black text-3xl text-[var(--color-text)] mb-2">¿Por qué Sanos y Salvos?</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {VALUES.map((v) => (
@@ -476,8 +476,8 @@ export default function Home() {
                 >
                   {v.icon}
                 </div>
-                <h3 className="font-black text-xl text-[#2B2B2B] mb-3">{v.title}</h3>
-                <p className="text-[#8a7a80] text-sm leading-relaxed">{v.desc}</p>
+                <h3 className="font-black text-xl text-[var(--color-text)] mb-3">{v.title}</h3>
+                <p className="text-[var(--color-muted)] text-sm leading-relaxed">{v.desc}</p>
               </div>
             ))}
           </div>
@@ -485,15 +485,15 @@ export default function Home() {
       </section>
 
       {/* ALIANZAS (teaser: el detalle vive en /alianzas) */}
-      <section className="py-12 bg-[#FFECF2]">
+      <section className="py-12 bg-[var(--color-bg)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="font-black text-2xl text-[#2B2B2B] mb-2">Alianzas</h2>
-          <p className="text-[#8a7a80] text-sm mb-6">
+          <h2 className="font-black text-2xl text-[var(--color-text)] mb-2">Alianzas</h2>
+          <p className="text-[var(--color-muted)] text-sm mb-6">
             Buscamos veterinarias, municipios y fundaciones que compartan nuestra misión
           </p>
           <button
             onClick={() => navigate("/alianzas")}
-            className="px-6 py-3 border-2 border-[#C46081] text-[#C46081] font-bold rounded-2xl hover:bg-white transition-colors text-sm"
+            className="px-6 py-3 border-2 border-[var(--color-primary)] text-[var(--color-primary)] font-bold rounded-2xl hover:bg-white transition-colors text-sm"
           >
             Conoce cómo sumarte →
           </button>

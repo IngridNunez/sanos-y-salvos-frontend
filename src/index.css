@@ -24,6 +24,19 @@
   --radius-3xl: 2.5rem;
 }
 
+/* Modo oscuro: mismos nombres de variable, valores distintos — con tono
+ * rosado/vino (no gris genérico), para que se siga sintiendo "Sanos y
+ * Salvos" en vez de un dark mode cualquiera. Se activa con la clase .dark
+ * en <html> (ver ThemeToggle.jsx), no con prefers-color-scheme directo,
+ * para que la persona pueda elegir y quede guardado. */
+.dark {
+  --color-bg: #241820;
+  --color-white: #32222b;
+  --color-text: #f7e9ee;
+  --color-muted: #b89aa3;
+  --color-border: #4a3540;
+}
+
 * {
   box-sizing: border-box;
 }

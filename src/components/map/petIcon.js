@@ -1,9 +1,9 @@
 import L from "leaflet";
 
 export const STATUS_COLORS = {
-  extraviada: "#C46081",
-  encontrada: "#99A966",
-  reunificada: "#EFB357",
+  extraviada: "var(--color-primary)",
+  encontrada: "var(--color-secondary)",
+  reunificada: "var(--color-accent)",
 };
 
 const SPECIES_EMOJI = { perro: "🐕", gato: "🐈", otro: "🐇" };
