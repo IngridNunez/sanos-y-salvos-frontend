@@ -15,6 +15,7 @@ import Alianzas from "@/pages/Alianzas";
 import Contacto from "@/pages/Contacto";
 import Terminos from "@/pages/Terminos";
 import ConfirmarReunificacion from "@/pages/ConfirmarReunificacion";
+import AdminDashboard from "@/pages/AdminDashboard";
 
 function Root() {
   return (
@@ -48,6 +49,7 @@ export const router = createBrowserRouter([
       { path: "alianzas", Component: Alianzas },
       { path: "contacto", Component: Contacto },
       { path: "confirmar-reunificacion/:id", Component: ConfirmarReunificacion },
+      { path: "admin", Component: AdminDashboard },
     ],
   },
   {
