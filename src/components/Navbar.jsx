@@ -109,13 +109,15 @@ export default function Navbar() {
                       >
                         👤 Mi perfil
                       </Link>
-                      <Link
-                        to="/admin"
-                        onClick={() => setCuentaAbierta(false)}
-                        className="block px-4 py-2 text-sm font-bold text-[#C46081] hover:bg-[#FFECF2]"
-                      >
-                        Administración
-                      </Link>
+                      {user.esAdministrador && (
+                        <Link
+                          to="/admin"
+                          onClick={() => setCuentaAbierta(false)}
+                          className="block px-4 py-2 text-sm font-bold text-[#C46081] hover:bg-[#FFECF2]"
+                        >
+                          Administración
+                        </Link>
+                      )}
                     </div>
                   )}
                 </div>
@@ -177,13 +179,15 @@ export default function Navbar() {
                 >
                   👤 Mi perfil
                 </Link>
-                <Link
-                  to="/admin"
-                  className="block px-3 py-2.5 text-sm font-bold rounded-xl text-[#C46081] hover:bg-[#FFECF2]"
-                  onClick={() => setMobileOpen(false)}
-                >
-                  Administración
-                </Link>
+                {user.esAdministrador && (
+                  <Link
+                    to="/admin"
+                    className="block px-3 py-2.5 text-sm font-bold rounded-xl text-[#C46081] hover:bg-[#FFECF2]"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    Administración
+                  </Link>
+                )}
                 <button
                   onClick={() => { handleReport(); setMobileOpen(false); }}
                   className="px-4 py-2.5 bg-[#C46081] text-white text-sm font-bold rounded-2xl"
