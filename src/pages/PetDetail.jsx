@@ -209,27 +209,34 @@ export default function PetDetail() {
                 </div>
               )}
 
-              <button
-                onClick={() => setShowContact(true)}
-                className="w-full py-4 bg-[#C46081] text-white font-bold rounded-2xl hover:bg-[#a84e6c] transition-all shadow-md shadow-[#C46081]/20 text-sm"
-              >
-                💬 Contactar
-              </button>
+              {!esDueno && (
+                <>
+                  <button
+                    onClick={() => setShowContact(true)}
+                    className="w-full py-4 bg-[#C46081] text-white font-bold rounded-2xl hover:bg-[#a84e6c] transition-all shadow-md shadow-[#C46081]/20 text-sm"
+                  >
+                    💬 Contactar
+                  </button>
 
-              {pet.status === "extraviada" ? (
-                <button
-                  onClick={() => setShowContact(true)}
-                  className="w-full py-3.5 border-2 border-[#99A966] text-[#99A966] font-bold rounded-2xl hover:bg-[#99A966]/10 transition-colors text-sm"
-                >
-                  👀 ¿La viste? Cuéntanos
-                </button>
-              ) : (
-                <button
-                  onClick={() => setShowContact(true)}
-                  className="w-full py-3.5 border-2 border-[#C46081] text-[#C46081] font-bold rounded-2xl hover:bg-[#FFECF2] transition-colors text-sm"
-                >
-                  🐾 ¿Es tuya esta mascota?
-                </button>
+                  {/* sin sentido en un reporte ya reunificado: no hay nada que "contar" ni
+                      nadie que reclamar — Contactar sigue arriba por si alguien igual
+                      quiere escribir */}
+                  {pet.status === "reunificada" ? null : pet.status === "extraviada" ? (
+                    <button
+                      onClick={() => setShowContact(true)}
+                      className="w-full py-3.5 border-2 border-[#99A966] text-[#99A966] font-bold rounded-2xl hover:bg-[#99A966]/10 transition-colors text-sm"
+                    >
+                      👀 ¿La viste? Cuéntanos
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => setShowContact(true)}
+                      className="w-full py-3.5 border-2 border-[#C46081] text-[#C46081] font-bold rounded-2xl hover:bg-[#FFECF2] transition-colors text-sm"
+                    >
+                      🐾 ¿Es tuya esta mascota?
+                    </button>
+                  )}
+                </>
               )}
 
               <button
