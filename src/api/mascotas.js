@@ -22,6 +22,7 @@ function mapMascota(m) {
     name: m.nombre,
     photo: m.fotografia,
     status: ESTADO_A_STATUS[m.estado] ?? "extraviada",
+    moderationStatus: m.estadoModeracion?.toLowerCase() ?? "aprobada",
     species: TIPO_A_SPECIES[m.tipoMascota] ?? "otro",
     comuna: m.comuna,
     description: m.descripcion,
@@ -213,4 +214,42 @@ export async function confirmarReunificacion(id, token) {
     throw error;
   }
   return data.resultado;
+}
+
+export async function obtenerMascotasAdmin(estado, page = 0, size = 12) {
+  const params = new URLSearchParams({ estado: estado.toUpperCase(), page: String(page), size: String(size), sort: "fecha,desc" });
+  const response = await fetch(`${API_URL}/api/v1/mascotas/admin?${params}`, {
+    credentials: "include",
+    headers: headersSesion,
+  });
+  if (!response.ok) {
+    throw new Error(`No se pudieron cargar los reportes para moderar (${response.status}).`);
+  }
+  const data = await response.json();
+  return { content: (data.content ?? []).map(mapMascota), totalElements: data.totalElements ?? 0 };
+}
+
+async function solicitarAccionAdmin(id, accion, method) {
+  const response = await fetch(`${API_URL}/api/v1/mascotas/admin/${encodeURIComponent(id)}${accion}`, {
+    method,
+    credentials: "include",
+    headers: headersSesion,
+  });
+  if (!response.ok) {
+    const detalle = await response.text().catch(() => "");
+    throw new Error(`No se pudo completar la acción (${response.status}). ${detalle}`);
+  }
+  return response.status === 204 ? null : mapMascota(await response.json());
+}
+
+export function aprobarMascotaAdmin(id) {
+  return solicitarAccionAdmin(id, "/aprobar", "PATCH");
+}
+
+export function rechazarMascotaAdmin(id) {
+  return solicitarAccionAdmin(id, "/rechazar", "PATCH");
+}
+
+export function eliminarMascotaAdmin(id) {
+  return solicitarAccionAdmin(id, "", "DELETE");
 }
