@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router";
 import { useAuth } from "@/context/AuthContext";
 
@@ -16,6 +16,17 @@ export default function Navbar() {
   const location = useLocation();
   const { user, logout } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [cuentaAbierta, setCuentaAbierta] = useState(false);
+  const cuentaRef = useRef(null);
+
+  useEffect(() => {
+    if (!cuentaAbierta) return;
+    const cerrarSiEsFuera = (e) => {
+      if (cuentaRef.current && !cuentaRef.current.contains(e.target)) setCuentaAbierta(false);
+    };
+    document.addEventListener("mousedown", cerrarSiEsFuera);
+    return () => document.removeEventListener("mousedown", cerrarSiEsFuera);
+  }, [cuentaAbierta]);
 
   const handleReport = () => {
     if (!user) {
@@ -55,12 +66,12 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop nav links */}
-          <div className="hidden lg:flex items-center gap-1">
+          <div className="hidden xl:flex items-center gap-0.5">
             {navLinks.map((link) => (
               <Link
                 key={link.label}
                 to={link.to}
-                className={`px-3 py-2 text-sm font-semibold rounded-xl transition-colors hover:text-[#C46081] hover:bg-[#FFECF2] ${
+                className={`px-2.5 py-2 text-sm font-semibold rounded-xl whitespace-nowrap transition-colors hover:text-[#C46081] hover:bg-[#FFECF2] ${
                   location.pathname === link.to
                     ? "text-[#C46081] bg-[#FFECF2]"
                     : "text-[#2B2B2B]"
@@ -72,45 +83,60 @@ export default function Navbar() {
           </div>
 
           {/* Auth buttons */}
-          <div className="hidden lg:flex items-center gap-2">
+          <div className="hidden xl:flex items-center gap-1.5 shrink-0">
             {user ? (
               <>
-                <Link
-                  to="/perfil"
-                  className="px-4 py-2 text-[#2B2B2B] text-sm font-semibold rounded-2xl hover:text-[#C46081] hover:bg-[#FFECF2] transition-colors"
-                >
-                  👤 Mi perfil
-                </Link>
-                <Link
-                  to="/admin"
-                  className="px-4 py-2 text-[#C46081] text-sm font-bold rounded-2xl hover:bg-[#FFECF2] transition-colors"
-                >
-                  Administración
-                </Link>
                 <button
                   onClick={handleReport}
-                  className="px-4 py-2 bg-[#C46081] text-white text-sm font-bold rounded-2xl hover:bg-[#a84e6c] transition-colors"
+                  className="px-3 py-2 bg-[#C46081] text-white text-sm font-bold rounded-2xl whitespace-nowrap hover:bg-[#a84e6c] transition-colors"
                 >
                   + Reportar
                 </button>
+                <div className="relative" ref={cuentaRef}>
+                  <button
+                    onClick={() => setCuentaAbierta((v) => !v)}
+                    className="px-3 py-2 text-[#2B2B2B] text-sm font-semibold rounded-2xl whitespace-nowrap hover:text-[#C46081] hover:bg-[#FFECF2] transition-colors flex items-center gap-1"
+                  >
+                    👤 Mi cuenta
+                    <span className={`text-[10px] transition-transform ${cuentaAbierta ? "rotate-180" : ""}`}>▾</span>
+                  </button>
+                  {cuentaAbierta && (
+                    <div className="absolute right-0 mt-2 w-44 bg-white rounded-2xl shadow-lg border border-[#f0d5df] py-1.5 z-50">
+                      <Link
+                        to="/perfil"
+                        onClick={() => setCuentaAbierta(false)}
+                        className="block px-4 py-2 text-sm font-semibold text-[#2B2B2B] hover:bg-[#FFECF2] hover:text-[#C46081]"
+                      >
+                        👤 Mi perfil
+                      </Link>
+                      <Link
+                        to="/admin"
+                        onClick={() => setCuentaAbierta(false)}
+                        className="block px-4 py-2 text-sm font-bold text-[#C46081] hover:bg-[#FFECF2]"
+                      >
+                        Administración
+                      </Link>
+                    </div>
+                  )}
+                </div>
                 <button
                   onClick={logout}
-                  className="px-4 py-2 border-2 border-[#C46081] text-[#C46081] text-sm font-bold rounded-2xl hover:bg-[#FFECF2] transition-colors"
+                  className="px-3 py-2 border-2 border-[#C46081] text-[#C46081] text-sm font-bold rounded-2xl whitespace-nowrap hover:bg-[#FFECF2] transition-colors"
                 >
-                  Cerrar sesión
+                  Salir
                 </button>
               </>
             ) : (
               <>
                 <Link
                   to="/login"
-                  className="px-4 py-2 border-2 border-[#C46081] text-[#C46081] text-sm font-bold rounded-2xl hover:bg-[#FFECF2] transition-colors"
+                  className="px-4 py-2 border-2 border-[#C46081] text-[#C46081] text-sm font-bold rounded-2xl whitespace-nowrap hover:bg-[#FFECF2] transition-colors"
                 >
                   Iniciar sesión
                 </Link>
                 <Link
                   to="/login?mode=register"
-                  className="px-4 py-2 bg-[#C46081] text-white text-sm font-bold rounded-2xl hover:bg-[#a84e6c] transition-colors flex items-center gap-1.5"
+                  className="px-4 py-2 bg-[#C46081] text-white text-sm font-bold rounded-2xl whitespace-nowrap hover:bg-[#a84e6c] transition-colors flex items-center gap-1.5"
                 >
                   <span>👤</span> Registrarme
                 </Link>
@@ -120,7 +146,7 @@ export default function Navbar() {
 
           {/* Mobile toggle */}
           <button
-            className="lg:hidden p-2 rounded-xl text-[#2B2B2B]"
+            className="xl:hidden p-2 rounded-xl text-[#2B2B2B]"
             onClick={() => setMobileOpen(!mobileOpen)}
           >
             {mobileOpen ? "✕" : "☰"}
@@ -130,7 +156,7 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="lg:hidden bg-white border-t border-[#f0d5df] px-4 py-4 space-y-2">
+        <div className="xl:hidden bg-white border-t border-[#f0d5df] px-4 py-4 space-y-2">
           {navLinks.map((link) => (
             <Link
               key={link.label}
