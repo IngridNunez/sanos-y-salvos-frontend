@@ -83,9 +83,9 @@ export default function ReportForm() {
       <div className="min-h-screen bg-[#FFECF2] flex items-center justify-center p-4">
         <div className="bg-white rounded-3xl shadow-xl p-10 text-center max-w-md w-full">
           <div className="text-6xl mb-4">🎉</div>
-          <h2 className="font-black text-2xl text-[#2B2B2B] mb-3">¡Reporte recibido!</h2>
+          <h2 className="font-black text-2xl text-[#2B2B2B] mb-3">¡Reporte publicado!</h2>
           <p className="text-[#8a7a80] mb-6 text-sm leading-relaxed">
-            Un administrador revisará tu reporte antes de publicarlo. Te agradecemos por ayudar a reunir a las mascotas con sus familias.
+            Tu reporte ha sido publicado exitosamente. La comunidad de Sanos y Salvos ya está al tanto. ¡Esperamos que tu mascota vuelva pronto a casa!
           </p>
           <button
             onClick={() => navigate("/")}

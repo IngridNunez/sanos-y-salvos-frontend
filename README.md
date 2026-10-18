@@ -1,17 +1,5 @@
 # React + Vite
 
-## Panel de administración
-
-El panel está disponible en `/admin` para cuentas del grupo de Cognito
-`Administradores`. Desde allí se revisan los reportes pendientes, se aprueban
-para publicarlos, se rechazan (quedan guardados y ocultos) o se eliminan
-definitivamente. El backend vuelve a validar el grupo en cada operación; ocultar
-la ruta en la interfaz no es la protección de acceso.
-
-Los reportes nuevos no aparecen en la búsqueda pública ni se pueden contactar
-hasta que un administrador los apruebe. Los reportes históricos, creados antes
-del flujo de moderación, se conservan como aprobados.
-
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
 Currently, two official plugins are available:
