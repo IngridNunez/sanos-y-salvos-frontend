@@ -17,7 +17,8 @@ const AuthContext = createContext({
 
 function usuarioDesdeIdToken(idToken) {
   const claims = decodeIdToken(idToken);
-  return { name: claims.name || claims.email, email: claims.email };
+  const grupos = claims["cognito:groups"] ?? [];
+  return { name: claims.name || claims.email, email: claims.email, esAdministrador: grupos.includes("Administradores") };
 }
 
 export function AuthProvider({ children }) {
@@ -28,7 +29,7 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     fetch(`${API_URL}/api/v1/auth/me`, { credentials: "include" })
       .then((response) => (response.ok ? response.json() : null))
-      .then((data) => setUser(data ? { name: data.nombre, email: data.email } : null))
+      .then((data) => setUser(data ? { name: data.nombre, email: data.email, esAdministrador: data.esAdministrador } : null))
       .catch(() => setUser(null))
       .finally(() => setCargandoSesion(false));
   }, []);
