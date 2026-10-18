@@ -86,6 +86,12 @@ export default function Navbar() {
           <div className="hidden xl:flex items-center gap-1.5 shrink-0">
             {user ? (
               <>
+                <button
+                  onClick={handleReport}
+                  className="px-3 py-2 bg-[#C46081] text-white text-sm font-bold rounded-2xl whitespace-nowrap hover:bg-[#a84e6c] transition-colors"
+                >
+                  + Reportar
+                </button>
                 <div className="relative" ref={cuentaRef}>
                   <button
                     onClick={() => setCuentaAbierta((v) => !v)}
@@ -113,12 +119,6 @@ export default function Navbar() {
                     </div>
                   )}
                 </div>
-                <button
-                  onClick={handleReport}
-                  className="px-3 py-2 bg-[#C46081] text-white text-sm font-bold rounded-2xl whitespace-nowrap hover:bg-[#a84e6c] transition-colors"
-                >
-                  + Reportar
-                </button>
                 <button
                   onClick={logout}
                   className="px-3 py-2 border-2 border-[#C46081] text-[#C46081] text-sm font-bold rounded-2xl whitespace-nowrap hover:bg-[#FFECF2] transition-colors"
