@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { COMUNAS } from "@/data/pets";
 import { crearMascota, subirFoto } from "@/api/mascotas";
+import { comprimirImagen } from "@/lib/comprimirImagen";
 import LocationPicker from "@/components/map/LocationPicker";
 import { useAuth } from "@/context/AuthContext";
 
@@ -16,6 +17,7 @@ export default function ReportForm() {
 
   const [enviando, setEnviando] = useState(false);
   const [errorEnvio, setErrorEnvio] = useState(null);
+  const [comprimiendoFoto, setComprimiendoFoto] = useState(false);
 
   useEffect(() => {
     /* espera a que termine de preguntarle al bff si hay sesion activa antes
@@ -39,10 +41,20 @@ export default function ReportForm() {
     consent2: false,
   });
 
-  const handlePhoto = (file) => {
-    const url = URL.createObjectURL(file);
-    setPhotoPreview(url);
-    setPhotoFile(file);
+  const handlePhoto = async (file) => {
+    setErrorEnvio(null);
+    setComprimiendoFoto(true);
+    try {
+      /* redimensiona/recomprime en el navegador -- evita que fotos de celular
+       * (sobre todo iPhones recientes) rebotan por pesar mas de 5 MB */
+      const comprimida = await comprimirImagen(file);
+      setPhotoPreview(URL.createObjectURL(comprimida));
+      setPhotoFile(comprimida);
+    } catch (err) {
+      setErrorEnvio(err.message);
+    } finally {
+      setComprimiendoFoto(false);
+    }
   };
 
   const handleDrop = (e) => {
@@ -147,7 +159,12 @@ export default function ReportForm() {
                 className="hidden"
                 onChange={handleFileInput}
               />
-              {photoPreview ? (
+              {comprimiendoFoto ? (
+                <>
+                  <div className="text-4xl mb-3 animate-pulse">🖼️</div>
+                  <p className="font-semibold text-[#2B2B2B] text-sm">Procesando foto...</p>
+                </>
+              ) : photoPreview ? (
                 <div className="relative">
                   <img
                     src={photoPreview}
@@ -168,7 +185,7 @@ export default function ReportForm() {
                 <>
                   <div className="text-4xl mb-3">📸</div>
                   <p className="font-semibold text-[#2B2B2B] text-sm">Arrastra una foto o haz clic para subir</p>
-                  <p className="text-xs text-[#8a7a80] mt-1">JPG, PNG o WEBP hasta 10 MB</p>
+                  <p className="text-xs text-[#8a7a80] mt-1">Cualquier tamaño — la achicamos automáticamente</p>
                 </>
               )}
             </div>
@@ -382,7 +399,7 @@ export default function ReportForm() {
           )}
           <button
             type="submit"
-            disabled={!canSubmit || enviando}
+            disabled={!canSubmit || enviando || comprimiendoFoto}
             className="w-full py-4 font-black rounded-2xl transition-all text-base shadow-lg disabled:opacity-40 disabled:cursor-not-allowed"
             style={{
               backgroundColor: tab === "extraviada" ? "#C46081" : "#99A966",
