@@ -168,6 +168,19 @@ export async function obtenerIdsMisMascotas() {
   return new Set((data.content ?? data).map((m) => m.idMascota));
 }
 
+/* reportes completos del usuario logueado, para la pantalla de Perfil */
+export async function obtenerMisMascotas() {
+  const response = await fetch(`${API_URL}/api/v1/mascotas/mis-mascotas?size=200&sort=fecha,desc`, {
+    credentials: "include",
+    headers: headersSesion,
+  });
+  if (!response.ok) {
+    throw new Error(`Error al obtener tus reportes: ${response.status}`);
+  }
+  const data = await response.json();
+  return (data.content ?? data).map(mapMascota);
+}
+
 /* estado: "EXTRAVIADO" | "ENCONTRADO" | "REUNIFICADO" — solo el dueño puede (lo valida ms-mascotas) */
 export async function cambiarEstadoMascota(id, estado) {
   const response = await fetch(`${API_URL}/api/v1/mascotas/${id}/estado`, {

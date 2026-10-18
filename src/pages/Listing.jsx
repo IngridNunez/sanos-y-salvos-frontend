@@ -241,7 +241,9 @@ export default function Listing() {
           </div>
         ) : viewMode === "map" ? (
           <PetsMap
-            pets={filtered.filter((p) => p.lat != null && p.lng != null)}
+            // una mascota reunificada ya no tiene alerta activa ni sentido en el
+            // mapa de búsqueda — sigue visible en la vista de tarjetas (grid)
+            pets={filtered.filter((p) => p.lat != null && p.lng != null && p.status !== "reunificada")}
             userLocation={userLocation}
             radioBusquedaKm={idsMascotasCercanas ? RADIO_CERCA_DE_MI_KM : null}
           />
