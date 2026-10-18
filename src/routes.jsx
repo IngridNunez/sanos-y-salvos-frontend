@@ -17,6 +17,7 @@ import Contacto from "@/pages/Contacto";
 import Terminos from "@/pages/Terminos";
 import ConfirmarReunificacion from "@/pages/ConfirmarReunificacion";
 import AdminDashboard from "@/pages/AdminDashboard";
+import ErrorPage from "@/pages/ErrorPage";
 
 function Root() {
   return (
@@ -39,6 +40,7 @@ export const router = createBrowserRouter([
   {
     path: "/",
     Component: Root,
+    errorElement: <ErrorPage />,
     children: [
       { index: true, Component: Home },
       { path: "buscar", Component: Listing },
@@ -57,9 +59,11 @@ export const router = createBrowserRouter([
   {
     path: "/login",
     Component: LoginRoot,
+    errorElement: <ErrorPage />,
   },
   {
     path: "/auth/callback",
     Component: AuthCallback,
+    errorElement: <ErrorPage />,
   },
 ]);
