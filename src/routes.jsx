@@ -2,6 +2,7 @@
 import { createBrowserRouter, Outlet } from "react-router";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import InAppBrowserBanner from "@/components/InAppBrowserBanner";
 import Home from "@/pages/Home";
 import Listing from "@/pages/Listing";
 import PetDetail from "@/pages/PetDetail";
@@ -20,6 +21,7 @@ import AdminDashboard from "@/pages/AdminDashboard";
 function Root() {
   return (
     <div className="flex flex-col min-h-screen">
+      <InAppBrowserBanner />
       <Navbar />
       <main className="flex-1">
         <Outlet />
