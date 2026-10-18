@@ -14,7 +14,7 @@ const DEFAULT_ZOOM = 11;
 // Radio de alerta del MVP (ver ms-alertas: POST /alertas crea una alerta con
 // este mismo radio recomendado alrededor del punto reportado) — se dibuja
 // solo para reportes activos, una reunificación ya no genera alerta.
-const RADIO_ALERTA_METROS = 3000;
+const RADIO_ALERTA_METROS = 1500;
 
 export default function PetsMap({ pets, userLocation, radioBusquedaKm }) {
   const navigate = useNavigate();

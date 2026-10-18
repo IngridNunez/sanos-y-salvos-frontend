@@ -9,7 +9,7 @@ import StatusBadge from "@/components/StatusBadge";
 import PetsMap from "@/components/map/PetsMap";
 
 const PAGE_SIZE = 6;
-const RADIO_CERCA_DE_MI_KM = 10;
+const RADIO_CERCA_DE_MI_KM = 3;
 
 export default function Listing() {
   const [searchParams, setSearchParams] = useSearchParams();
