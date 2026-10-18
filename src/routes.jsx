@@ -13,6 +13,7 @@ import Conocenos from "@/pages/Conocenos";
 import Alianzas from "@/pages/Alianzas";
 import Contacto from "@/pages/Contacto";
 import Terminos from "@/pages/Terminos";
+import ConfirmarReunificacion from "@/pages/ConfirmarReunificacion";
 
 function Root() {
   return (
@@ -44,6 +45,7 @@ export const router = createBrowserRouter([
       { path: "conocenos", Component: Conocenos },
       { path: "alianzas", Component: Alianzas },
       { path: "contacto", Component: Contacto },
+      { path: "confirmar-reunificacion/:id", Component: ConfirmarReunificacion },
     ],
   },
   {
