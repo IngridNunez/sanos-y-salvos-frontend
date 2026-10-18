@@ -55,12 +55,12 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop nav links */}
-          <div className="hidden lg:flex items-center gap-1">
+          <div className="hidden xl:flex items-center gap-0.5">
             {navLinks.map((link) => (
               <Link
                 key={link.label}
                 to={link.to}
-                className={`px-3 py-2 text-sm font-semibold rounded-xl transition-colors hover:text-[#C46081] hover:bg-[#FFECF2] ${
+                className={`px-2.5 py-2 text-sm font-semibold rounded-xl whitespace-nowrap transition-colors hover:text-[#C46081] hover:bg-[#FFECF2] ${
                   location.pathname === link.to
                     ? "text-[#C46081] bg-[#FFECF2]"
                     : "text-[#2B2B2B]"
@@ -72,45 +72,45 @@ export default function Navbar() {
           </div>
 
           {/* Auth buttons */}
-          <div className="hidden lg:flex items-center gap-2">
+          <div className="hidden xl:flex items-center gap-1.5 shrink-0">
             {user ? (
               <>
                 <Link
                   to="/perfil"
-                  className="px-4 py-2 text-[#2B2B2B] text-sm font-semibold rounded-2xl hover:text-[#C46081] hover:bg-[#FFECF2] transition-colors"
+                  className="px-3 py-2 text-[#2B2B2B] text-sm font-semibold rounded-2xl whitespace-nowrap hover:text-[#C46081] hover:bg-[#FFECF2] transition-colors"
                 >
-                  👤 Mi perfil
+                  👤 Perfil
                 </Link>
                 <Link
                   to="/admin"
-                  className="px-4 py-2 text-[#C46081] text-sm font-bold rounded-2xl hover:bg-[#FFECF2] transition-colors"
+                  className="px-3 py-2 text-[#C46081] text-sm font-bold rounded-2xl whitespace-nowrap hover:bg-[#FFECF2] transition-colors"
                 >
-                  Administración
+                  Admin
                 </Link>
                 <button
                   onClick={handleReport}
-                  className="px-4 py-2 bg-[#C46081] text-white text-sm font-bold rounded-2xl hover:bg-[#a84e6c] transition-colors"
+                  className="px-3 py-2 bg-[#C46081] text-white text-sm font-bold rounded-2xl whitespace-nowrap hover:bg-[#a84e6c] transition-colors"
                 >
                   + Reportar
                 </button>
                 <button
                   onClick={logout}
-                  className="px-4 py-2 border-2 border-[#C46081] text-[#C46081] text-sm font-bold rounded-2xl hover:bg-[#FFECF2] transition-colors"
+                  className="px-3 py-2 border-2 border-[#C46081] text-[#C46081] text-sm font-bold rounded-2xl whitespace-nowrap hover:bg-[#FFECF2] transition-colors"
                 >
-                  Cerrar sesión
+                  Salir
                 </button>
               </>
             ) : (
               <>
                 <Link
                   to="/login"
-                  className="px-4 py-2 border-2 border-[#C46081] text-[#C46081] text-sm font-bold rounded-2xl hover:bg-[#FFECF2] transition-colors"
+                  className="px-4 py-2 border-2 border-[#C46081] text-[#C46081] text-sm font-bold rounded-2xl whitespace-nowrap hover:bg-[#FFECF2] transition-colors"
                 >
                   Iniciar sesión
                 </Link>
                 <Link
                   to="/login?mode=register"
-                  className="px-4 py-2 bg-[#C46081] text-white text-sm font-bold rounded-2xl hover:bg-[#a84e6c] transition-colors flex items-center gap-1.5"
+                  className="px-4 py-2 bg-[#C46081] text-white text-sm font-bold rounded-2xl whitespace-nowrap hover:bg-[#a84e6c] transition-colors flex items-center gap-1.5"
                 >
                   <span>👤</span> Registrarme
                 </Link>
@@ -120,7 +120,7 @@ export default function Navbar() {
 
           {/* Mobile toggle */}
           <button
-            className="lg:hidden p-2 rounded-xl text-[#2B2B2B]"
+            className="xl:hidden p-2 rounded-xl text-[#2B2B2B]"
             onClick={() => setMobileOpen(!mobileOpen)}
           >
             {mobileOpen ? "✕" : "☰"}
@@ -130,7 +130,7 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="lg:hidden bg-white border-t border-[#f0d5df] px-4 py-4 space-y-2">
+        <div className="xl:hidden bg-white border-t border-[#f0d5df] px-4 py-4 space-y-2">
           {navLinks.map((link) => (
             <Link
               key={link.label}
