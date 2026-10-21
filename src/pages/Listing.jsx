@@ -195,18 +195,18 @@ export default function Listing() {
         {/* Avisos por proximidad — mientras esta pestaña esté abierta */}
         <div className="bg-white rounded-3xl p-5 mb-6 shadow-sm flex items-center justify-between gap-4 flex-wrap">
           <div>
-            <p className="font-bold text-[#2B2B2B] text-sm">🔔 Avisarme si entro a una zona con mascota perdida</p>
-            <p className="text-xs text-[#8a7a80] mt-0.5 max-w-xl">
+            <p className="font-bold text-[var(--color-text)] text-sm">🔔 Avisarme si entro a una zona con mascota perdida</p>
+            <p className="text-xs text-[var(--color-muted)] mt-0.5 max-w-xl">
               Revisa tu ubicación cada cierto tiempo mientras esta pestaña esté abierta y te notifica apenas entras al radio de una alerta activa. Pide permiso de ubicación y de notificaciones del navegador.
             </p>
-            {errorAvisos && <p className="text-xs text-[#C46081] font-semibold mt-1">{errorAvisos}</p>}
+            {errorAvisos && <p className="text-xs text-[var(--color-primary)] font-semibold mt-1">{errorAvisos}</p>}
           </div>
           <button
             onClick={avisosActivos ? desactivarAvisos : activarAvisos}
-            className={`px-4 py-2 rounded-2xl font-bold text-sm transition-colors shrink-0 ${
+            className={`px-4 py-2 rounded-2xl font-bold text-sm transition-colors shrink-0 border-2 ${
               avisosActivos
-                ? "bg-[#99A966] text-white hover:bg-[#879457]"
-                : "border-2 border-[#f0d5df] text-[#2B2B2B] hover:border-[#C46081] hover:text-[#C46081]"
+                ? "bg-[var(--color-secondary)] text-white border-[var(--color-secondary)] hover:bg-[var(--color-secondary-dark)]"
+                : "border-[var(--color-primary)] text-[var(--color-primary)] hover:bg-[var(--color-primary)] hover:text-white"
             }`}
           >
             {avisosActivos ? "🔔 Activado — apagar" : "Activar avisos"}
