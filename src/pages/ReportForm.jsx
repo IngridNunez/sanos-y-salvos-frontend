@@ -85,7 +85,7 @@ export default function ReportForm() {
           <div className="text-6xl mb-4">🎉</div>
           <h2 className="font-black text-2xl text-[#2B2B2B] mb-3">¡Reporte recibido!</h2>
           <p className="text-[#8a7a80] mb-6 text-sm leading-relaxed">
-            Un administrador revisará tu reporte antes de publicarlo. Te agradecemos por ayudar a reunir a las mascotas con sus familias.
+            Tu reporte está en revisión antes de publicarse. Te agradecemos por ayudar a reunir a las mascotas con sus familias.
           </p>
           <button
             onClick={() => navigate("/")}
