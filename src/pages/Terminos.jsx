@@ -3,19 +3,19 @@ import { Link } from "react-router";
 function Seccion({ titulo, children }) {
   return (
     <section className="bg-white rounded-3xl p-6 shadow-sm mb-5">
-      <h2 className="font-black text-lg text-[#2B2B2B] mb-3">{titulo}</h2>
-      <div className="text-sm text-[#8a7a80] leading-relaxed space-y-3">{children}</div>
+      <h2 className="font-black text-lg text-[var(--color-text)] mb-3">{titulo}</h2>
+      <div className="text-sm text-[var(--color-muted)] leading-relaxed space-y-3">{children}</div>
     </section>
   );
 }
 
 export default function Terminos() {
   return (
-    <div className="min-h-screen bg-[#FFECF2] py-10">
+    <div className="min-h-screen bg-[var(--color-bg)] py-10">
       <div className="max-w-3xl mx-auto px-4 sm:px-6">
         <div className="mb-8">
-          <h1 className="font-black text-3xl text-[#2B2B2B] mb-2">Términos de servicio</h1>
-          <p className="text-sm text-[#8a7a80]">Última actualización: septiembre de 2026.</p>
+          <h1 className="font-black text-3xl text-[var(--color-text)] mb-2">Términos de servicio</h1>
+          <p className="text-sm text-[var(--color-muted)]">Última actualización: septiembre de 2026.</p>
         </div>
 
         <Seccion titulo="1. Qué es Sanos y Salvos">
@@ -67,7 +67,7 @@ export default function Terminos() {
         </Seccion>
 
         <div className="text-center mt-6">
-          <Link to="/" className="text-sm text-[#C46081] font-semibold hover:underline">
+          <Link to="/" className="text-sm text-[var(--color-primary)] font-semibold hover:underline">
             ← Volver al inicio
           </Link>
         </div>

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router";
 import { useAuth } from "@/context/AuthContext";
+import ThemeToggle from "./ThemeToggle";
 
 const navLinks = [
   { label: "Inicio", to: "/" },
@@ -37,7 +38,7 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-[#f0d5df]">
+    <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-[var(--color-border)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
@@ -46,20 +47,20 @@ export default function Navbar() {
               <path
                 d="M20 34C20 34 4 24.5 4 14.5C4 9 8 5 13 5C16 5 18.5 6.5 20 9C21.5 6.5 24 5 27 5C32 5 36 9 36 14.5C36 24.5 20 34 20 34Z"
                 fill="white"
-                stroke="#C46081"
+                stroke="var(--color-primary)"
                 strokeWidth="2.5"
               />
-              <ellipse cx="21" cy="24" rx="6.5" ry="5.5" fill="#C46081" />
-              <ellipse cx="13" cy="16" rx="2.8" ry="3.4" fill="#C46081" transform="rotate(-15 13 16)" />
-              <ellipse cx="18.5" cy="12.5" rx="2.8" ry="3.4" fill="#C46081" />
-              <ellipse cx="24" cy="12.5" rx="2.8" ry="3.4" fill="#C46081" />
-              <ellipse cx="29" cy="16" rx="2.8" ry="3.4" fill="#C46081" transform="rotate(15 29 16)" />
+              <ellipse cx="21" cy="24" rx="6.5" ry="5.5" fill="var(--color-primary)" />
+              <ellipse cx="13" cy="16" rx="2.8" ry="3.4" fill="var(--color-primary)" transform="rotate(-15 13 16)" />
+              <ellipse cx="18.5" cy="12.5" rx="2.8" ry="3.4" fill="var(--color-primary)" />
+              <ellipse cx="24" cy="12.5" rx="2.8" ry="3.4" fill="var(--color-primary)" />
+              <ellipse cx="29" cy="16" rx="2.8" ry="3.4" fill="var(--color-primary)" transform="rotate(15 29 16)" />
             </svg>
             <div>
-              <span className="font-black text-[#2B2B2B] text-base leading-none block">
+              <span className="font-black text-[var(--color-text)] text-base leading-none block">
                 Sanos y Salvos
               </span>
-              <span className="text-[10px] text-[#C46081] font-semibold leading-none">
+              <span className="text-[10px] text-[var(--color-primary)] font-semibold leading-none">
                 Juntos los encontramos 🐾
               </span>
             </div>
@@ -71,10 +72,10 @@ export default function Navbar() {
               <Link
                 key={link.label}
                 to={link.to}
-                className={`px-2.5 py-2 text-sm font-semibold rounded-xl whitespace-nowrap transition-colors hover:text-[#C46081] hover:bg-[#FFECF2] ${
+                className={`px-2.5 py-2 text-sm font-semibold rounded-xl whitespace-nowrap transition-colors hover:text-[var(--color-primary)] hover:bg-[var(--color-bg)] ${
                   location.pathname === link.to
-                    ? "text-[#C46081] bg-[#FFECF2]"
-                    : "text-[#2B2B2B]"
+                    ? "text-[var(--color-primary)] bg-[var(--color-bg)]"
+                    : "text-[var(--color-text)]"
                 }`}
               >
                 {link.label}
@@ -88,24 +89,24 @@ export default function Navbar() {
               <>
                 <button
                   onClick={handleReport}
-                  className="px-3 py-2 bg-[#C46081] text-white text-sm font-bold rounded-2xl whitespace-nowrap hover:bg-[#a84e6c] transition-colors"
+                  className="px-3 py-2 bg-[var(--color-primary)] text-white text-sm font-bold rounded-2xl whitespace-nowrap hover:bg-[var(--color-primary-dark)] transition-colors"
                 >
                   + Reportar
                 </button>
                 <div className="relative" ref={cuentaRef}>
                   <button
                     onClick={() => setCuentaAbierta((v) => !v)}
-                    className="px-3 py-2 text-[#2B2B2B] text-sm font-semibold rounded-2xl whitespace-nowrap hover:text-[#C46081] hover:bg-[#FFECF2] transition-colors flex items-center gap-1"
+                    className="px-3 py-2 text-[var(--color-text)] text-sm font-semibold rounded-2xl whitespace-nowrap hover:text-[var(--color-primary)] hover:bg-[var(--color-bg)] transition-colors flex items-center gap-1"
                   >
                     👤 Mi cuenta
                     <span className={`text-[10px] transition-transform ${cuentaAbierta ? "rotate-180" : ""}`}>▾</span>
                   </button>
                   {cuentaAbierta && (
-                    <div className="absolute right-0 mt-2 w-44 bg-white rounded-2xl shadow-lg border border-[#f0d5df] py-1.5 z-50">
+                    <div className="absolute right-0 mt-2 w-44 bg-white rounded-2xl shadow-lg border border-[var(--color-border)] py-1.5 z-50">
                       <Link
                         to="/perfil"
                         onClick={() => setCuentaAbierta(false)}
-                        className="block px-4 py-2 text-sm font-semibold text-[#2B2B2B] hover:bg-[#FFECF2] hover:text-[#C46081]"
+                        className="block px-4 py-2 text-sm font-semibold text-[var(--color-text)] hover:bg-[var(--color-bg)] hover:text-[var(--color-primary)]"
                       >
                         👤 Mi perfil
                       </Link>
@@ -113,7 +114,7 @@ export default function Navbar() {
                         <Link
                           to="/admin"
                           onClick={() => setCuentaAbierta(false)}
-                          className="block px-4 py-2 text-sm font-bold text-[#C46081] hover:bg-[#FFECF2]"
+                          className="block px-4 py-2 text-sm font-bold text-[var(--color-primary)] hover:bg-[var(--color-bg)]"
                         >
                           Administración
                         </Link>
@@ -123,7 +124,7 @@ export default function Navbar() {
                 </div>
                 <button
                   onClick={logout}
-                  className="px-3 py-2 border-2 border-[#C46081] text-[#C46081] text-sm font-bold rounded-2xl whitespace-nowrap hover:bg-[#FFECF2] transition-colors"
+                  className="px-3 py-2 border-2 border-[var(--color-primary)] text-[var(--color-primary)] text-sm font-bold rounded-2xl whitespace-nowrap hover:bg-[var(--color-bg)] transition-colors"
                 >
                   Salir
                 </button>
@@ -132,13 +133,13 @@ export default function Navbar() {
               <>
                 <Link
                   to="/login"
-                  className="px-4 py-2 border-2 border-[#C46081] text-[#C46081] text-sm font-bold rounded-2xl whitespace-nowrap hover:bg-[#FFECF2] transition-colors"
+                  className="px-4 py-2 border-2 border-[var(--color-primary)] text-[var(--color-primary)] text-sm font-bold rounded-2xl whitespace-nowrap hover:bg-[var(--color-bg)] transition-colors"
                 >
                   Iniciar sesión
                 </Link>
                 <Link
                   to="/login?mode=register"
-                  className="px-4 py-2 bg-[#C46081] text-white text-sm font-bold rounded-2xl whitespace-nowrap hover:bg-[#a84e6c] transition-colors flex items-center gap-1.5"
+                  className="px-4 py-2 bg-[var(--color-primary)] text-white text-sm font-bold rounded-2xl whitespace-nowrap hover:bg-[var(--color-primary-dark)] transition-colors flex items-center gap-1.5"
                 >
                   <span>👤</span> Registrarme
                 </Link>
@@ -146,9 +147,11 @@ export default function Navbar() {
             )}
           </div>
 
+          <ThemeToggle className="ml-1" />
+
           {/* Mobile toggle */}
           <button
-            className="xl:hidden p-2 rounded-xl text-[#2B2B2B]"
+            className="xl:hidden p-2 rounded-xl text-[var(--color-text)]"
             onClick={() => setMobileOpen(!mobileOpen)}
           >
             {mobileOpen ? "✕" : "☰"}
@@ -158,12 +161,12 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="xl:hidden bg-white border-t border-[#f0d5df] px-4 py-4 space-y-2">
+        <div className="xl:hidden bg-white border-t border-[var(--color-border)] px-4 py-4 space-y-2">
           {navLinks.map((link) => (
             <Link
               key={link.label}
               to={link.to}
-              className="block px-3 py-2.5 text-sm font-semibold rounded-xl text-[#2B2B2B] hover:text-[#C46081] hover:bg-[#FFECF2]"
+              className="block px-3 py-2.5 text-sm font-semibold rounded-xl text-[var(--color-text)] hover:text-[var(--color-primary)] hover:bg-[var(--color-bg)]"
               onClick={() => setMobileOpen(false)}
             >
               {link.label}
@@ -174,7 +177,7 @@ export default function Navbar() {
               <>
                 <Link
                   to="/perfil"
-                  className="block text-center px-4 py-2.5 text-[#2B2B2B] text-sm font-semibold rounded-2xl hover:bg-[#FFECF2]"
+                  className="block text-center px-4 py-2.5 text-[var(--color-text)] text-sm font-semibold rounded-2xl hover:bg-[var(--color-bg)]"
                   onClick={() => setMobileOpen(false)}
                 >
                   👤 Mi perfil
@@ -182,7 +185,7 @@ export default function Navbar() {
                 {user.esAdministrador && (
                   <Link
                     to="/admin"
-                    className="block px-3 py-2.5 text-sm font-bold rounded-xl text-[#C46081] hover:bg-[#FFECF2]"
+                    className="block px-3 py-2.5 text-sm font-bold rounded-xl text-[var(--color-primary)] hover:bg-[var(--color-bg)]"
                     onClick={() => setMobileOpen(false)}
                   >
                     Administración
@@ -190,13 +193,13 @@ export default function Navbar() {
                 )}
                 <button
                   onClick={() => { handleReport(); setMobileOpen(false); }}
-                  className="px-4 py-2.5 bg-[#C46081] text-white text-sm font-bold rounded-2xl"
+                  className="px-4 py-2.5 bg-[var(--color-primary)] text-white text-sm font-bold rounded-2xl"
                 >
                   + Reportar mascota
                 </button>
                 <button
                   onClick={() => { logout(); setMobileOpen(false); }}
-                  className="px-4 py-2.5 border-2 border-[#C46081] text-[#C46081] text-sm font-bold rounded-2xl"
+                  className="px-4 py-2.5 border-2 border-[var(--color-primary)] text-[var(--color-primary)] text-sm font-bold rounded-2xl"
                 >
                   Cerrar sesión
                 </button>
@@ -205,14 +208,14 @@ export default function Navbar() {
               <>
                 <Link
                   to="/login"
-                  className="block text-center px-4 py-2.5 border-2 border-[#C46081] text-[#C46081] text-sm font-bold rounded-2xl"
+                  className="block text-center px-4 py-2.5 border-2 border-[var(--color-primary)] text-[var(--color-primary)] text-sm font-bold rounded-2xl"
                   onClick={() => setMobileOpen(false)}
                 >
                   Iniciar sesión
                 </Link>
                 <Link
                   to="/login?mode=register"
-                  className="block text-center px-4 py-2.5 bg-[#C46081] text-white text-sm font-bold rounded-2xl"
+                  className="block text-center px-4 py-2.5 bg-[var(--color-primary)] text-white text-sm font-bold rounded-2xl"
                   onClick={() => setMobileOpen(false)}
                 >
                   Registrarme

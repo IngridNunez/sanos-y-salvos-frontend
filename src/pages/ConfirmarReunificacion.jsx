@@ -29,14 +29,14 @@ export default function ConfirmarReunificacion() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FFECF2] py-10 flex items-center justify-center">
+    <div className="min-h-screen bg-[var(--color-bg)] py-10 flex items-center justify-center">
       <div className="max-w-md w-full mx-auto px-4 sm:px-6">
         <div className="bg-white rounded-3xl p-8 shadow-sm text-center">
           {!token ? (
             <>
               <div className="text-5xl mb-4">⚠️</div>
-              <h1 className="font-black text-xl text-[#2B2B2B] mb-2">Link incompleto</h1>
-              <p className="text-sm text-[#8a7a80]">
+              <h1 className="font-black text-xl text-[var(--color-text)] mb-2">Link incompleto</h1>
+              <p className="text-sm text-[var(--color-muted)]">
                 Este link no trae la información necesaria para confirmar. Revisa que lo hayas
                 copiado completo desde el correo.
               </p>
@@ -44,15 +44,15 @@ export default function ConfirmarReunificacion() {
           ) : estado === "inicial" || estado === "confirmando" ? (
             <>
               <div className="text-5xl mb-4">🐾</div>
-              <h1 className="font-black text-xl text-[#2B2B2B] mb-2">¿Confirmas la reunificación?</h1>
-              <p className="text-sm text-[#8a7a80] mb-6">
+              <h1 className="font-black text-xl text-[var(--color-text)] mb-2">¿Confirmas la reunificación?</h1>
+              <p className="text-sm text-[var(--color-muted)] mb-6">
                 Si recuperaste a tu mascota gracias a esta persona, confirma para cerrar el
                 reporte y avisar que ya está en casa.
               </p>
               <button
                 onClick={confirmar}
                 disabled={estado === "confirmando"}
-                className="w-full py-3.5 bg-[#99A966] text-white font-bold rounded-2xl hover:bg-[#83925a] transition-colors text-sm disabled:opacity-60"
+                className="w-full py-3.5 bg-[var(--color-secondary)] text-white font-bold rounded-2xl hover:bg-[#83925a] transition-colors text-sm disabled:opacity-60"
               >
                 {estado === "confirmando" ? "Confirmando..." : "🎉 Sí, confirmar"}
               </button>
@@ -60,17 +60,17 @@ export default function ConfirmarReunificacion() {
           ) : estado === "ok" ? (
             <>
               <div className="text-5xl mb-4">🎉</div>
-              <h1 className="font-black text-xl text-[#2B2B2B] mb-2">
+              <h1 className="font-black text-xl text-[var(--color-text)] mb-2">
                 {resultado === "YA_REUNIFICADA" ? "Este reporte ya estaba confirmado" : "¡Listo!"}
               </h1>
-              <p className="text-sm text-[#8a7a80] mb-6">
+              <p className="text-sm text-[var(--color-muted)] mb-6">
                 {resultado === "YA_REUNIFICADA"
                   ? "Alguien ya había confirmado esta reunificación antes."
                   : "El reporte quedó marcado como reunificado. Gracias por ayudar a que las mascotas vuelvan a casa."}
               </p>
               <Link
                 to="/"
-                className="inline-block px-5 py-2.5 bg-[#C46081] text-white font-bold rounded-2xl hover:bg-[#a84e6c] transition-colors text-sm"
+                className="inline-block px-5 py-2.5 bg-[var(--color-primary)] text-white font-bold rounded-2xl hover:bg-[var(--color-primary-dark)] transition-colors text-sm"
               >
                 Ir al inicio
               </Link>
@@ -78,8 +78,8 @@ export default function ConfirmarReunificacion() {
           ) : (
             <>
               <div className="text-5xl mb-4">😕</div>
-              <h1 className="font-black text-xl text-[#2B2B2B] mb-2">No se pudo confirmar</h1>
-              <p className="text-sm text-[#8a7a80]">{errorMensaje}</p>
+              <h1 className="font-black text-xl text-[var(--color-text)] mb-2">No se pudo confirmar</h1>
+              <p className="text-sm text-[var(--color-muted)]">{errorMensaje}</p>
             </>
           )}
         </div>

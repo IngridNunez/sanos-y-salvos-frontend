@@ -80,16 +80,16 @@ export default function ReportForm() {
 
   if (submitted) {
     return (
-      <div className="min-h-screen bg-[#FFECF2] flex items-center justify-center p-4">
+      <div className="min-h-screen bg-[var(--color-bg)] flex items-center justify-center p-4">
         <div className="bg-white rounded-3xl shadow-xl p-10 text-center max-w-md w-full">
           <div className="text-6xl mb-4">🎉</div>
-          <h2 className="font-black text-2xl text-[#2B2B2B] mb-3">¡Reporte recibido!</h2>
-          <p className="text-[#8a7a80] mb-6 text-sm leading-relaxed">
+          <h2 className="font-black text-2xl text-[var(--color-text)] mb-3">¡Reporte recibido!</h2>
+          <p className="text-[var(--color-muted)] mb-6 text-sm leading-relaxed">
             Tu reporte está en revisión antes de publicarse. Te agradecemos por ayudar a reunir a las mascotas con sus familias.
           </p>
           <button
             onClick={() => navigate("/")}
-            className="w-full py-4 bg-[#C46081] text-white font-bold rounded-2xl hover:bg-[#a84e6c] transition-colors"
+            className="w-full py-4 bg-[var(--color-primary)] text-white font-bold rounded-2xl hover:bg-[var(--color-primary-dark)] transition-colors"
           >
             Volver al inicio
           </button>
@@ -99,11 +99,11 @@ export default function ReportForm() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FFECF2] py-8">
+    <div className="min-h-screen bg-[var(--color-bg)] py-8">
       <div className="max-w-2xl mx-auto px-4">
         <div className="mb-6">
-          <h1 className="font-black text-3xl text-[#2B2B2B] mb-1">Reportar mascota</h1>
-          <p className="text-[#8a7a80] text-sm">Completa el formulario para publicar un reporte en la comunidad</p>
+          <h1 className="font-black text-3xl text-[var(--color-text)] mb-1">Reportar mascota</h1>
+          <p className="text-[var(--color-muted)] text-sm">Completa el formulario para publicar un reporte en la comunidad</p>
         </div>
 
         {/* Tab selector */}
@@ -115,9 +115,9 @@ export default function ReportForm() {
               className={`flex-1 py-3 rounded-2xl font-bold text-sm transition-all ${
                 tab === t
                   ? t === "extraviada"
-                    ? "bg-[#C46081] text-white shadow-md"
-                    : "bg-[#99A966] text-white shadow-md"
-                  : "text-[#8a7a80] hover:text-[#2B2B2B]"
+                    ? "bg-[var(--color-primary)] text-white shadow-md"
+                    : "bg-[var(--color-secondary)] text-white shadow-md"
+                  : "text-[var(--color-muted)] hover:text-[var(--color-text)]"
               }`}
             >
               {t === "extraviada" ? "🔴 Mascota Extraviada" : "🟢 Mascota Encontrada"}
@@ -128,12 +128,12 @@ export default function ReportForm() {
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* Photo upload */}
           <div className="bg-white rounded-3xl p-6 shadow-sm">
-            <h2 className="font-bold text-[#2B2B2B] mb-4">Foto de la mascota</h2>
+            <h2 className="font-bold text-[var(--color-text)] mb-4">Foto de la mascota</h2>
             <div
               className={`relative border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-colors ${
                 dragOver
-                  ? "border-[#C46081] bg-[#FFECF2]"
-                  : "border-[#f0d5df] hover:border-[#C46081] hover:bg-[#FFECF2]/50"
+                  ? "border-[var(--color-primary)] bg-[var(--color-bg)]"
+                  : "border-[var(--color-border)] hover:border-[var(--color-primary)] hover:bg-[var(--color-bg)]/50"
               }`}
               onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
               onDragLeave={() => setDragOver(false)}
@@ -157,18 +157,18 @@ export default function ReportForm() {
                   <button
                     type="button"
                     onClick={(e) => { e.stopPropagation(); setPhotoPreview(null); setPhotoFile(null); }}
-                    className="absolute -top-2 -right-2 w-7 h-7 bg-[#C46081] text-white rounded-full text-xs font-bold flex items-center justify-center mx-auto"
+                    className="absolute -top-2 -right-2 w-7 h-7 bg-[var(--color-primary)] text-white rounded-full text-xs font-bold flex items-center justify-center mx-auto"
                     style={{ left: "calc(50% + 52px)" }}
                   >
                     ✕
                   </button>
-                  <p className="text-sm text-[#8a7a80] mt-3">Haz clic para cambiar la foto</p>
+                  <p className="text-sm text-[var(--color-muted)] mt-3">Haz clic para cambiar la foto</p>
                 </div>
               ) : (
                 <>
                   <div className="text-4xl mb-3">📸</div>
-                  <p className="font-semibold text-[#2B2B2B] text-sm">Arrastra una foto o haz clic para subir</p>
-                  <p className="text-xs text-[#8a7a80] mt-1">JPG, PNG o WEBP hasta 10 MB</p>
+                  <p className="font-semibold text-[var(--color-text)] text-sm">Arrastra una foto o haz clic para subir</p>
+                  <p className="text-xs text-[var(--color-muted)] mt-1">JPG, PNG o WEBP hasta 10 MB</p>
                 </>
               )}
             </div>
@@ -176,11 +176,11 @@ export default function ReportForm() {
 
           {/* Basic info */}
           <div className="bg-white rounded-3xl p-6 shadow-sm">
-            <h2 className="font-bold text-[#2B2B2B] mb-4">Información básica</h2>
+            <h2 className="font-bold text-[var(--color-text)] mb-4">Información básica</h2>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-semibold text-[#2B2B2B] mb-1.5">
-                  Nombre <span className="text-[#C46081]">*</span>
+                <label className="block text-sm font-semibold text-[var(--color-text)] mb-1.5">
+                  Nombre <span className="text-[var(--color-primary)]">*</span>
                 </label>
                 <input
                   type="text"
@@ -188,14 +188,14 @@ export default function ReportForm() {
                   placeholder="¿Cómo se llama?"
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  className="w-full px-4 py-3 rounded-2xl border-2 border-[#f0d5df] text-sm focus:outline-none focus:border-[#C46081] transition-colors"
+                  className="w-full px-4 py-3 rounded-2xl border-2 border-[var(--color-border)] text-sm focus:outline-none focus:border-[var(--color-primary)] transition-colors"
                 />
               </div>
 
               {/* Species */}
               <div>
-                <label className="block text-sm font-semibold text-[#2B2B2B] mb-1.5">
-                  Especie <span className="text-[#C46081]">*</span>
+                <label className="block text-sm font-semibold text-[var(--color-text)] mb-1.5">
+                  Especie <span className="text-[var(--color-primary)]">*</span>
                 </label>
                 <div className="flex gap-3">
                   {[
@@ -209,8 +209,8 @@ export default function ReportForm() {
                       onClick={() => setForm({ ...form, species: s.value })}
                       className={`flex-1 flex flex-col items-center gap-1 py-3 rounded-2xl border-2 font-semibold text-sm transition-all ${
                         form.species === s.value
-                          ? "border-[#C46081] bg-[#FFECF2] text-[#C46081]"
-                          : "border-[#f0d5df] text-[#8a7a80] hover:border-[#C46081]/50"
+                          ? "border-[var(--color-primary)] bg-[var(--color-bg)] text-[var(--color-primary)]"
+                          : "border-[var(--color-border)] text-[var(--color-muted)] hover:border-[var(--color-primary)]/50"
                       }`}
                     >
                       <span className="text-xl">{s.icon}</span>
@@ -222,41 +222,41 @@ export default function ReportForm() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-sm font-semibold text-[#2B2B2B] mb-1.5">Raza</label>
+                  <label className="block text-sm font-semibold text-[var(--color-text)] mb-1.5">Raza</label>
                   <input
                     type="text"
                     placeholder="Labrador, Mestizo..."
                     value={form.breed}
                     onChange={(e) => setForm({ ...form, breed: e.target.value })}
-                    className="w-full px-4 py-3 rounded-2xl border-2 border-[#f0d5df] text-sm focus:outline-none focus:border-[#C46081] transition-colors"
+                    className="w-full px-4 py-3 rounded-2xl border-2 border-[var(--color-border)] text-sm focus:outline-none focus:border-[var(--color-primary)] transition-colors"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-[#2B2B2B] mb-1.5">Color</label>
+                  <label className="block text-sm font-semibold text-[var(--color-text)] mb-1.5">Color</label>
                   <input
                     type="text"
                     placeholder="Negro, Marrón..."
                     value={form.color}
                     onChange={(e) => setForm({ ...form, color: e.target.value })}
-                    className="w-full px-4 py-3 rounded-2xl border-2 border-[#f0d5df] text-sm focus:outline-none focus:border-[#C46081] transition-colors"
+                    className="w-full px-4 py-3 rounded-2xl border-2 border-[var(--color-border)] text-sm focus:outline-none focus:border-[var(--color-primary)] transition-colors"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-[#2B2B2B] mb-1.5">Patrón</label>
+                  <label className="block text-sm font-semibold text-[var(--color-text)] mb-1.5">Patrón</label>
                   <input
                     type="text"
                     placeholder="Sólido, Atigrado..."
                     value={form.pattern}
                     onChange={(e) => setForm({ ...form, pattern: e.target.value })}
-                    className="w-full px-4 py-3 rounded-2xl border-2 border-[#f0d5df] text-sm focus:outline-none focus:border-[#C46081] transition-colors"
+                    className="w-full px-4 py-3 rounded-2xl border-2 border-[var(--color-border)] text-sm focus:outline-none focus:border-[var(--color-primary)] transition-colors"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-[#2B2B2B] mb-1.5">Tamaño</label>
+                  <label className="block text-sm font-semibold text-[var(--color-text)] mb-1.5">Tamaño</label>
                   <select
                     value={form.size}
                     onChange={(e) => setForm({ ...form, size: e.target.value })}
-                    className="w-full px-4 py-3 rounded-2xl border-2 border-[#f0d5df] text-sm focus:outline-none focus:border-[#C46081] bg-white"
+                    className="w-full px-4 py-3 rounded-2xl border-2 border-[var(--color-border)] text-sm focus:outline-none focus:border-[var(--color-primary)] bg-white"
                   >
                     <option value="">Seleccionar</option>
                     <option value="pequeño">Pequeño</option>
@@ -267,8 +267,8 @@ export default function ReportForm() {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-[#2B2B2B] mb-1.5">
-                  Descripción <span className="text-[#C46081]">*</span>
+                <label className="block text-sm font-semibold text-[var(--color-text)] mb-1.5">
+                  Descripción <span className="text-[var(--color-primary)]">*</span>
                 </label>
                 <textarea
                   required
@@ -276,7 +276,7 @@ export default function ReportForm() {
                   placeholder="Describe señas particulares (no incluyas datos de contacto aquí)"
                   value={form.description}
                   onChange={(e) => setForm({ ...form, description: e.target.value })}
-                  className="w-full px-4 py-3 rounded-2xl border-2 border-[#f0d5df] text-sm focus:outline-none focus:border-[#C46081] transition-colors resize-none"
+                  className="w-full px-4 py-3 rounded-2xl border-2 border-[var(--color-border)] text-sm focus:outline-none focus:border-[var(--color-primary)] transition-colors resize-none"
                 />
               </div>
             </div>
@@ -284,30 +284,30 @@ export default function ReportForm() {
 
           {/* Location */}
           <div className="bg-white rounded-3xl p-6 shadow-sm">
-            <h2 className="font-bold text-[#2B2B2B] mb-4">Ubicación</h2>
+            <h2 className="font-bold text-[var(--color-text)] mb-4">Ubicación</h2>
             <div className="space-y-3">
               <div>
-                <label className="block text-sm font-semibold text-[#2B2B2B] mb-1.5">
-                  Comuna <span className="text-[#C46081]">*</span>
+                <label className="block text-sm font-semibold text-[var(--color-text)] mb-1.5">
+                  Comuna <span className="text-[var(--color-primary)]">*</span>
                 </label>
                 <select
                   required
                   value={form.comuna}
                   onChange={(e) => setForm({ ...form, comuna: e.target.value })}
-                  className="w-full px-4 py-3 rounded-2xl border-2 border-[#f0d5df] text-sm focus:outline-none focus:border-[#C46081] bg-white"
+                  className="w-full px-4 py-3 rounded-2xl border-2 border-[var(--color-border)] text-sm focus:outline-none focus:border-[var(--color-primary)] bg-white"
                 >
                   <option value="">Selecciona tu comuna</option>
                   {COMUNAS.map((c) => <option key={c} value={c}>{c}</option>)}
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-semibold text-[#2B2B2B] mb-1.5">Sector / Barrio</label>
+                <label className="block text-sm font-semibold text-[var(--color-text)] mb-1.5">Sector / Barrio</label>
                 <input
                   type="text"
                   placeholder="Ej: Recreo, Centro, Cerro Alegre..."
                   value={form.sector}
                   onChange={(e) => setForm({ ...form, sector: e.target.value })}
-                  className="w-full px-4 py-3 rounded-2xl border-2 border-[#f0d5df] text-sm focus:outline-none focus:border-[#C46081] transition-colors"
+                  className="w-full px-4 py-3 rounded-2xl border-2 border-[var(--color-border)] text-sm focus:outline-none focus:border-[var(--color-primary)] transition-colors"
                 />
               </div>
 
@@ -317,36 +317,36 @@ export default function ReportForm() {
                 onChange={(location) => setForm({ ...form, location })}
               />
               {!form.location && (
-                <p className="text-xs text-[#C46081] font-semibold">La ubicación en el mapa es obligatoria.</p>
+                <p className="text-xs text-[var(--color-primary)] font-semibold">La ubicación en el mapa es obligatoria.</p>
               )}
-              <div className="flex items-center gap-2 bg-[#FFECF2] rounded-2xl p-3">
-                <span className="text-[#C46081]">🔒</span>
-                <p className="text-xs text-[#8a7a80]">La ubicación pública se muestra de forma aproximada para proteger tu privacidad.</p>
+              <div className="flex items-center gap-2 bg-[var(--color-bg)] rounded-2xl p-3">
+                <span className="text-[var(--color-primary)]">🔒</span>
+                <p className="text-xs text-[var(--color-muted)]">La ubicación pública se muestra de forma aproximada para proteger tu privacidad.</p>
               </div>
             </div>
           </div>
 
           {/* Contact */}
           <div className="bg-white rounded-3xl p-6 shadow-sm">
-            <h2 className="font-bold text-[#2B2B2B] mb-4">Contacto</h2>
+            <h2 className="font-bold text-[var(--color-text)] mb-4">Contacto</h2>
             <div>
-              <label className="block text-sm font-semibold text-[#2B2B2B] mb-1.5">
-                Teléfono <span className="text-[#8a7a80] font-normal">(opcional · privado)</span>
+              <label className="block text-sm font-semibold text-[var(--color-text)] mb-1.5">
+                Teléfono <span className="text-[var(--color-muted)] font-normal">(opcional · privado)</span>
               </label>
               <input
                 type="tel"
                 placeholder="+56 9 1234 5678"
                 value={form.phone}
                 onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                className="w-full px-4 py-3 rounded-2xl border-2 border-[#f0d5df] text-sm focus:outline-none focus:border-[#C46081] transition-colors"
+                className="w-full px-4 py-3 rounded-2xl border-2 border-[var(--color-border)] text-sm focus:outline-none focus:border-[var(--color-primary)] transition-colors"
               />
-              <p className="text-xs text-[#8a7a80] mt-1.5">Tu número no se muestra públicamente. Solo se envía cuando alguien te contacta.</p>
+              <p className="text-xs text-[var(--color-muted)] mt-1.5">Tu número no se muestra públicamente. Solo se envía cuando alguien te contacta.</p>
             </div>
           </div>
 
           {/* Consents */}
           <div className="bg-white rounded-3xl p-6 shadow-sm space-y-3">
-            <h2 className="font-bold text-[#2B2B2B] mb-2">Consentimientos</h2>
+            <h2 className="font-bold text-[var(--color-text)] mb-2">Consentimientos</h2>
             {[
               { key: "consent1", text: "Confirmo que la información ingresada es verídica y que soy el dueño/a o quien encontró a esta mascota." },
               { key: "consent2", text: "Acepto los Términos de uso y la Política de privacidad de Sanos y Salvos, y consiento el uso de los datos para la búsqueda comunitaria." },
@@ -362,8 +362,8 @@ export default function ReportForm() {
                   <div
                     className={`w-5 h-5 rounded-lg border-2 flex items-center justify-center transition-colors ${
                       form[c.key]
-                        ? "bg-[#C46081] border-[#C46081]"
-                        : "border-[#f0d5df] group-hover:border-[#C46081]"
+                        ? "bg-[var(--color-primary)] border-[var(--color-primary)]"
+                        : "border-[var(--color-border)] group-hover:border-[var(--color-primary)]"
                     }`}
                   >
                     {form[c.key] && (
@@ -371,24 +371,24 @@ export default function ReportForm() {
                     )}
                   </div>
                 </div>
-                <span className="text-sm text-[#8a7a80] leading-relaxed">{c.text}</span>
+                <span className="text-sm text-[var(--color-muted)] leading-relaxed">{c.text}</span>
               </label>
             ))}
           </div>
 
           {/* Submit */}
           {errorEnvio && (
-            <p className="text-sm text-[#C46081] font-semibold text-center">{errorEnvio}</p>
+            <p className="text-sm text-[var(--color-primary)] font-semibold text-center">{errorEnvio}</p>
           )}
           <button
             type="submit"
             disabled={!canSubmit || enviando}
             className="w-full py-4 font-black rounded-2xl transition-all text-base shadow-lg disabled:opacity-40 disabled:cursor-not-allowed"
             style={{
-              backgroundColor: tab === "extraviada" ? "#C46081" : "#99A966",
+              backgroundColor: tab === "extraviada" ? "var(--color-primary)" : "var(--color-secondary)",
               color: "white",
               boxShadow: canSubmit
-                ? `0 8px 24px ${tab === "extraviada" ? "#C46081" : "#99A966"}40`
+                ? `0 8px 24px ${tab === "extraviada" ? "var(--color-primary)" : "var(--color-secondary)"}40`
                 : "none",
             }}
           >

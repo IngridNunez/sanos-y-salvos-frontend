@@ -57,7 +57,7 @@ export default function LocationPicker({ value, onChange }) {
           )}
         </MapContainer>
       </div>
-      <p className="text-xs text-[#8a7a80] text-center">
+      <p className="text-xs text-[var(--color-muted)] text-center">
         {value
           ? "Arrastra el pin para ajustar el punto exacto."
           : "Haz clic en el mapa donde se perdió o encontró la mascota."}

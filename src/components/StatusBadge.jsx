@@ -1,7 +1,7 @@
 const config = {
-  extraviada: { label: "EXTRAVIADA", bg: "bg-[#C46081]", text: "text-white" },
-  encontrada: { label: "ENCONTRADA", bg: "bg-[#99A966]", text: "text-white" },
-  reunificada: { label: "REUNIFICADA", bg: "bg-[#EFB357]", text: "text-white" },
+  extraviada: { label: "EXTRAVIADA", bg: "bg-[var(--color-primary)]", text: "text-white" },
+  encontrada: { label: "ENCONTRADA", bg: "bg-[var(--color-secondary)]", text: "text-white" },
+  reunificada: { label: "REUNIFICADA", bg: "bg-[var(--color-accent)]", text: "text-white" },
 };
 
 export default function StatusBadge({ status }) {

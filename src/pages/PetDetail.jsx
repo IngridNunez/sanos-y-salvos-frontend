@@ -70,19 +70,19 @@ export default function PetDetail() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#FFECF2] flex items-center justify-center">
-        <p className="text-[#8a7a80]">Cargando...</p>
+      <div className="min-h-screen bg-[var(--color-bg)] flex items-center justify-center">
+        <p className="text-[var(--color-muted)]">Cargando...</p>
       </div>
     );
   }
 
   if (!pet) {
     return (
-      <div className="min-h-screen bg-[#FFECF2] flex items-center justify-center">
+      <div className="min-h-screen bg-[var(--color-bg)] flex items-center justify-center">
         <div className="text-center">
           <div className="text-6xl mb-4">🐾</div>
-          <h2 className="font-black text-2xl text-[#2B2B2B] mb-2">Mascota no encontrada</h2>
-          <Link to="/buscar" className="text-[#C46081] font-bold hover:underline">
+          <h2 className="font-black text-2xl text-[var(--color-text)] mb-2">Mascota no encontrada</h2>
+          <Link to="/buscar" className="text-[var(--color-primary)] font-bold hover:underline">
             ← Volver al listado
           </Link>
         </div>
@@ -94,22 +94,22 @@ export default function PetDetail() {
   const speciesLabel = { perro: "🐕 Perro", gato: "🐈 Gato", otro: "🐇 Otro" };
 
   return (
-    <div className="min-h-screen bg-[#FFECF2] py-8">
+    <div className="min-h-screen bg-[var(--color-bg)] py-8">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
-        <nav className="flex items-center gap-2 text-sm text-[#8a7a80] mb-6">
-          <Link to="/" className="hover:text-[#C46081] transition-colors">Inicio</Link>
+        <nav className="flex items-center gap-2 text-sm text-[var(--color-muted)] mb-6">
+          <Link to="/" className="hover:text-[var(--color-primary)] transition-colors">Inicio</Link>
           <span>/</span>
-          <Link to="/buscar" className="hover:text-[#C46081] transition-colors">Mascotas</Link>
+          <Link to="/buscar" className="hover:text-[var(--color-primary)] transition-colors">Mascotas</Link>
           <span>/</span>
-          <span className="text-[#2B2B2B] font-semibold">{pet.name}</span>
+          <span className="text-[var(--color-text)] font-semibold">{pet.name}</span>
         </nav>
 
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
           {/* Left — photo + map */}
           <div className="lg:col-span-2 space-y-4">
             {/* Photo */}
-            <div className="relative rounded-3xl overflow-hidden aspect-square bg-[#FFECF2] shadow-md">
+            <div className="relative rounded-3xl overflow-hidden aspect-square bg-[var(--color-bg)] shadow-md">
               <img
                 src={pet.photo}
                 alt={pet.name}
@@ -122,19 +122,19 @@ export default function PetDetail() {
 
             {/* Ubicación aproximada */}
             <div className="bg-white rounded-3xl overflow-hidden shadow-sm">
-              <div className="p-4 border-b border-[#f0d5df]">
-                <h3 className="font-bold text-[#2B2B2B] text-sm">Ubicación aproximada</h3>
-                <p className="text-xs text-[#8a7a80]">{pet.comuna}</p>
+              <div className="p-4 border-b border-[var(--color-border)]">
+                <h3 className="font-bold text-[var(--color-text)] text-sm">Ubicación aproximada</h3>
+                <p className="text-xs text-[var(--color-muted)]">{pet.comuna}</p>
               </div>
               <div className="relative h-44 isolate">
                 {pet.lat != null && pet.lng != null ? (
                   <PetLocationMap lat={pet.lat} lng={pet.lng} status={pet.status} />
                 ) : (
-                  <div className="h-full flex items-center justify-center text-sm text-[#8a7a80] bg-[#FFECF2]">
+                  <div className="h-full flex items-center justify-center text-sm text-[var(--color-muted)] bg-[var(--color-bg)]">
                     Sin ubicación en el mapa
                   </div>
                 )}
-                <div className="absolute bottom-3 right-3 z-[1000] bg-white/80 backdrop-blur rounded-xl px-2 py-1 text-xs text-[#8a7a80]">
+                <div className="absolute bottom-3 right-3 z-[1000] bg-white/80 backdrop-blur rounded-xl px-2 py-1 text-xs text-[var(--color-muted)]">
                   🔒 Ubicación aproximada
                 </div>
               </div>
@@ -147,8 +147,8 @@ export default function PetDetail() {
             <div className="bg-white rounded-3xl p-6 shadow-sm">
               <div className="flex items-start justify-between mb-4">
                 <div>
-                  <h1 className="font-black text-3xl text-[#2B2B2B] mb-1">{pet.name}</h1>
-                  <p className="text-[#8a7a80]">{pet.breed}</p>
+                  <h1 className="font-black text-3xl text-[var(--color-text)] mb-1">{pet.name}</h1>
+                  <p className="text-[var(--color-muted)]">{pet.breed}</p>
                 </div>
                 <StatusBadge status={pet.status} />
               </div>
@@ -163,9 +163,9 @@ export default function PetDetail() {
                   { label: "Patrón", value: pet.pattern },
                   { label: "Fecha del reporte", value: pet.date },
                 ].map((item) => (
-                  <div key={item.label} className="bg-[#FFECF2] rounded-2xl p-3">
-                    <div className="text-xs text-[#8a7a80] mb-0.5">{item.label}</div>
-                    <div className="font-bold text-sm text-[#2B2B2B]">{item.value}</div>
+                  <div key={item.label} className="bg-[var(--color-bg)] rounded-2xl p-3">
+                    <div className="text-xs text-[var(--color-muted)] mb-0.5">{item.label}</div>
+                    <div className="font-bold text-sm text-[var(--color-text)]">{item.value}</div>
                   </div>
                 ))}
               </div>
@@ -173,18 +173,18 @@ export default function PetDetail() {
 
             {/* Description */}
             <div className="bg-white rounded-3xl p-6 shadow-sm">
-              <h2 className="font-bold text-[#2B2B2B] mb-3">Descripción</h2>
-              <p className="text-[#8a7a80] text-sm leading-relaxed">{pet.description}</p>
+              <h2 className="font-bold text-[var(--color-text)] mb-3">Descripción</h2>
+              <p className="text-[var(--color-muted)] text-sm leading-relaxed">{pet.description}</p>
             </div>
 
             {/* Location detail */}
             <div className="bg-white rounded-3xl p-6 shadow-sm">
-              <h2 className="font-bold text-[#2B2B2B] mb-3">Dónde fue vista</h2>
+              <h2 className="font-bold text-[var(--color-text)] mb-3">Dónde fue vista</h2>
               <div className="flex items-center gap-2 text-sm">
-                <span className="text-[#C46081]">📍</span>
-                <span className="font-semibold text-[#2B2B2B]">{[pet.sector, pet.comuna].filter(Boolean).join(", ")}</span>
+                <span className="text-[var(--color-primary)]">📍</span>
+                <span className="font-semibold text-[var(--color-text)]">{[pet.sector, pet.comuna].filter(Boolean).join(", ")}</span>
               </div>
-              <p className="text-xs text-[#8a7a80] mt-2">
+              <p className="text-xs text-[var(--color-muted)] mt-2">
                 La ubicación exacta se muestra solo de forma aproximada para proteger la privacidad.
               </p>
             </div>
@@ -192,12 +192,12 @@ export default function PetDetail() {
             {/* Actions */}
             <div className="bg-white rounded-3xl p-6 shadow-sm space-y-3">
               {esDueno && pet.status !== "reunificada" && (
-                <div className="bg-[#99A966]/10 border-2 border-[#99A966] rounded-2xl p-4 space-y-2">
+                <div className="bg-[var(--color-secondary)]/10 border-2 border-[var(--color-secondary)] rounded-2xl p-4 space-y-2">
                   <p className="text-xs text-[#5f6b3f] font-semibold">Este reporte es tuyo</p>
                   <button
                     onClick={marcarReunificada}
                     disabled={actualizando}
-                    className="w-full py-3.5 bg-[#99A966] text-white font-bold rounded-2xl hover:bg-[#83925a] transition-colors text-sm disabled:opacity-60"
+                    className="w-full py-3.5 bg-[var(--color-secondary)] text-white font-bold rounded-2xl hover:bg-[#83925a] transition-colors text-sm disabled:opacity-60"
                   >
                     {actualizando
                       ? "Guardando..."
@@ -205,7 +205,7 @@ export default function PetDetail() {
                         ? "🎉 ¡Ya se la devolví a su dueño! Marcar como reunificada"
                         : "🎉 ¡Ya la encontré! Marcar como reunificada"}
                   </button>
-                  {errorEstado && <p className="text-xs text-[#C46081]">{errorEstado}</p>}
+                  {errorEstado && <p className="text-xs text-[var(--color-primary)]">{errorEstado}</p>}
                 </div>
               )}
 
@@ -213,7 +213,7 @@ export default function PetDetail() {
                 <>
                   <button
                     onClick={() => setShowContact(true)}
-                    className="w-full py-4 bg-[#C46081] text-white font-bold rounded-2xl hover:bg-[#a84e6c] transition-all shadow-md shadow-[#C46081]/20 text-sm"
+                    className="w-full py-4 bg-[var(--color-primary)] text-white font-bold rounded-2xl hover:bg-[var(--color-primary-dark)] transition-all shadow-md shadow-[var(--color-primary)]/20 text-sm"
                   >
                     💬 Contactar
                   </button>
@@ -224,14 +224,14 @@ export default function PetDetail() {
                   {pet.status === "reunificada" ? null : pet.status === "extraviada" ? (
                     <button
                       onClick={() => setShowContact(true)}
-                      className="w-full py-3.5 border-2 border-[#99A966] text-[#99A966] font-bold rounded-2xl hover:bg-[#99A966]/10 transition-colors text-sm"
+                      className="w-full py-3.5 border-2 border-[var(--color-secondary)] text-[var(--color-secondary)] font-bold rounded-2xl hover:bg-[var(--color-secondary)]/10 transition-colors text-sm"
                     >
                       👀 ¿La viste? Cuéntanos
                     </button>
                   ) : (
                     <button
                       onClick={() => setShowContact(true)}
-                      className="w-full py-3.5 border-2 border-[#C46081] text-[#C46081] font-bold rounded-2xl hover:bg-[#FFECF2] transition-colors text-sm"
+                      className="w-full py-3.5 border-2 border-[var(--color-primary)] text-[var(--color-primary)] font-bold rounded-2xl hover:bg-[var(--color-bg)] transition-colors text-sm"
                     >
                       🐾 ¿Es tuya esta mascota?
                     </button>
@@ -241,7 +241,7 @@ export default function PetDetail() {
 
               <button
                 onClick={() => navigate(-1)}
-                className="w-full py-3 text-sm text-[#8a7a80] font-semibold hover:text-[#C46081] transition-colors"
+                className="w-full py-3 text-sm text-[var(--color-muted)] font-semibold hover:text-[var(--color-primary)] transition-colors"
               >
                 ← Volver al listado
               </button>
