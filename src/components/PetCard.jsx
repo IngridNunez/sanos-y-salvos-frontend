@@ -15,23 +15,19 @@ export default function PetCard({ pet }) {
           alt={pet.name}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
         />
-        <div className="absolute top-2 left-2">
+        <div className="absolute top-2 left-2 flex flex-col items-start gap-1">
           <StatusBadge status={pet.status} />
-        </div>
-        {pet.moderationStatus === "pendiente" && (
-          <div className="absolute top-2 right-2">
-            <span className="bg-[#8a7a80] text-white text-[10px] font-bold tracking-widest px-2.5 py-1 rounded-full uppercase">
+          {pet.moderationStatus === "pendiente" && (
+            <span className="bg-amber-600 text-white text-[10px] font-bold tracking-widest px-2.5 py-1 rounded-full uppercase">
               🕓 En revisión
             </span>
-          </div>
-        )}
-        {pet.moderationStatus === "rechazada" && (
-          <div className="absolute top-2 right-2">
-            <span className="bg-[#2B2B2B] text-white text-[10px] font-bold tracking-widest px-2.5 py-1 rounded-full uppercase">
+          )}
+          {pet.moderationStatus === "rechazada" && (
+            <span className="bg-red-700 text-white text-[10px] font-bold tracking-widest px-2.5 py-1 rounded-full uppercase">
               No publicado
             </span>
-          </div>
-        )}
+          )}
+        </div>
       </div>
       <div className="flex-1 min-w-0 p-4 flex flex-col justify-between">
         <div>

@@ -59,8 +59,13 @@ export async function obtenerMascotas() {
   return contenido.map(mapMascota);
 }
 
+/* credentials: "include" para que, si hay sesión, viaje la cookie y el bff
+ * pueda agregar X-User-Id — así el dueño puede ver el detalle de su propio
+ * reporte aunque todavía esté pendiente o lo hayan rechazado (ver
+ * MascotaService.obtenerPorId en ms-mascotas). Para invitados sin sesión no
+ * cambia nada: sin cookie, sigue siendo acceso libre a lo ya aprobado. */
 export async function obtenerMascotaPorId(id) {
-  const response = await fetch(`${API_URL}/api/v1/mascotas/${id}`);
+  const response = await fetch(`${API_URL}/api/v1/mascotas/${id}`, { credentials: "include" });
   if (response.status === 404) {
     return null;
   }

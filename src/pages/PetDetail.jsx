@@ -191,7 +191,7 @@ export default function PetDetail() {
 
             {/* Actions */}
             <div className="bg-white rounded-3xl p-6 shadow-sm space-y-3">
-              {esDueno && pet.status !== "reunificada" && (
+              {esDueno && pet.status !== "reunificada" && pet.moderationStatus === "aprobada" && (
                 <div className="bg-[var(--color-secondary)]/10 border-2 border-[var(--color-secondary)] rounded-2xl p-4 space-y-2">
                   <p className="text-xs text-[#5f6b3f] font-semibold">Este reporte es tuyo</p>
                   <button
@@ -206,6 +206,23 @@ export default function PetDetail() {
                         : "🎉 ¡Ya la encontré! Marcar como reunificada"}
                   </button>
                   {errorEstado && <p className="text-xs text-[var(--color-primary)]">{errorEstado}</p>}
+                </div>
+              )}
+
+              {/* el dueño viendo su propio reporte, antes de que un admin lo revise
+                  o si lo rechazaron — sin el botón de reunificar, que no tiene
+                  sentido hasta que esté publicado */}
+              {esDueno && pet.moderationStatus !== "aprobada" && (
+                <div className={`rounded-2xl p-4 border-2 ${
+                  pet.moderationStatus === "pendiente"
+                    ? "bg-amber-50 border-amber-400"
+                    : "bg-red-50 border-red-400"
+                }`}>
+                  <p className={`text-sm font-bold ${pet.moderationStatus === "pendiente" ? "text-amber-800" : "text-red-700"}`}>
+                    {pet.moderationStatus === "pendiente"
+                      ? "🕓 Este reporte está en revisión y aún no es visible para el público."
+                      : "🚫 Este reporte fue rechazado por un administrador y no es visible para el público."}
+                  </p>
                 </div>
               )}
 

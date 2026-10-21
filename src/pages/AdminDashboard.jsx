@@ -252,7 +252,7 @@ export default function AdminDashboard() {
                             {mascota.moderationStatus}
                           </span>
                         </div>
-                        <p className="mt-3 whitespace-pre-line text-sm leading-relaxed text-[#51474b]">{mascota.description || "Sin descripción."}</p>
+                        <p className="mt-3 whitespace-pre-line text-sm leading-relaxed text-[var(--color-text)]">{mascota.description || "Sin descripción."}</p>
 
                         <button
                           type="button"
@@ -327,14 +327,16 @@ export default function AdminDashboard() {
                               </button>
                             </>
                           )}
-                          <button
-                            type="button"
-                            disabled={accionId !== null}
-                            onClick={() => moderar(mascota, "eliminar")}
-                            className="rounded-xl border border-red-200 px-3 py-2 text-sm font-bold text-red-700 hover:bg-red-50 disabled:opacity-50"
-                          >
-                            Eliminar definitivamente
-                          </button>
+                          {filtro.id !== "pendiente" && (
+                            <button
+                              type="button"
+                              disabled={accionId !== null}
+                              onClick={() => moderar(mascota, "eliminar")}
+                              className="rounded-xl border border-red-200 px-3 py-2 text-sm font-bold text-red-700 hover:bg-red-50 disabled:opacity-50"
+                            >
+                              Eliminar definitivamente
+                            </button>
+                          )}
                         </div>
                       </div>
                     </article>
