@@ -241,7 +241,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-black">
       {/* HERO */}
       <section className="relative bg-gradient-to-b from-[var(--color-bg)] to-[var(--color-white)] overflow-hidden pb-20 lg:pb-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
