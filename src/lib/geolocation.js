@@ -12,10 +12,12 @@ export function redondear(valor) {
  * solo se debe llamar como reacción a un clic del usuario, nunca al cargar
  * la página, para no spamear el permiso sin que la persona lo pida.
  *
- * Android/iOS dejan elegir "ubicación aproximada" o "precisa" en el propio
- * diálogo de permiso — eso lo decide el sistema operativo, la página no
- * puede ocultar esa opción. Para que de igual cuál elija la persona, acá
- * se redondea la coordenada apenas llega, antes de usarla para nada. */
+ * Sin redondear a propósito: a diferencia de la ubicación de un reporte
+ * (que se guarda y cualquiera la ve), esta coordenada es la del usuario
+ * buscando "cerca de mí" — nunca se guarda, solo se usa al vuelo para
+ * calcular distancia contra las alertas activas. Redondearla acá no
+ * protege a nadie, solo haría que el punto en el mapa no coincida con
+ * dónde está la persona de verdad. */
 export function solicitarUbicacionActual() {
   return new Promise((resolve, reject) => {
     if (!("geolocation" in navigator)) {
@@ -25,8 +27,8 @@ export function solicitarUbicacionActual() {
     navigator.geolocation.getCurrentPosition(
       (posicion) =>
         resolve({
-          lat: redondear(posicion.coords.latitude),
-          lng: redondear(posicion.coords.longitude),
+          lat: posicion.coords.latitude,
+          lng: posicion.coords.longitude,
         }),
       (error) => reject(mapearErrorGeolocalizacion(error)),
       { enableHighAccuracy: false, timeout: 10000, maximumAge: 5 * 60 * 1000 },
