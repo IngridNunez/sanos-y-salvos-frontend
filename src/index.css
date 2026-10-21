@@ -31,10 +31,10 @@
  * para que la persona pueda elegir y quede guardado. */
 .dark {
   --color-bg: #0a0a0a;
-  --color-white: #1c1c1e;
+  --color-white: #242424;
   --color-text: #f7e9ee;
   --color-muted: #b89aa3;
-  --color-border: #3a3a3c;
+  --color-border: #434345;
 }
 
 * {
