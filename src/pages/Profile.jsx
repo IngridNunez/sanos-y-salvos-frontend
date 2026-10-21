@@ -171,7 +171,7 @@ export default function Profile() {
           <h2 className="font-black text-xl text-[var(--color-text)] mb-4">Mis reportes</h2>
 
             {pets.length > 0 && (
-              <div className="relative mb-12 max-w-2xl">
+              <div className="relative mb-10 max-w-2xl">
                 <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--color-muted)]">🔍</span>
                 <input
                   type="text"
