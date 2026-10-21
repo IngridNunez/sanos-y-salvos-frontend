@@ -23,18 +23,18 @@ export default function AuthCallback() {
   }, [searchParams, loginWithTokens, navigate]);
 
   return (
-    <div className="min-h-screen bg-[#FFECF2] flex items-center justify-center p-4">
+    <div className="min-h-screen bg-[var(--color-bg)] flex items-center justify-center p-4">
       <div className="w-full max-w-sm bg-white rounded-3xl shadow-xl p-8 text-center">
         {error ? (
           <>
-            <p className="font-black text-lg text-[#2B2B2B] mb-2">No se pudo iniciar sesión</p>
-            <p className="text-sm text-[#8a7a80] mb-6">{error}</p>
-            <Link to="/login" className="text-sm text-[#C46081] font-semibold hover:underline">
+            <p className="font-black text-lg text-[var(--color-text)] mb-2">No se pudo iniciar sesión</p>
+            <p className="text-sm text-[var(--color-muted)] mb-6">{error}</p>
+            <Link to="/login" className="text-sm text-[var(--color-primary)] font-semibold hover:underline">
               Volver a intentar
             </Link>
           </>
         ) : (
-          <p className="text-sm text-[#8a7a80]">Iniciando sesión...</p>
+          <p className="text-sm text-[var(--color-muted)]">Iniciando sesión...</p>
         )}
       </div>
     </div>

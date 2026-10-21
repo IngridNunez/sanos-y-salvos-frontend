@@ -30,7 +30,7 @@ export default function PetsMap({ pets, userLocation, radioBusquedaKm }) {
 
   return (
     <div className="rounded-3xl overflow-hidden shadow-sm relative isolate" style={{ height: 480 }}>
-      <label className="absolute z-[1000] top-3 right-3 bg-white/95 backdrop-blur rounded-2xl px-3 py-2 text-xs font-semibold text-[#2B2B2B] shadow-md flex items-center gap-2 cursor-pointer">
+      <label className="absolute z-[1000] top-3 right-3 bg-white/95 backdrop-blur rounded-2xl px-3 py-2 text-xs font-semibold text-[var(--color-text)] shadow-md flex items-center gap-2 cursor-pointer">
         <input
           type="checkbox"
           checked={showAlertRadius}
@@ -92,8 +92,8 @@ export default function PetsMap({ pets, userLocation, radioBusquedaKm }) {
                     className="w-12 h-12 rounded-xl object-cover shrink-0"
                   />
                   <div>
-                    <div className="font-bold text-sm text-[#2B2B2B]">{pet.name}</div>
-                    <div className="text-xs text-[#8a7a80]">{[pet.sector, pet.comuna].filter(Boolean).join(", ")}</div>
+                    <div className="font-bold text-sm text-[var(--color-text)]">{pet.name}</div>
+                    <div className="text-xs text-[var(--color-muted)]">{[pet.sector, pet.comuna].filter(Boolean).join(", ")}</div>
                   </div>
                 </div>
               </Popup>

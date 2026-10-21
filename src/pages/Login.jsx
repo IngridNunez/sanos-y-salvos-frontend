@@ -88,26 +88,26 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FFECF2] flex items-center justify-center p-4">
+    <div className="min-h-screen bg-[var(--color-bg)] flex items-center justify-center p-4">
       <div className="w-full max-w-sm">
         {/* Card */}
         <div className="bg-white rounded-3xl shadow-xl p-8">
           {/* Logo */}
           <div className="text-center mb-8">
-            <div className="w-16 h-16 bg-[#C46081] rounded-3xl flex items-center justify-center text-white text-3xl mx-auto mb-4 shadow-lg shadow-[#C46081]/30">
+            <div className="w-16 h-16 bg-[var(--color-primary)] rounded-3xl flex items-center justify-center text-white text-3xl mx-auto mb-4 shadow-lg shadow-[var(--color-primary)]/30">
               🐾
             </div>
-            <h1 className="font-black text-2xl text-[#C46081] leading-tight">Sanos y Salvos</h1>
-            <p className="text-xs text-[#8a7a80] mt-0.5">Juntos los encontramos</p>
+            <h1 className="font-black text-2xl text-[var(--color-primary)] leading-tight">Sanos y Salvos</h1>
+            <p className="text-xs text-[var(--color-muted)] mt-0.5">Juntos los encontramos</p>
           </div>
 
           {/* Tabs login/registro */}
-          <div className="bg-[#FFECF2] rounded-2xl p-1 flex mb-6">
+          <div className="bg-[var(--color-bg)] rounded-2xl p-1 flex mb-6">
             <button
               type="button"
               onClick={() => cambiarModo("login")}
               className={`flex-1 py-2.5 rounded-xl font-bold text-sm transition-all ${
-                !isRegisterMode ? "bg-white text-[#C46081] shadow-sm" : "text-[#8a7a80]"
+                !isRegisterMode ? "bg-white text-[var(--color-primary)] shadow-sm" : "text-[var(--color-muted)]"
               }`}
             >
               Iniciar sesión
@@ -116,7 +116,7 @@ export default function Login() {
               type="button"
               onClick={() => cambiarModo("register")}
               className={`flex-1 py-2.5 rounded-xl font-bold text-sm transition-all ${
-                isRegisterMode ? "bg-white text-[#C46081] shadow-sm" : "text-[#8a7a80]"
+                isRegisterMode ? "bg-white text-[var(--color-primary)] shadow-sm" : "text-[var(--color-muted)]"
               }`}
             >
               Registrarme
@@ -125,10 +125,10 @@ export default function Login() {
 
           {isRegisterMode && step === "confirm" ? (
             <>
-              <h2 className="font-black text-xl text-[#2B2B2B] text-center mb-2">
+              <h2 className="font-black text-xl text-[var(--color-text)] text-center mb-2">
                 Revisa tu correo
               </h2>
-              <p className="text-sm text-[#8a7a80] text-center mb-8">
+              <p className="text-sm text-[var(--color-muted)] text-center mb-8">
                 Te enviamos un código a <span className="font-semibold">{email}</span>. Ingrésalo para confirmar tu cuenta.
               </p>
               <form onSubmit={handleConfirmCode} className="space-y-3">
@@ -138,13 +138,13 @@ export default function Login() {
                   placeholder="Código de confirmación"
                   value={codigo}
                   onChange={(e) => setCodigo(e.target.value)}
-                  className="w-full px-4 py-3 rounded-2xl border-2 border-[#f0d5df] text-sm text-center tracking-widest focus:outline-none focus:border-[#C46081] transition-colors"
+                  className="w-full px-4 py-3 rounded-2xl border-2 border-[var(--color-border)] text-sm text-center tracking-widest focus:outline-none focus:border-[var(--color-primary)] transition-colors"
                 />
-                {error && <p className="text-xs text-[#C46081] font-semibold">{error}</p>}
+                {error && <p className="text-xs text-[var(--color-primary)] font-semibold">{error}</p>}
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-3.5 bg-[#C46081] text-white font-bold rounded-2xl hover:bg-[#a84e6c] transition-colors disabled:opacity-50"
+                  className="w-full py-3.5 bg-[var(--color-primary)] text-white font-bold rounded-2xl hover:bg-[var(--color-primary-dark)] transition-colors disabled:opacity-50"
                 >
                   {loading ? "Confirmando..." : "Confirmar cuenta"}
                 </button>
@@ -152,10 +152,10 @@ export default function Login() {
             </>
           ) : (
             <>
-              <h2 className="font-black text-xl text-[#2B2B2B] text-center mb-2">
+              <h2 className="font-black text-xl text-[var(--color-text)] text-center mb-2">
                 {isRegisterMode ? "Crea tu cuenta" : (<>Inicia sesión para ayudar<br />a reunir mascotas</>)}
               </h2>
-              <p className="text-sm text-[#8a7a80] text-center mb-8">
+              <p className="text-sm text-[var(--color-muted)] text-center mb-8">
                 {isRegisterMode
                   ? "Regístrate para poder reportar mascotas."
                   : "Accede para reportar mascotas o gestionar tus reportes."}
@@ -164,7 +164,7 @@ export default function Login() {
               {/* Google button */}
               <button
                 onClick={handleGoogleLogin}
-                className="w-full flex items-center justify-center gap-3 px-4 py-3.5 border-2 border-[#dadce0] rounded-2xl text-sm font-semibold text-[#2B2B2B] hover:bg-gray-50 transition-colors shadow-sm"
+                className="w-full flex items-center justify-center gap-3 px-4 py-3.5 border-2 border-[#dadce0] rounded-2xl text-sm font-semibold text-[var(--color-text)] hover:bg-gray-50 transition-colors shadow-sm"
               >
                 {/* Google logo SVG */}
                 <svg width="18" height="18" viewBox="0 0 18 18">
@@ -178,9 +178,9 @@ export default function Login() {
 
               {/* Divider */}
               <div className="flex items-center gap-3 my-5">
-                <div className="flex-1 h-px bg-[#f0d5df]" />
-                <span className="text-xs text-[#8a7a80]">o con tu correo</span>
-                <div className="flex-1 h-px bg-[#f0d5df]" />
+                <div className="flex-1 h-px bg-[var(--color-border)]" />
+                <span className="text-xs text-[var(--color-muted)]">o con tu correo</span>
+                <div className="flex-1 h-px bg-[var(--color-border)]" />
               </div>
 
               {/* Email/password form */}
@@ -191,7 +191,7 @@ export default function Login() {
                   placeholder="Correo electrónico"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-3 rounded-2xl border-2 border-[#f0d5df] text-sm focus:outline-none focus:border-[#C46081] transition-colors"
+                  className="w-full px-4 py-3 rounded-2xl border-2 border-[var(--color-border)] text-sm focus:outline-none focus:border-[var(--color-primary)] transition-colors"
                 />
                 <input
                   type="password"
@@ -199,18 +199,18 @@ export default function Login() {
                   placeholder="Contraseña"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-3 rounded-2xl border-2 border-[#f0d5df] text-sm focus:outline-none focus:border-[#C46081] transition-colors"
+                  className="w-full px-4 py-3 rounded-2xl border-2 border-[var(--color-border)] text-sm focus:outline-none focus:border-[var(--color-primary)] transition-colors"
                 />
                 {isRegisterMode && (
                   <>
-                    <p className="text-xs text-[#8a7a80] -mt-1">Mínimo 8 caracteres.</p>
+                    <p className="text-xs text-[var(--color-muted)] -mt-1">Mínimo 8 caracteres.</p>
                     <input
                       type="password"
                       required
                       placeholder="Confirmar contraseña"
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
-                      className="w-full px-4 py-3 rounded-2xl border-2 border-[#f0d5df] text-sm focus:outline-none focus:border-[#C46081] transition-colors"
+                      className="w-full px-4 py-3 rounded-2xl border-2 border-[var(--color-border)] text-sm focus:outline-none focus:border-[var(--color-primary)] transition-colors"
                     />
                     <label className="flex items-start gap-2.5 cursor-pointer">
                       <input
@@ -219,9 +219,9 @@ export default function Login() {
                         onChange={(e) => setAceptaTerminos(e.target.checked)}
                         className="mt-0.5"
                       />
-                      <span className="text-xs text-[#8a7a80] leading-relaxed">
+                      <span className="text-xs text-[var(--color-muted)] leading-relaxed">
                         Acepto los{" "}
-                        <Link to="/terminos" target="_blank" className="text-[#C46081] font-semibold hover:underline">
+                        <Link to="/terminos" target="_blank" className="text-[var(--color-primary)] font-semibold hover:underline">
                           Términos de servicio
                         </Link>
                         .
@@ -234,9 +234,9 @@ export default function Login() {
                         onChange={(e) => setAceptaPrivacidad(e.target.checked)}
                         className="mt-0.5"
                       />
-                      <span className="text-xs text-[#8a7a80] leading-relaxed">
+                      <span className="text-xs text-[var(--color-muted)] leading-relaxed">
                         Acepto la{" "}
-                        <Link to="/privacidad" target="_blank" className="text-[#C46081] font-semibold hover:underline">
+                        <Link to="/privacidad" target="_blank" className="text-[var(--color-primary)] font-semibold hover:underline">
                           Política de privacidad
                         </Link>
                         .
@@ -244,11 +244,11 @@ export default function Login() {
                     </label>
                   </>
                 )}
-                {error && <p className="text-xs text-[#C46081] font-semibold">{error}</p>}
+                {error && <p className="text-xs text-[var(--color-primary)] font-semibold">{error}</p>}
                 <button
                   type="submit"
                   disabled={loading || (isRegisterMode && (!aceptaTerminos || !aceptaPrivacidad))}
-                  className="w-full py-3.5 bg-[#C46081] text-white font-bold rounded-2xl hover:bg-[#a84e6c] transition-colors disabled:opacity-50"
+                  className="w-full py-3.5 bg-[var(--color-primary)] text-white font-bold rounded-2xl hover:bg-[var(--color-primary-dark)] transition-colors disabled:opacity-50"
                 >
                   {loading ? "Un momento..." : isRegisterMode ? "Crear cuenta" : "Iniciar sesión"}
                 </button>
@@ -258,17 +258,17 @@ export default function Login() {
 
           {/* Legal (solo en login; en registro ya está el checkbox obligatorio) */}
           {!isRegisterMode && (
-            <p className="text-xs text-[#8a7a80] text-center mt-6 leading-relaxed">
+            <p className="text-xs text-[var(--color-muted)] text-center mt-6 leading-relaxed">
               Al continuar, aceptas nuestros{" "}
-              <Link to="/terminos" className="text-[#C46081] font-semibold hover:underline">Términos de servicio</Link>{" "}
+              <Link to="/terminos" className="text-[var(--color-primary)] font-semibold hover:underline">Términos de servicio</Link>{" "}
               y{" "}
-              <Link to="/privacidad" className="text-[#C46081] font-semibold hover:underline">Política de privacidad</Link>.
+              <Link to="/privacidad" className="text-[var(--color-primary)] font-semibold hover:underline">Política de privacidad</Link>.
             </p>
           )}
         </div>
 
         <div className="text-center mt-5">
-          <Link to="/" className="text-sm text-[#8a7a80] hover:text-[#C46081] transition-colors font-semibold">
+          <Link to="/" className="text-sm text-[var(--color-muted)] hover:text-[var(--color-primary)] transition-colors font-semibold">
             ← Volver al inicio sin sesión
           </Link>
         </div>

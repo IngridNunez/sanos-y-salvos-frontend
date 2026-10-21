@@ -4,6 +4,7 @@ import { COMUNAS } from "@/data/pets";
 import { obtenerMascotas } from "@/api/mascotas";
 import { obtenerAlertasPorZona } from "@/api/alertas";
 import { solicitarUbicacionActual } from "@/lib/geolocation";
+import { useAlertasProximidad } from "@/hooks/useAlertasProximidad";
 import PetCard from "@/components/PetCard";
 import StatusBadge from "@/components/StatusBadge";
 import PetsMap from "@/components/map/PetsMap";
@@ -46,6 +47,13 @@ export default function Listing() {
   const [idsMascotasCercanas, setIdsMascotasCercanas] = useState(null);
   const [buscandoCercania, setBuscandoCercania] = useState(false);
   const [errorCercania, setErrorCercania] = useState(null);
+
+  const {
+    activo: avisosActivos,
+    error: errorAvisos,
+    activar: activarAvisos,
+    desactivar: desactivarAvisos,
+  } = useAlertasProximidad();
 
   useEffect(() => {
     obtenerMascotas()
@@ -111,12 +119,12 @@ export default function Listing() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FFECF2] py-8">
+    <div className="min-h-screen bg-[var(--color-bg)] py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-6">
-          <h1 className="font-black text-3xl text-[#2B2B2B] mb-1">Buscar mascotas</h1>
-          <p className="text-[#8a7a80]">Encuentra o reporta mascotas en tu comuna</p>
+          <h1 className="font-black text-3xl text-[var(--color-text)] mb-1">Buscar mascotas</h1>
+          <p className="text-[var(--color-muted)]">Encuentra o reporta mascotas en tu comuna</p>
         </div>
 
         {/* Filters */}
@@ -125,7 +133,7 @@ export default function Listing() {
             <select
               value={filterComuna}
               onChange={(e) => setFilterComuna(e.target.value)}
-              className="px-4 py-3 rounded-2xl border-2 border-[#f0d5df] text-sm font-semibold text-[#2B2B2B] focus:outline-none focus:border-[#C46081] bg-white"
+              className="px-4 py-3 rounded-2xl border-2 border-[var(--color-border)] text-sm font-semibold text-[var(--color-text)] focus:outline-none focus:border-[var(--color-primary)] bg-white"
             >
               <option value="">📍 Todas las comunas</option>
               {COMUNAS.map((c) => <option key={c} value={c}>{c}</option>)}
@@ -134,7 +142,7 @@ export default function Listing() {
             <select
               value={filterSpecies}
               onChange={(e) => setFilterSpecies(e.target.value)}
-              className="px-4 py-3 rounded-2xl border-2 border-[#f0d5df] text-sm font-semibold text-[#2B2B2B] focus:outline-none focus:border-[#C46081] bg-white"
+              className="px-4 py-3 rounded-2xl border-2 border-[var(--color-border)] text-sm font-semibold text-[var(--color-text)] focus:outline-none focus:border-[var(--color-primary)] bg-white"
             >
               <option value="">🐾 Tipo de mascota</option>
               <option value="perro">🐕 Perro</option>
@@ -145,7 +153,7 @@ export default function Listing() {
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
-              className="px-4 py-3 rounded-2xl border-2 border-[#f0d5df] text-sm font-semibold text-[#2B2B2B] focus:outline-none focus:border-[#C46081] bg-white"
+              className="px-4 py-3 rounded-2xl border-2 border-[var(--color-border)] text-sm font-semibold text-[var(--color-text)] focus:outline-none focus:border-[var(--color-primary)] bg-white"
             >
               <option value="">📋 Todos los estados</option>
               <option value="extraviada">🔴 Extraviada</option>
@@ -157,37 +165,58 @@ export default function Listing() {
               type="date"
               value={filterDateFrom}
               onChange={(e) => setFilterDateFrom(e.target.value)}
-              className="px-4 py-3 rounded-2xl border-2 border-[#f0d5df] text-sm text-[#2B2B2B] focus:outline-none focus:border-[#C46081]"
+              className="px-4 py-3 rounded-2xl border-2 border-[var(--color-border)] text-sm text-[var(--color-text)] focus:outline-none focus:border-[var(--color-primary)]"
               placeholder="Desde"
             />
             <input
               type="date"
               value={filterDateTo}
               onChange={(e) => setFilterDateTo(e.target.value)}
-              className="px-4 py-3 rounded-2xl border-2 border-[#f0d5df] text-sm text-[#2B2B2B] focus:outline-none focus:border-[#C46081]"
+              className="px-4 py-3 rounded-2xl border-2 border-[var(--color-border)] text-sm text-[var(--color-text)] focus:outline-none focus:border-[var(--color-primary)]"
               placeholder="Hasta"
             />
           </div>
           <div className="flex gap-2 mt-3">
             <button
               onClick={handleFilter}
-              className="px-5 py-2.5 bg-[#C46081] text-white font-bold rounded-2xl hover:bg-[#a84e6c] transition-colors text-sm"
+              className="px-5 py-2.5 bg-[var(--color-primary)] text-white font-bold rounded-2xl hover:bg-[var(--color-primary-dark)] transition-colors text-sm"
             >
               🔍 Aplicar filtros
             </button>
             <button
               onClick={clearFilters}
-              className="px-5 py-2.5 border-2 border-[#f0d5df] text-[#8a7a80] font-semibold rounded-2xl hover:border-[#C46081] hover:text-[#C46081] transition-colors text-sm"
+              className="px-5 py-2.5 border-2 border-[var(--color-border)] text-[var(--color-muted)] font-semibold rounded-2xl hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] transition-colors text-sm"
             >
               Limpiar
             </button>
           </div>
         </div>
 
+        {/* Avisos por proximidad — mientras esta pestaña esté abierta */}
+        <div className="bg-white rounded-3xl p-5 mb-6 shadow-sm flex items-center justify-between gap-4 flex-wrap">
+          <div>
+            <p className="font-bold text-[#2B2B2B] text-sm">🔔 Avisarme si entro a una zona con mascota perdida</p>
+            <p className="text-xs text-[#8a7a80] mt-0.5 max-w-xl">
+              Revisa tu ubicación cada cierto tiempo mientras esta pestaña esté abierta y te notifica apenas entras al radio de una alerta activa. Pide permiso de ubicación y de notificaciones del navegador.
+            </p>
+            {errorAvisos && <p className="text-xs text-[#C46081] font-semibold mt-1">{errorAvisos}</p>}
+          </div>
+          <button
+            onClick={avisosActivos ? desactivarAvisos : activarAvisos}
+            className={`px-4 py-2 rounded-2xl font-bold text-sm transition-colors shrink-0 ${
+              avisosActivos
+                ? "bg-[#99A966] text-white hover:bg-[#879457]"
+                : "border-2 border-[#f0d5df] text-[#2B2B2B] hover:border-[#C46081] hover:text-[#C46081]"
+            }`}
+          >
+            {avisosActivos ? "🔔 Activado — apagar" : "Activar avisos"}
+          </button>
+        </div>
+
         {/* Results header */}
         <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
-          <div className="text-sm text-[#8a7a80]">
-            <span className="font-bold text-[#2B2B2B] text-base">{filtered.length}</span> mascotas encontradas
+          <div className="text-sm text-[var(--color-muted)]">
+            <span className="font-bold text-[var(--color-text)] text-base">{filtered.length}</span> mascotas encontradas
             {filterStatus && (
               <span className="ml-2">
                 <StatusBadge status={filterStatus} />
@@ -198,7 +227,7 @@ export default function Listing() {
             {idsMascotasCercanas ? (
               <button
                 onClick={limpiarCercania}
-                className="px-4 py-2 rounded-2xl border-2 border-[#C46081] text-[#C46081] font-semibold text-sm hover:bg-[#FFECF2] transition-colors"
+                className="px-4 py-2 rounded-2xl border-2 border-[var(--color-primary)] text-[var(--color-primary)] font-semibold text-sm hover:bg-[var(--color-bg)] transition-colors"
               >
                 📍 Viendo cerca de mí — quitar
               </button>
@@ -206,20 +235,20 @@ export default function Listing() {
               <button
                 onClick={buscarCercaDeMi}
                 disabled={buscandoCercania}
-                className="px-4 py-2 rounded-2xl border-2 border-[#f0d5df] text-[#2B2B2B] font-semibold text-sm hover:border-[#C46081] hover:text-[#C46081] transition-colors disabled:opacity-50"
+                className="px-4 py-2 rounded-2xl border-2 border-[var(--color-border)] text-[var(--color-text)] font-semibold text-sm hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] transition-colors disabled:opacity-50"
               >
                 {buscandoCercania ? "Obteniendo ubicación…" : "📍 Ver cerca de mí"}
               </button>
             )}
             <button
               onClick={() => setViewMode("grid")}
-              className={`w-9 h-9 rounded-xl flex items-center justify-center text-lg transition-colors ${viewMode === "grid" ? "bg-[#C46081] text-white" : "bg-white text-[#8a7a80] hover:bg-[#FFECF2]"}`}
+              className={`w-9 h-9 rounded-xl flex items-center justify-center text-lg transition-colors ${viewMode === "grid" ? "bg-[var(--color-primary)] text-white" : "bg-white text-[var(--color-muted)] hover:bg-[var(--color-bg)]"}`}
             >
               ▦
             </button>
             <button
               onClick={() => setViewMode("map")}
-              className={`w-9 h-9 rounded-xl flex items-center justify-center text-sm transition-colors ${viewMode === "map" ? "bg-[#C46081] text-white" : "bg-white text-[#8a7a80] hover:bg-[#FFECF2]"}`}
+              className={`w-9 h-9 rounded-xl flex items-center justify-center text-sm transition-colors ${viewMode === "map" ? "bg-[var(--color-primary)] text-white" : "bg-white text-[var(--color-muted)] hover:bg-[var(--color-bg)]"}`}
             >
               🗺
             </button>
@@ -227,17 +256,17 @@ export default function Listing() {
         </div>
 
         {errorCercania && (
-          <p className="text-sm text-[#C46081] font-semibold mb-4">{errorCercania}</p>
+          <p className="text-sm text-[var(--color-primary)] font-semibold mb-4">{errorCercania}</p>
         )}
 
         {/* Content */}
         {loading ? (
           <div className="text-center py-24 bg-white rounded-3xl">
-            <p className="text-[#8a7a80]">Cargando mascotas...</p>
+            <p className="text-[var(--color-muted)]">Cargando mascotas...</p>
           </div>
         ) : error ? (
           <div className="text-center py-24 bg-white rounded-3xl">
-            <p className="text-[#C46081] font-semibold">No se pudo conectar con el servidor: {error}</p>
+            <p className="text-[var(--color-primary)] font-semibold">No se pudo conectar con el servidor: {error}</p>
           </div>
         ) : viewMode === "map" ? (
           <PetsMap
@@ -250,11 +279,11 @@ export default function Listing() {
         ) : filtered.length === 0 ? (
           <div className="text-center py-24 bg-white rounded-3xl">
             <div className="text-6xl mb-4">🔍</div>
-            <h3 className="font-black text-xl text-[#2B2B2B] mb-2">Sin resultados</h3>
-            <p className="text-[#8a7a80] mb-6">No encontramos mascotas con esos filtros. Intenta con otras opciones.</p>
+            <h3 className="font-black text-xl text-[var(--color-text)] mb-2">Sin resultados</h3>
+            <p className="text-[var(--color-muted)] mb-6">No encontramos mascotas con esos filtros. Intenta con otras opciones.</p>
             <button
               onClick={clearFilters}
-              className="px-5 py-2.5 bg-[#C46081] text-white font-bold rounded-2xl hover:bg-[#a84e6c] transition-colors text-sm"
+              className="px-5 py-2.5 bg-[var(--color-primary)] text-white font-bold rounded-2xl hover:bg-[var(--color-primary-dark)] transition-colors text-sm"
             >
               Ver todas las mascotas
             </button>
@@ -273,7 +302,7 @@ export default function Listing() {
                 <button
                   disabled={page === 1}
                   onClick={() => setPage(page - 1)}
-                  className="px-4 py-2 rounded-2xl border-2 border-[#f0d5df] text-sm font-semibold text-[#8a7a80] disabled:opacity-40 hover:border-[#C46081] hover:text-[#C46081] transition-colors"
+                  className="px-4 py-2 rounded-2xl border-2 border-[var(--color-border)] text-sm font-semibold text-[var(--color-muted)] disabled:opacity-40 hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] transition-colors"
                 >
                   ← Anterior
                 </button>
@@ -281,7 +310,7 @@ export default function Listing() {
                   <button
                     key={p}
                     onClick={() => setPage(p)}
-                    className={`w-9 h-9 rounded-xl text-sm font-bold transition-colors ${p === page ? "bg-[#C46081] text-white" : "bg-white text-[#8a7a80] hover:bg-[#FFECF2]"}`}
+                    className={`w-9 h-9 rounded-xl text-sm font-bold transition-colors ${p === page ? "bg-[var(--color-primary)] text-white" : "bg-white text-[var(--color-muted)] hover:bg-[var(--color-bg)]"}`}
                   >
                     {p}
                   </button>
@@ -289,7 +318,7 @@ export default function Listing() {
                 <button
                   disabled={page === totalPages}
                   onClick={() => setPage(page + 1)}
-                  className="px-4 py-2 rounded-2xl border-2 border-[#f0d5df] text-sm font-semibold text-[#8a7a80] disabled:opacity-40 hover:border-[#C46081] hover:text-[#C46081] transition-colors"
+                  className="px-4 py-2 rounded-2xl border-2 border-[var(--color-border)] text-sm font-semibold text-[var(--color-muted)] disabled:opacity-40 hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] transition-colors"
                 >
                   Siguiente →
                 </button>
