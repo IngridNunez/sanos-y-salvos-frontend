@@ -81,11 +81,12 @@ export default function Profile() {
   }, {});
 
   return (
-    <div className="min-h-screen bg-[var(--color-bg)]">
-      {/* Panel lateral — en PC queda fijo al borde izquierdo, debajo de la barra de
-       * navegación (h-16 = 64px), con su propio color para distinguirse del fondo.
-       * En celular se apila arriba como un bloque normal, sin fijarse. */}
-      <aside className="bg-white lg:fixed lg:left-0 lg:top-16 lg:bottom-0 lg:w-72 lg:overflow-y-auto lg:border-r lg:border-[var(--color-border)] rounded-3xl lg:rounded-none shadow-sm lg:shadow-none mx-4 sm:mx-6 lg:mx-0 mt-8 lg:mt-0 p-5 space-y-5">
+    <div className="min-h-screen bg-[var(--color-bg)] flex flex-col lg:flex-row">
+      {/* Panel lateral — en PC se queda pegado al borde izquierdo mientras se hace
+       * scroll por esta página (sticky), y se suelta solo antes del Footer, que es
+       * de otro componente y no debe quedar tapado. Con su propio color de fondo
+       * para distinguirse del resto. En celular se apila arriba, sin fijarse. */}
+      <aside className="bg-white lg:w-72 lg:shrink-0 lg:sticky lg:top-16 lg:self-start lg:max-h-[calc(100vh-4rem)] lg:overflow-y-auto lg:border-r lg:border-[var(--color-border)] rounded-3xl lg:rounded-none shadow-sm lg:shadow-none mx-4 sm:mx-6 lg:mx-0 mt-8 lg:mt-0 p-5 space-y-5">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-[var(--color-bg)] flex items-center justify-center text-base font-black text-[var(--color-primary)] shrink-0">
             {(user.name || user.email || "?").charAt(0).toUpperCase()}
@@ -165,8 +166,8 @@ export default function Profile() {
         )}
       </aside>
 
-      {/* Contenido — con margen a la izquierda en PC para no quedar debajo del panel fijo */}
-      <div className="lg:ml-72 px-4 sm:px-6 lg:px-8 py-8">
+      {/* Contenido */}
+      <div className="flex-1 min-w-0 px-4 sm:px-6 lg:px-8 py-8">
         <div className="max-w-6xl">
           <h2 className="font-black text-xl text-[var(--color-text)] mb-4">Mis reportes</h2>
 
