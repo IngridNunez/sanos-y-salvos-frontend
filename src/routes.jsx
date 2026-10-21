@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components -- patrón estándar de createBrowserRouter con componentes inline */
-import { createBrowserRouter, Outlet } from "react-router";
+import { createBrowserRouter, Outlet, useLocation } from "react-router";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import InAppBrowserBanner from "@/components/InAppBrowserBanner";
@@ -21,6 +21,12 @@ import AdminDashboard from "@/pages/AdminDashboard";
 import ErrorPage from "@/pages/ErrorPage";
 
 function Root() {
+  // El Perfil tiene su propio panel lateral pegajoso (sticky) a todo el alto
+  // de su contenido — el Footer debajo se ve cortado por esa transición, así
+  // que en esta página se omite.
+  const { pathname } = useLocation();
+  const ocultarFooter = pathname.startsWith("/perfil");
+
   return (
     <div className="flex flex-col min-h-screen">
       <InAppBrowserBanner />
@@ -28,7 +34,7 @@ function Root() {
       <main className="flex-1">
         <Outlet />
       </main>
-      <Footer />
+      {!ocultarFooter && <Footer />}
     </div>
   );
 }
