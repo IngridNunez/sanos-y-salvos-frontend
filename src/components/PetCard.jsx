@@ -6,7 +6,7 @@ export default function PetCard({ pet }) {
 
   return (
     <div
-      className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-200 hover:-translate-y-0.5 cursor-pointer group flex h-44"
+      className="bg-white rounded-3xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5 cursor-pointer group flex h-44"
       onClick={() => navigate(`/mascota/${pet.id}`)}
     >
       <div className="relative w-2/5 shrink-0 h-full overflow-hidden bg-[var(--color-bg)]">
