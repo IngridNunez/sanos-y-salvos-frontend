@@ -3,6 +3,7 @@ import { useNavigate } from "react-router";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from "recharts";
 import { COMUNAS } from "@/data/pets";
 import { obtenerMascotas } from "@/api/mascotas";
+import { reporteVigente } from "@/lib/reporteVigente";
 import PetCard from "@/components/PetCard";
 import { useAuth } from "@/context/AuthContext";
 
@@ -45,7 +46,7 @@ function enRango(fechaISO, range) {
   return ahora - fecha <= dias * 24 * 60 * 60 * 1000;
 }
 
-function StatsBlock({ pets }) {
+export function StatsBlock({ pets }) {
   const [comuna, setComuna] = useState("Viña del Mar");
   const [range, setRange] = useState("este-mes");
 
@@ -219,9 +220,12 @@ export default function Home() {
     };
   }, []);
 
-  // el API ya viene ordenado por fecha desc, así que "recientes" = las primeras activas
-  const recentPets = pets.filter((p) => p.status !== "reunificada").slice(0, 4);
-  const reunitedPets = pets.filter((p) => p.status === "reunificada").slice(0, 6);
+  // el API ya viene ordenado por fecha desc, así que "recientes" = las primeras activas.
+  // reporteVigente oculta de estas vitrinas públicas lo que ya pasó sus 3 meses de
+  // publicación — el bloque de estadísticas más abajo sí usa "pets" sin filtrar,
+  // porque ese necesita datos históricos (rangos de "este año", etc.).
+  const recentPets = pets.filter((p) => p.status !== "reunificada" && reporteVigente(p.fechaISO)).slice(0, 4);
+  const reunitedPets = pets.filter((p) => p.status === "reunificada" && reporteVigente(p.fechaISO)).slice(0, 6);
 
   // Antes era un "2" fijo en el JSX, sin relación con la comuna elegida arriba.
   const reunidasHeroEsteMes = pets.filter(

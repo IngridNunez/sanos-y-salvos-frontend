@@ -2,6 +2,7 @@ import { useState, useMemo, useEffect } from "react";
 import { useSearchParams } from "react-router";
 import { COMUNAS } from "@/data/pets";
 import { obtenerMascotas } from "@/api/mascotas";
+import { reporteVigente } from "@/lib/reporteVigente";
 import { obtenerAlertasPorZona } from "@/api/alertas";
 import { solicitarUbicacionActual } from "@/lib/geolocation";
 import { useAlertasProximidad } from "@/hooks/useAlertasProximidad";
@@ -57,7 +58,7 @@ export default function Listing() {
 
   useEffect(() => {
     obtenerMascotas()
-      .then(setPets)
+      .then((data) => setPets(data.filter((p) => reporteVigente(p.fechaISO))))
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
   }, []);

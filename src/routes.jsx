@@ -25,7 +25,7 @@ function Root() {
   // de su contenido — el Footer debajo se ve cortado por esa transición, así
   // que en esta página se omite.
   const { pathname } = useLocation();
-  const ocultarFooter = pathname.startsWith("/perfil");
+  const ocultarFooter = pathname.startsWith("/perfil") || pathname.startsWith("/admin");
 
   return (
     <div className="flex flex-col min-h-screen">
