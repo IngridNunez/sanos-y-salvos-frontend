@@ -30,11 +30,11 @@
  * en <html> (ver ThemeToggle.jsx), no con prefers-color-scheme directo,
  * para que la persona pueda elegir y quede guardado. */
 .dark {
-  --color-bg: #241820;
-  --color-white: #32222b;
+  --color-bg: #0a0a0a;
+  --color-white: #1c1c1e;
   --color-text: #f7e9ee;
   --color-muted: #b89aa3;
-  --color-border: #4a3540;
+  --color-border: #3a3a3c;
 }
 
 * {
