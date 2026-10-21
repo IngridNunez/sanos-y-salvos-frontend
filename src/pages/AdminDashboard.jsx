@@ -56,12 +56,26 @@ export default function AdminDashboard() {
   const clavePagina = `${filtro.api}:${pagina}:${recarga}`;
   const cargando = paginaCargada !== clavePagina;
 
+  // Conteos por estado de moderación para el resumen del panel lateral —
+  // size=1 porque solo interesa totalElements, no la lista en sí.
+  const [conteosModeracion, setConteosModeracion] = useState({});
+
   useEffect(() => {
     obtenerMascotas()
       .then(setTodasLasMascotas)
       .catch(() => setTodasLasMascotas([]))
       .finally(() => setCargandoGeneral(false));
   }, []);
+
+  useEffect(() => {
+    Promise.all(FILTROS.map((f) => obtenerMascotasAdmin(f.api, 0, 1)))
+      .then((resultados) => {
+        const conteos = {};
+        FILTROS.forEach((f, i) => { conteos[f.id] = resultados[i].totalElements; });
+        setConteosModeracion(conteos);
+      })
+      .catch(() => setConteosModeracion({}));
+  }, [recarga]);
 
   useEffect(() => {
     let vigente = true;
@@ -138,6 +152,18 @@ export default function AdminDashboard() {
             </button>
           ))}
         </nav>
+
+        <div className="pt-4 border-t border-[var(--color-border)]">
+          <h3 className="font-bold text-xs text-[var(--color-muted)] uppercase tracking-wide mb-3">Moderación</h3>
+          <div className="space-y-2">
+            {FILTROS.map((f) => (
+              <div key={f.id} className="flex items-center justify-between">
+                <span className="text-sm text-[var(--color-text)] font-semibold">{f.label}</span>
+                <span className="font-black text-[var(--color-text)]">{conteosModeracion[f.id] ?? "…"}</span>
+              </div>
+            ))}
+          </div>
+        </div>
 
         <Link
           to="/"
