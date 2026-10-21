@@ -136,7 +136,19 @@ export default function AdminDashboard() {
           <h1 className="font-black text-lg text-[var(--color-text)]">Administración</h1>
         </div>
 
-        <nav className="space-y-1">
+        <div>
+          <h3 className="font-bold text-xs text-[var(--color-muted)] uppercase tracking-wide mb-3">Moderación</h3>
+          <div className="space-y-2">
+            {FILTROS.map((f) => (
+              <div key={f.id} className="flex items-center justify-between">
+                <span className="text-sm text-[var(--color-text)] font-semibold">{f.label}</span>
+                <span className="font-black text-[var(--color-text)]">{conteosModeracion[f.id] ?? "…"}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <nav className="space-y-1 pt-4 border-t border-[var(--color-border)]">
           {SECCIONES.map((s) => (
             <button
               key={s.id}
@@ -152,18 +164,6 @@ export default function AdminDashboard() {
             </button>
           ))}
         </nav>
-
-        <div className="pt-4 border-t border-[var(--color-border)]">
-          <h3 className="font-bold text-xs text-[var(--color-muted)] uppercase tracking-wide mb-3">Moderación</h3>
-          <div className="space-y-2">
-            {FILTROS.map((f) => (
-              <div key={f.id} className="flex items-center justify-between">
-                <span className="text-sm text-[var(--color-text)] font-semibold">{f.label}</span>
-                <span className="font-black text-[var(--color-text)]">{conteosModeracion[f.id] ?? "…"}</span>
-              </div>
-            ))}
-          </div>
-        </div>
 
         <Link
           to="/"
