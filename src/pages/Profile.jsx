@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, Navigate } from "react-router";
 import { useAuth } from "@/context/AuthContext";
-import { obtenerMisMascotas } from "@/api/mascotas";
+import { obtenerMisMascotas, eliminarMascota } from "@/api/mascotas";
 import { COMUNAS } from "@/data/pets";
 import PetCard from "@/components/PetCard";
 
@@ -17,6 +17,8 @@ export default function Profile() {
   const [filterStatus, setFilterStatus] = useState("");
   const [filterComuna, setFilterComuna] = useState("");
   const [filterSpecies, setFilterSpecies] = useState("");
+  const [borrandoId, setBorrandoId] = useState(null);
+  const [errorBorrar, setErrorBorrar] = useState(null);
 
   useEffect(() => {
     if (!user) return;
@@ -39,6 +41,20 @@ export default function Profile() {
     setFilterStatus("");
     setFilterComuna("");
     setFilterSpecies("");
+  };
+
+  const handleBorrar = async (pet) => {
+    if (!window.confirm(`¿Seguro que quieres borrar el reporte de "${pet.name}"? Esto no se puede deshacer.`)) return;
+    setErrorBorrar(null);
+    setBorrandoId(pet.id);
+    try {
+      await eliminarMascota(pet.id);
+      setPets((prev) => prev.filter((p) => p.id !== pet.id));
+    } catch (err) {
+      setErrorBorrar(err.message);
+    } finally {
+      setBorrandoId(null);
+    }
   };
 
   if (cargandoSesion) {
@@ -138,6 +154,10 @@ export default function Profile() {
           </div>
         )}
 
+        {errorBorrar && (
+          <p className="text-sm text-[var(--color-primary)] font-semibold mb-4">{errorBorrar}</p>
+        )}
+
         {loading ? (
           <div className="text-center py-24 bg-white rounded-3xl">
             <p className="text-[var(--color-muted)]">Cargando tus reportes...</p>
@@ -173,7 +193,24 @@ export default function Profile() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {filtered.map((pet) => (
-              <PetCard key={pet.id} pet={pet} />
+              <div key={pet.id}>
+                <PetCard pet={pet} />
+                <div className="flex gap-2 mt-2">
+                  <Link
+                    to={`/editar/${pet.id}`}
+                    className="flex-1 text-center py-2 rounded-2xl border-2 border-[var(--color-border)] text-[var(--color-text)] text-xs font-bold hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] transition-colors"
+                  >
+                    ✏️ Editar
+                  </Link>
+                  <button
+                    onClick={() => handleBorrar(pet)}
+                    disabled={borrandoId === pet.id}
+                    className="flex-1 py-2 rounded-2xl border-2 border-[var(--color-border)] text-[var(--color-muted)] text-xs font-bold hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] transition-colors disabled:opacity-50"
+                  >
+                    {borrandoId === pet.id ? "Borrando..." : "🗑 Borrar"}
+                  </button>
+                </div>
+              </div>
             ))}
           </div>
         )}

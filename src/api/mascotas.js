@@ -196,6 +196,50 @@ export async function cambiarEstadoMascota(id, estado) {
   return mapMascota(await response.json());
 }
 
+/* Actualiza los datos de un reporte propio. Solo campos que ms-mascotas deja
+ * editar (ActualizarMascotaDTO): no se puede cambiar nombre, especie ni tipo
+ * de reporte — el estado se cambia aparte, con cambiarEstadoMascota.
+ * fotografiaUrl: solo si se subió una foto nueva, si no se mantiene la que había. */
+export async function actualizarMascota(id, form, fotografiaUrl) {
+  const caracteristicas = {};
+  if (form.breed) caracteristicas.raza = form.breed;
+  if (form.color) caracteristicas.color = form.color;
+  if (form.pattern) caracteristicas.patron = form.pattern;
+  if (form.size) caracteristicas.tamaño = form.size;
+  if (form.sector) caracteristicas.sector = form.sector;
+
+  const body = {
+    comuna: form.comuna,
+    descripcion: form.description,
+    caracteristicas,
+  };
+  if (fotografiaUrl) body.fotografia = fotografiaUrl;
+  if (form.location) body.ubicacion = { latitud: form.location.lat, longitud: form.location.lng };
+
+  const response = await fetch(`${API_URL}/api/v1/mascotas/${id}`, {
+    method: "PATCH",
+    credentials: "include",
+    headers: headersSesion,
+    body: JSON.stringify(body),
+  });
+  if (!response.ok) {
+    const detalle = await response.text().catch(() => "");
+    throw new Error(`No se pudo actualizar el reporte (${response.status}). ${detalle}`);
+  }
+  return mapMascota(await response.json());
+}
+
+export async function eliminarMascota(id) {
+  const response = await fetch(`${API_URL}/api/v1/mascotas/${id}`, {
+    method: "DELETE",
+    credentials: "include",
+    headers: headersSesion,
+  });
+  if (!response.ok) {
+    throw new Error(`No se pudo eliminar el reporte (${response.status})`);
+  }
+}
+
 /* pública (sin sesión): quien hace clic en el link del correo de contacto confirma
  * la reunificación con el token — el token es la autorización, no hace falta login.
  * Devuelve el resultado tal cual lo manda ms-mascotas: CONFIRMADA | YA_REUNIFICADA,

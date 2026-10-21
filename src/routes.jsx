@@ -9,6 +9,7 @@ import PetDetail from "@/pages/PetDetail";
 import Login from "@/pages/Login";
 import AuthCallback from "@/pages/AuthCallback";
 import ReportForm from "@/pages/ReportForm";
+import EditForm from "@/pages/EditForm";
 import Profile from "@/pages/Profile";
 import Privacidad from "@/pages/Privacidad";
 import Conocenos from "@/pages/Conocenos";
@@ -46,6 +47,7 @@ export const router = createBrowserRouter([
       { path: "buscar", Component: Listing },
       { path: "mascota/:id", Component: PetDetail },
       { path: "reportar", Component: ReportForm },
+      { path: "editar/:id", Component: EditForm },
       { path: "perfil", Component: Profile },
       { path: "privacidad", Component: Privacidad },
       { path: "terminos", Component: Terminos },

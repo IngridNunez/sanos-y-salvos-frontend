@@ -2,14 +2,18 @@ import { useEffect, useState } from "react";
 
 const CLAVE = "sys-tema-oscuro";
 
+/* El modo claro es el principal: la primera vez que alguien entra (sin
+ * elección guardada todavía) siempre parte en claro, sin importar la
+ * preferencia del sistema operativo — el oscuro queda como opción
+ * secundaria, que la persona activa a propósito con el botón. */
 function temaInicial() {
   try {
     const guardado = localStorage.getItem(CLAVE);
     if (guardado !== null) return guardado === "1";
   } catch {
-    /* localStorage puede fallar en navegación privada — se sigue con la preferencia del sistema */
+    /* localStorage puede fallar en navegación privada — se sigue con el claro por defecto */
   }
-  return window.matchMedia?.("(prefers-color-scheme: dark)").matches ?? false;
+  return false;
 }
 
 /* aplica/saca la clase .dark en <html> (de ahí toman los tokens de color en
