@@ -138,6 +138,13 @@ export default function AdminDashboard() {
             </button>
           ))}
         </nav>
+
+        <Link
+          to="/"
+          className="block px-4 py-2.5 text-sm font-semibold text-[var(--color-muted)] hover:text-[var(--color-primary)] transition-colors"
+        >
+          ← Volver al sitio
+        </Link>
       </aside>
 
       {/* Contenido */}

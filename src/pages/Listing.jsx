@@ -5,7 +5,6 @@ import { obtenerMascotas } from "@/api/mascotas";
 import { reporteVigente } from "@/lib/reporteVigente";
 import { obtenerAlertasPorZona } from "@/api/alertas";
 import { solicitarUbicacionActual } from "@/lib/geolocation";
-import { useAlertasProximidad } from "@/hooks/useAlertasProximidad";
 import PetCard from "@/components/PetCard";
 import StatusBadge from "@/components/StatusBadge";
 import PetsMap from "@/components/map/PetsMap";
@@ -48,13 +47,6 @@ export default function Listing() {
   const [idsMascotasCercanas, setIdsMascotasCercanas] = useState(null);
   const [buscandoCercania, setBuscandoCercania] = useState(false);
   const [errorCercania, setErrorCercania] = useState(null);
-
-  const {
-    activo: avisosActivos,
-    error: errorAvisos,
-    activar: activarAvisos,
-    desactivar: desactivarAvisos,
-  } = useAlertasProximidad();
 
   useEffect(() => {
     obtenerMascotas()
@@ -191,27 +183,6 @@ export default function Listing() {
               Limpiar
             </button>
           </div>
-        </div>
-
-        {/* Avisos por proximidad — mientras esta pestaña esté abierta */}
-        <div className="bg-white rounded-3xl p-5 mb-6 shadow-sm flex items-center justify-between gap-4 flex-wrap">
-          <div>
-            <p className="font-bold text-[var(--color-text)] text-sm">🔔 Avisarme si entro a una zona con mascota perdida</p>
-            <p className="text-xs text-[var(--color-muted)] mt-0.5 max-w-xl">
-              Revisa tu ubicación cada cierto tiempo mientras esta pestaña esté abierta y te notifica apenas entras al radio de una alerta activa. Pide permiso de ubicación y de notificaciones del navegador.
-            </p>
-            {errorAvisos && <p className="text-xs text-[var(--color-primary)] font-semibold mt-1">{errorAvisos}</p>}
-          </div>
-          <button
-            onClick={avisosActivos ? desactivarAvisos : activarAvisos}
-            className={`px-4 py-2 rounded-2xl font-bold text-sm transition-colors shrink-0 border-2 ${
-              avisosActivos
-                ? "bg-[var(--color-secondary)] text-white border-[var(--color-secondary)] hover:bg-[var(--color-secondary-dark)]"
-                : "border-[var(--color-primary)] text-[var(--color-primary)] hover:bg-[var(--color-primary)] hover:text-white"
-            }`}
-          >
-            {avisosActivos ? "🔔 Activado — apagar" : "Activar avisos"}
-          </button>
         </div>
 
         {/* Results header */}
