@@ -17,6 +17,7 @@ export default function Profile() {
   const [filterStatus, setFilterStatus] = useState("");
   const [filterComuna, setFilterComuna] = useState("");
   const [filterSpecies, setFilterSpecies] = useState("");
+  const [filterNombre, setFilterNombre] = useState("");
   const [borrandoId, setBorrandoId] = useState(null);
   const [errorBorrar, setErrorBorrar] = useState(null);
 
@@ -29,20 +30,23 @@ export default function Profile() {
   }, [user]);
 
   const filtered = useMemo(() => {
+    const nombreBuscado = filterNombre.trim().toLowerCase();
     return pets.filter((p) => {
       if (filterStatus && p.status !== filterStatus) return false;
       if (filterComuna && p.comuna !== filterComuna) return false;
       if (filterSpecies && p.species !== filterSpecies) return false;
+      if (nombreBuscado && !p.name?.toLowerCase().includes(nombreBuscado)) return false;
       return true;
     });
-  }, [pets, filterStatus, filterComuna, filterSpecies]);
+  }, [pets, filterStatus, filterComuna, filterSpecies, filterNombre]);
 
-  const hayFiltrosActivos = filterComuna || filterSpecies || filterStatus;
+  const hayFiltrosActivos = filterComuna || filterSpecies || filterStatus || filterNombre;
 
   const clearFilters = () => {
     setFilterStatus("");
     setFilterComuna("");
     setFilterSpecies("");
+    setFilterNombre("");
   };
 
   const handleBorrar = async (pet) => {
@@ -164,6 +168,19 @@ export default function Profile() {
           {/* Contenido */}
           <div className="flex-1 min-w-0">
             <h2 className="font-black text-xl text-[var(--color-text)] mb-4">Mis reportes</h2>
+
+            {pets.length > 0 && (
+              <div className="relative mb-4">
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--color-muted)]">🔍</span>
+                <input
+                  type="text"
+                  placeholder="Buscar por nombre de mascota..."
+                  value={filterNombre}
+                  onChange={(e) => setFilterNombre(e.target.value)}
+                  className="w-full pl-11 pr-4 py-3 rounded-2xl border-2 border-[var(--color-border)] text-sm text-[var(--color-text)] bg-white focus:outline-none focus:border-[var(--color-primary)] transition-colors"
+                />
+              </div>
+            )}
 
             {errorBorrar && (
               <p className="text-sm text-[var(--color-primary)] font-semibold mb-4">{errorBorrar}</p>
