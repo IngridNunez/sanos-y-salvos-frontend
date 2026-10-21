@@ -1,10 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;1,9..144,400&display=swap');
 @import 'tailwindcss';
 
-/* Habilita el prefijo dark: de Tailwind atado a la clase .dark en <html>
- * (ver ThemeToggle.jsx), en vez del prefers-color-scheme del sistema. */
-@custom-variant dark (&:where(.dark, .dark *));
-
 @theme {
   --color-primary: #C46081;
   --color-primary-light: #d4738e;
