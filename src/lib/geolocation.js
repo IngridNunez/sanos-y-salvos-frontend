@@ -2,7 +2,7 @@
 // ms-mascotas para la ubicación pública de las mascotas.
 const DECIMALES_UBICACION_APROXIMADA = 2;
 
-function redondear(valor) {
+export function redondear(valor) {
   const factor = 10 ** DECIMALES_UBICACION_APROXIMADA;
   return Math.round(valor * factor) / factor;
 }
