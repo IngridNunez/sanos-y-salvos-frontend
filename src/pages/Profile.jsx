@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, Navigate } from "react-router";
 import { useAuth } from "@/context/AuthContext";
-import { obtenerMisMascotas } from "@/api/mascotas";
+import { obtenerMisMascotas, eliminarMascota } from "@/api/mascotas";
 import { COMUNAS } from "@/data/pets";
 import PetCard from "@/components/PetCard";
 
@@ -17,6 +17,9 @@ export default function Profile() {
   const [filterStatus, setFilterStatus] = useState("");
   const [filterComuna, setFilterComuna] = useState("");
   const [filterSpecies, setFilterSpecies] = useState("");
+  const [filterNombre, setFilterNombre] = useState("");
+  const [borrandoId, setBorrandoId] = useState(null);
+  const [errorBorrar, setErrorBorrar] = useState(null);
 
   useEffect(() => {
     if (!user) return;
@@ -27,18 +30,37 @@ export default function Profile() {
   }, [user]);
 
   const filtered = useMemo(() => {
+    const nombreBuscado = filterNombre.trim().toLowerCase();
     return pets.filter((p) => {
       if (filterStatus && p.status !== filterStatus) return false;
       if (filterComuna && p.comuna !== filterComuna) return false;
       if (filterSpecies && p.species !== filterSpecies) return false;
+      if (nombreBuscado && !p.name?.toLowerCase().includes(nombreBuscado)) return false;
       return true;
     });
-  }, [pets, filterStatus, filterComuna, filterSpecies]);
+  }, [pets, filterStatus, filterComuna, filterSpecies, filterNombre]);
+
+  const hayFiltrosActivos = filterComuna || filterSpecies || filterStatus || filterNombre;
 
   const clearFilters = () => {
     setFilterStatus("");
     setFilterComuna("");
     setFilterSpecies("");
+    setFilterNombre("");
+  };
+
+  const handleBorrar = async (pet) => {
+    if (!window.confirm(`¿Seguro que quieres borrar el reporte de "${pet.name}"? Esto no se puede deshacer.`)) return;
+    setErrorBorrar(null);
+    setBorrandoId(pet.id);
+    try {
+      await eliminarMascota(pet.id);
+      setPets((prev) => prev.filter((p) => p.id !== pet.id));
+    } catch (err) {
+      setErrorBorrar(err.message);
+    } finally {
+      setBorrandoId(null);
+    }
   };
 
   if (cargandoSesion) {
@@ -59,10 +81,12 @@ export default function Profile() {
   }, {});
 
   return (
-    <div className="min-h-screen bg-[var(--color-bg)] py-8">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Encabezado — ancho al contenido, no a todo el layout */}
-        <div className="inline-flex items-center gap-3 bg-white rounded-2xl px-4 py-2.5 shadow-sm mb-6 max-w-full">
+    <div className="min-h-screen bg-[var(--color-bg)]">
+      {/* Panel lateral — en PC queda fijo al borde izquierdo, toda la altura, sin
+       * moverse con el scroll. Esta página no tiene Footer (se oculta en Root),
+       * así que no hay nada que el panel pueda tapar. En celular se apila arriba. */}
+      <aside className="bg-white lg:fixed lg:left-0 lg:top-16 lg:bottom-0 lg:w-72 lg:overflow-y-auto lg:border-r lg:border-[var(--color-border)] rounded-3xl lg:rounded-none shadow-sm lg:shadow-none mx-4 sm:mx-6 lg:mx-0 mt-8 lg:mt-0 p-5 space-y-5">
+        <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-[var(--color-bg)] flex items-center justify-center text-base font-black text-[var(--color-primary)] shrink-0">
             {(user.name || user.email || "?").charAt(0).toUpperCase()}
           </div>
@@ -72,34 +96,35 @@ export default function Profile() {
           </div>
         </div>
 
+        <Link
+          to="/reportar"
+          className="block w-full text-center px-4 py-2.5 bg-[var(--color-primary)] text-white text-sm font-bold rounded-2xl hover:bg-[var(--color-primary-dark)] transition-colors"
+        >
+          + Reportar
+        </Link>
+
         {/* Resumen */}
-        <div className="grid grid-cols-3 gap-3 mb-6">
-          {["extraviada", "encontrada", "reunificada"].map((estado) => (
-            <div key={estado} className="bg-white rounded-2xl p-4 text-center shadow-sm">
-              <div className="font-black text-2xl text-[var(--color-text)]">{conteos[estado] ?? 0}</div>
-              <div className="text-xs text-[var(--color-muted)] font-semibold">{ESTADO_LABEL[estado]}</div>
-            </div>
-          ))}
+        <div className="pt-4 border-t border-[var(--color-border)]">
+          <h3 className="font-bold text-xs text-[var(--color-muted)] uppercase tracking-wide mb-3">Resumen</h3>
+          <div className="space-y-2">
+            {["extraviada", "encontrada", "reunificada"].map((estado) => (
+              <div key={estado} className="flex items-center justify-between">
+                <span className="text-sm text-[var(--color-text)] font-semibold">{ESTADO_LABEL[estado]}</span>
+                <span className="font-black text-[var(--color-text)]">{conteos[estado] ?? 0}</span>
+              </div>
+            ))}
+          </div>
         </div>
 
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="font-black text-xl text-[var(--color-text)]">Mis reportes</h2>
-          <Link
-            to="/reportar"
-            className="px-4 py-2 bg-[var(--color-primary)] text-white text-sm font-bold rounded-2xl hover:bg-[var(--color-primary-dark)] transition-colors"
-          >
-            + Reportar
-          </Link>
-        </div>
-
-        {/* Filtros — mismos que el listado público (Buscar), para ordenar los reportes propios */}
+        {/* Filtros */}
         {pets.length > 0 && (
-          <div className="bg-white rounded-3xl p-5 mb-6 shadow-sm">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div className="pt-4 border-t border-[var(--color-border)]">
+            <h3 className="font-bold text-xs text-[var(--color-muted)] uppercase tracking-wide mb-3">Filtrar</h3>
+            <div className="space-y-3">
               <select
                 value={filterComuna}
                 onChange={(e) => setFilterComuna(e.target.value)}
-                className="px-4 py-3 rounded-2xl border-2 border-[var(--color-border)] text-sm font-semibold text-[var(--color-text)] focus:outline-none focus:border-[var(--color-primary)] bg-white"
+                className="w-full px-4 py-3 rounded-2xl border-2 border-[var(--color-border)] text-sm font-semibold text-[var(--color-text)] focus:outline-none focus:border-[var(--color-primary)] bg-white"
               >
                 <option value="">📍 Todas las comunas</option>
                 {COMUNAS.map((c) => <option key={c} value={c}>{c}</option>)}
@@ -108,7 +133,7 @@ export default function Profile() {
               <select
                 value={filterSpecies}
                 onChange={(e) => setFilterSpecies(e.target.value)}
-                className="px-4 py-3 rounded-2xl border-2 border-[var(--color-border)] text-sm font-semibold text-[var(--color-text)] focus:outline-none focus:border-[var(--color-primary)] bg-white"
+                className="w-full px-4 py-3 rounded-2xl border-2 border-[var(--color-border)] text-sm font-semibold text-[var(--color-text)] focus:outline-none focus:border-[var(--color-primary)] bg-white"
               >
                 <option value="">🐾 Tipo de mascota</option>
                 <option value="perro">🐕 Perro</option>
@@ -119,64 +144,106 @@ export default function Profile() {
               <select
                 value={filterStatus}
                 onChange={(e) => setFilterStatus(e.target.value)}
-                className="px-4 py-3 rounded-2xl border-2 border-[var(--color-border)] text-sm font-semibold text-[var(--color-text)] focus:outline-none focus:border-[var(--color-primary)] bg-white"
+                className="w-full px-4 py-3 rounded-2xl border-2 border-[var(--color-border)] text-sm font-semibold text-[var(--color-text)] focus:outline-none focus:border-[var(--color-primary)] bg-white"
               >
                 <option value="">📋 Todos los estados</option>
                 <option value="extraviada">🔴 Extraviada</option>
                 <option value="encontrada">🟢 Encontrada</option>
                 <option value="reunificada">🟡 Reunificada</option>
               </select>
-            </div>
-            {(filterComuna || filterSpecies || filterStatus) && (
-              <button
-                onClick={clearFilters}
-                className="mt-3 px-5 py-2.5 border-2 border-[var(--color-border)] text-[var(--color-muted)] font-semibold rounded-2xl hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] transition-colors text-sm"
-              >
-                Limpiar filtros
-              </button>
-            )}
-          </div>
-        )}
 
-        {loading ? (
-          <div className="text-center py-24 bg-white rounded-3xl">
-            <p className="text-[var(--color-muted)]">Cargando tus reportes...</p>
-          </div>
-        ) : error ? (
-          <div className="text-center py-24 bg-white rounded-3xl">
-            <p className="text-[var(--color-primary)] font-semibold">No se pudo conectar con el servidor: {error}</p>
-          </div>
-        ) : pets.length === 0 ? (
-          <div className="text-center py-24 bg-white rounded-3xl">
-            <div className="text-6xl mb-4">🐾</div>
-            <h3 className="font-black text-xl text-[var(--color-text)] mb-2">Todavía no tienes reportes</h3>
-            <p className="text-[var(--color-muted)] mb-6">Cuando reportes una mascota extraviada o encontrada, aparecerá aquí.</p>
-            <Link
-              to="/reportar"
-              className="px-5 py-2.5 bg-[var(--color-primary)] text-white font-bold rounded-2xl hover:bg-[var(--color-primary-dark)] transition-colors text-sm inline-block"
-            >
-              Reportar una mascota
-            </Link>
-          </div>
-        ) : filtered.length === 0 ? (
-          <div className="text-center py-24 bg-white rounded-3xl">
-            <div className="text-6xl mb-4">🔍</div>
-            <h3 className="font-black text-xl text-[var(--color-text)] mb-2">Sin resultados</h3>
-            <p className="text-[var(--color-muted)] mb-6">Ninguno de tus reportes calza con esos filtros.</p>
-            <button
-              onClick={clearFilters}
-              className="px-5 py-2.5 bg-[var(--color-primary)] text-white font-bold rounded-2xl hover:bg-[var(--color-primary-dark)] transition-colors text-sm"
-            >
-              Ver todos mis reportes
-            </button>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {filtered.map((pet) => (
-              <PetCard key={pet.id} pet={pet} />
-            ))}
+              {hayFiltrosActivos && (
+                <button
+                  onClick={clearFilters}
+                  className="w-full px-5 py-2.5 border-2 border-[var(--color-border)] text-[var(--color-muted)] font-semibold rounded-2xl hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] transition-colors text-sm"
+                >
+                  Limpiar filtros
+                </button>
+              )}
+            </div>
           </div>
         )}
+      </aside>
+
+      {/* Contenido */}
+      <div className="lg:ml-72 px-4 sm:px-6 lg:px-8 py-8">
+        <div className="max-w-6xl">
+          <h2 className="font-black text-xl text-[var(--color-text)] mb-4">Mis reportes</h2>
+
+            {pets.length > 0 && (
+              <div className="relative mb-10 max-w-2xl">
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--color-muted)]">🔍</span>
+                <input
+                  type="text"
+                  placeholder="Buscar por nombre..."
+                  value={filterNombre}
+                  onChange={(e) => setFilterNombre(e.target.value)}
+                  className="w-full pl-11 pr-4 py-2.5 rounded-2xl border-2 border-[var(--color-border)] text-sm text-[var(--color-text)] bg-white focus:outline-none focus:border-[var(--color-primary)] transition-colors"
+                />
+              </div>
+            )}
+
+            {errorBorrar && (
+              <p className="text-sm text-[var(--color-primary)] font-semibold mb-4">{errorBorrar}</p>
+            )}
+
+            {loading ? (
+              <div className="text-center py-24 bg-white rounded-3xl">
+                <p className="text-[var(--color-muted)]">Cargando tus reportes...</p>
+              </div>
+            ) : error ? (
+              <div className="text-center py-24 bg-white rounded-3xl">
+                <p className="text-[var(--color-primary)] font-semibold">No se pudo conectar con el servidor: {error}</p>
+              </div>
+            ) : pets.length === 0 ? (
+              <div className="text-center py-24 bg-white rounded-3xl">
+                <div className="text-6xl mb-4">🐾</div>
+                <h3 className="font-black text-xl text-[var(--color-text)] mb-2">Todavía no tienes reportes</h3>
+                <p className="text-[var(--color-muted)] mb-6">Cuando reportes una mascota extraviada o encontrada, aparecerá aquí.</p>
+                <Link
+                  to="/reportar"
+                  className="px-5 py-2.5 bg-[var(--color-primary)] text-white font-bold rounded-2xl hover:bg-[var(--color-primary-dark)] transition-colors text-sm inline-block"
+                >
+                  Reportar una mascota
+                </Link>
+              </div>
+            ) : filtered.length === 0 ? (
+              <div className="text-center py-24 bg-white rounded-3xl">
+                <div className="text-6xl mb-4">🔍</div>
+                <h3 className="font-black text-xl text-[var(--color-text)] mb-2">Sin resultados</h3>
+                <p className="text-[var(--color-muted)] mb-6">Ninguno de tus reportes calza con esos filtros.</p>
+                <button
+                  onClick={clearFilters}
+                  className="px-5 py-2.5 bg-[var(--color-primary)] text-white font-bold rounded-2xl hover:bg-[var(--color-primary-dark)] transition-colors text-sm"
+                >
+                  Ver todos mis reportes
+                </button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+                {filtered.map((pet) => (
+                  <div key={pet.id}>
+                    <PetCard pet={pet} />
+                    <div className="flex gap-2 mt-2">
+                      <Link
+                        to={`/editar/${pet.id}`}
+                        className="flex-1 text-center py-2 rounded-2xl border-2 border-[var(--color-border)] text-[var(--color-text)] text-xs font-bold hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] transition-colors"
+                      >
+                        ✏️ Editar
+                      </Link>
+                      <button
+                        onClick={() => handleBorrar(pet)}
+                        disabled={borrandoId === pet.id}
+                        className="flex-1 py-2 rounded-2xl border-2 border-[var(--color-border)] text-[var(--color-muted)] text-xs font-bold hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] transition-colors disabled:opacity-50"
+                      >
+                        {borrandoId === pet.id ? "Borrando..." : "🗑 Borrar"}
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+        </div>
       </div>
     </div>
   );

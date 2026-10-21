@@ -59,8 +59,13 @@ export async function obtenerMascotas() {
   return contenido.map(mapMascota);
 }
 
+/* credentials: "include" para que, si hay sesión, viaje la cookie y el bff
+ * pueda agregar X-User-Id — así el dueño puede ver el detalle de su propio
+ * reporte aunque todavía esté pendiente o lo hayan rechazado (ver
+ * MascotaService.obtenerPorId en ms-mascotas). Para invitados sin sesión no
+ * cambia nada: sin cookie, sigue siendo acceso libre a lo ya aprobado. */
 export async function obtenerMascotaPorId(id) {
-  const response = await fetch(`${API_URL}/api/v1/mascotas/${id}`);
+  const response = await fetch(`${API_URL}/api/v1/mascotas/${id}`, { credentials: "include" });
   if (response.status === 404) {
     return null;
   }
@@ -194,6 +199,50 @@ export async function cambiarEstadoMascota(id, estado) {
     throw new Error(`No se pudo actualizar el estado (${response.status})`);
   }
   return mapMascota(await response.json());
+}
+
+/* Actualiza los datos de un reporte propio. Solo campos que ms-mascotas deja
+ * editar (ActualizarMascotaDTO): no se puede cambiar nombre, especie ni tipo
+ * de reporte — el estado se cambia aparte, con cambiarEstadoMascota.
+ * fotografiaUrl: solo si se subió una foto nueva, si no se mantiene la que había. */
+export async function actualizarMascota(id, form, fotografiaUrl) {
+  const caracteristicas = {};
+  if (form.breed) caracteristicas.raza = form.breed;
+  if (form.color) caracteristicas.color = form.color;
+  if (form.pattern) caracteristicas.patron = form.pattern;
+  if (form.size) caracteristicas.tamaño = form.size;
+  if (form.sector) caracteristicas.sector = form.sector;
+
+  const body = {
+    comuna: form.comuna,
+    descripcion: form.description,
+    caracteristicas,
+  };
+  if (fotografiaUrl) body.fotografia = fotografiaUrl;
+  if (form.location) body.ubicacion = { latitud: form.location.lat, longitud: form.location.lng };
+
+  const response = await fetch(`${API_URL}/api/v1/mascotas/${id}`, {
+    method: "PATCH",
+    credentials: "include",
+    headers: headersSesion,
+    body: JSON.stringify(body),
+  });
+  if (!response.ok) {
+    const detalle = await response.text().catch(() => "");
+    throw new Error(`No se pudo actualizar el reporte (${response.status}). ${detalle}`);
+  }
+  return mapMascota(await response.json());
+}
+
+export async function eliminarMascota(id) {
+  const response = await fetch(`${API_URL}/api/v1/mascotas/${id}`, {
+    method: "DELETE",
+    credentials: "include",
+    headers: headersSesion,
+  });
+  if (!response.ok) {
+    throw new Error(`No se pudo eliminar el reporte (${response.status})`);
+  }
 }
 
 /* pública (sin sesión): quien hace clic en el link del correo de contacto confirma
