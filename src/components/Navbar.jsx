@@ -110,6 +110,13 @@ export default function Navbar() {
                       >
                         👤 Mi perfil
                       </Link>
+                      <Link
+                        to="/chat"
+                        onClick={() => setCuentaAbierta(false)}
+                        className="block px-4 py-2 text-sm font-semibold text-[var(--color-text)] hover:bg-[var(--color-bg)] hover:text-[var(--color-primary)]"
+                      >
+                        💬 Mis mensajes
+                      </Link>
                       {user.esAdministrador && (
                         <Link
                           to="/admin"
@@ -181,6 +188,13 @@ export default function Navbar() {
                   onClick={() => setMobileOpen(false)}
                 >
                   👤 Mi perfil
+                </Link>
+                <Link
+                  to="/chat"
+                  className="block text-center px-4 py-2.5 text-[var(--color-text)] text-sm font-semibold rounded-2xl hover:bg-[var(--color-bg)]"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  💬 Mis mensajes
                 </Link>
                 {user.esAdministrador && (
                   <Link

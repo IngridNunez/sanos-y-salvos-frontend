@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router";
 import { obtenerMascotaPorId, obtenerIdsMisMascotas, cambiarEstadoMascota } from "@/api/mascotas";
+import { iniciarConversacion } from "@/api/chat";
 import { useAuth } from "@/context/AuthContext";
 import PetLocationMap from "@/components/map/PetLocationMap";
 import StatusBadge from "@/components/StatusBadge";
@@ -14,6 +15,8 @@ export default function PetDetail() {
   const [esDueno, setEsDueno] = useState(false);
   const [actualizando, setActualizando] = useState(false);
   const [errorEstado, setErrorEstado] = useState(null);
+  const [abriendoChat, setAbriendoChat] = useState(false);
+  const [errorChat, setErrorChat] = useState(null);
 
   const [pet, setPet] = useState(null);
   const [loadedId, setLoadedId] = useState(null);
@@ -65,6 +68,24 @@ export default function PetDetail() {
       setErrorEstado(err.message);
     } finally {
       setActualizando(false);
+    }
+  };
+
+  /* el chat exige sesión: a quien no la tiene se le pide entrar y vuelve a este reporte */
+  const chatear = async () => {
+    if (!user) {
+      navigate(`/login?redirect=/mascota/${id}`);
+      return;
+    }
+    setAbriendoChat(true);
+    setErrorChat(null);
+    try {
+      const conversacion = await iniciarConversacion(id);
+      navigate(`/chat?c=${encodeURIComponent(conversacion.id)}`);
+    } catch (err) {
+      setErrorChat(err.message);
+    } finally {
+      setAbriendoChat(false);
     }
   };
 
@@ -234,6 +255,15 @@ export default function PetDetail() {
                   >
                     💬 Contactar
                   </button>
+
+                  <button
+                    onClick={chatear}
+                    disabled={abriendoChat}
+                    className="w-full py-3.5 border-2 border-[var(--color-primary)] text-[var(--color-primary)] font-bold rounded-2xl hover:bg-[var(--color-bg)] transition-colors text-sm disabled:opacity-60"
+                  >
+                    {abriendoChat ? "Abriendo chat..." : "⚡ Chatear ahora"}
+                  </button>
+                  {errorChat && <p className="text-xs text-[var(--color-primary)]">{errorChat}</p>}
 
                   {/* sin sentido en un reporte ya reunificado: no hay nada que "contar" ni
                       nadie que reclamar — Contactar sigue arriba por si alguien igual

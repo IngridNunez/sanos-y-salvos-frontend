@@ -18,6 +18,7 @@ import Contacto from "@/pages/Contacto";
 import Terminos from "@/pages/Terminos";
 import ConfirmarReunificacion from "@/pages/ConfirmarReunificacion";
 import AdminDashboard from "@/pages/AdminDashboard";
+import Chat from "@/pages/Chat";
 import ErrorPage from "@/pages/ErrorPage";
 
 function Root() {
@@ -25,7 +26,8 @@ function Root() {
   // de su contenido — el Footer debajo se ve cortado por esa transición, así
   // que en esta página se omite.
   const { pathname } = useLocation();
-  const ocultarFooter = pathname.startsWith("/perfil") || pathname.startsWith("/admin");
+  const ocultarFooter =
+    pathname.startsWith("/perfil") || pathname.startsWith("/admin") || pathname.startsWith("/chat");
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -55,6 +57,7 @@ export const router = createBrowserRouter([
       { path: "reportar", Component: ReportForm },
       { path: "editar/:id", Component: EditForm },
       { path: "perfil", Component: Profile },
+      { path: "chat", Component: Chat },
       { path: "privacidad", Component: Privacidad },
       { path: "terminos", Component: Terminos },
       { path: "conocenos", Component: Conocenos },
