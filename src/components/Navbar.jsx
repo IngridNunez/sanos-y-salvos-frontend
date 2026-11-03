@@ -29,6 +29,14 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", cerrarSiEsFuera);
   }, [cuentaAbierta]);
 
+  // En el celular el menú se cierra apenas la persona empieza a bajar por la página
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const cerrar = () => setMobileOpen(false);
+    window.addEventListener("scroll", cerrar, { passive: true });
+    return () => window.removeEventListener("scroll", cerrar);
+  }, [mobileOpen]);
+
   const handleReport = () => {
     if (!user) {
       navigate("/login?redirect=/reportar");
