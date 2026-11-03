@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components -- patrón estándar de createBrowserRouter con componentes inline */
-import { createBrowserRouter, Outlet, useLocation } from "react-router";
+import { createBrowserRouter, Outlet, ScrollRestoration, useLocation } from "react-router";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import InAppBrowserBanner from "@/components/InAppBrowserBanner";
@@ -37,6 +37,9 @@ function Root() {
         <Outlet />
       </main>
       {!ocultarFooter && <Footer />}
+      {/* al entrar a una página nueva parte desde arriba (antes quedaba la posición de la anterior, p. ej. el footer);
+          con "atrás" del navegador vuelve a donde estaba */}
+      <ScrollRestoration />
     </div>
   );
 }
